@@ -2919,10 +2919,12 @@ def use_ticket(code):
     conn.commit(); conn.close()
     return jsonify({'ok': True, 'status': 'used'})
 
+# Inicializace DB při startu (funguje i pro gunicorn)
+init_db()
+
 # ── Entry point ───────────────────────────────────────────────────────────────
 
 if __name__ == '__main__':
-    init_db()
-    print('\n🎵  Hear Me Out běží na  http://localhost:5000\n')
+    print('\n🎵  Hear Me Out běží na  http://localhost:5001\n')
     debug = os.environ.get('FLASK_DEBUG', '0') == '1'
     app.run(debug=debug, port=5001)
