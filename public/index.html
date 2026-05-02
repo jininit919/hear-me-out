@@ -3146,27 +3146,45 @@ function urlB64ToUint8(b64) {
 }
 
 async function subscribePush() {
-  if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
+  if (!('serviceWorker' in navigator)) { console.log('[Push] no SW'); return; }
+  if (!('PushManager' in window))      { console.log('[Push] no PushManager'); return; }
+  if (!('Notification' in window))     { console.log('[Push] no Notification'); return; }
   try {
     const reg = await navigator.serviceWorker.ready;
+    console.log('[Push] SW ready', reg);
+
     const existing = await reg.pushManager.getSubscription();
-    if (existing) return; // already subscribed
+    if (existing) { console.log('[Push] already subscribed'); return; }
+
     const res = await fetch('/api/push/vapid-key');
     const { publicKey } = await res.json();
-    if (!publicKey) return;
+    console.log('[Push] publicKey:', publicKey ? publicKey.slice(0,20)+'…' : 'EMPTY');
+    if (!publicKey) { showToast('Push notifikace nejsou nakonfigurovány'); return; }
+
+    console.log('[Push] current permission:', Notification.permission);
+    if (Notification.permission === 'denied') {
+      showToast('Notifikace jsou zakázány v nastavení prohlížeče');
+      return;
+    }
+
     const permission = await Notification.requestPermission();
+    console.log('[Push] permission result:', permission);
     if (permission !== 'granted') return;
+
     const sub = await reg.pushManager.subscribe({
       userVisibleOnly: true,
       applicationServerKey: urlB64ToUint8(publicKey),
     });
-    await fetch('/api/push/subscribe', {
+    console.log('[Push] subscribed:', sub.endpoint.slice(0,40)+'…');
+
+    const r = await fetch('/api/push/subscribe', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(sub.toJSON()),
     });
+    if (r.ok) showToast('Notifikace zapnuty ✓');
   } catch (e) {
-    console.log('[Push]', e);
+    console.error('[Push] error:', e);
   }
 }
 </script>
