@@ -22,6 +22,35 @@ self.addEventListener('activate', e => {
   );
 });
 
+// Push notifications
+self.addEventListener('push', e => {
+  let data = {};
+  try { data = e.data ? e.data.json() : {}; } catch {}
+  const title   = data.title || 'Hear Me Out';
+  const options = {
+    body:    data.body || '',
+    icon:    '/icons/icon-192.png',
+    badge:   '/icons/icon-192.png',
+    data:    { url: data.url || '/' },
+    vibrate: [100, 50, 100],
+  };
+  e.waitUntil(self.registration.showNotification(title, options));
+});
+
+self.addEventListener('notificationclick', e => {
+  e.notification.close();
+  const url = e.notification.data?.url || '/';
+  e.waitUntil(clients.matchAll({ type: 'window', includeUncontrolled: true }).then(list => {
+    for (const c of list) {
+      if (c.url.includes(self.location.origin) && 'focus' in c) {
+        c.navigate(url);
+        return c.focus();
+      }
+    }
+    return clients.openWindow(url);
+  }));
+});
+
 // Fetch — network first, cache fallback
 self.addEventListener('fetch', e => {
   const { request } = e;

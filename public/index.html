@@ -1154,6 +1154,7 @@ async function init() {
       const ab = document.getElementById('analyticsNavBtn');
       if (ab) ab.style.display = '';
     }
+    subscribePush();
   } else {
     currentUser = null;
     navAv.innerHTML = `<a href="/login" style="color:var(--red2);font-size:12px;letter-spacing:0.08em;text-decoration:none">Přihlásit</a>`;
@@ -3130,6 +3131,41 @@ async function submitSkill(e) {
   </div>
 </nav>
 
-<script>if("serviceWorker"in navigator)navigator.serviceWorker.register("/sw.js");</script>
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js');
+}
+
+function urlB64ToUint8(b64) {
+  const pad = '='.repeat((4 - b64.length % 4) % 4);
+  const raw = atob((b64 + pad).replace(/-/g,'+').replace(/_/g,'/'));
+  return Uint8Array.from([...raw].map(c => c.charCodeAt(0)));
+}
+
+async function subscribePush() {
+  if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
+  try {
+    const reg = await navigator.serviceWorker.ready;
+    const existing = await reg.pushManager.getSubscription();
+    if (existing) return; // already subscribed
+    const res = await fetch('/api/push/vapid-key');
+    const { publicKey } = await res.json();
+    if (!publicKey) return;
+    const permission = await Notification.requestPermission();
+    if (permission !== 'granted') return;
+    const sub = await reg.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: urlB64ToUint8(publicKey),
+    });
+    await fetch('/api/push/subscribe', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(sub.toJSON()),
+    });
+  } catch (e) {
+    console.log('[Push]', e);
+  }
+}
+</script>
 </body>
 </html>

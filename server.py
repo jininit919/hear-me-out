@@ -61,7 +61,9 @@ STRIPE_PRO_PRICE_ID   = os.environ.get('STRIPE_PRO_PRICE_ID', '')
 if STRIPE_SECRET_KEY:
     stripe.api_key = STRIPE_SECRET_KEY
 
-RESEND_API_KEY = os.environ.get('RESEND_API_KEY', '')
+RESEND_API_KEY    = os.environ.get('RESEND_API_KEY', '')
+VAPID_PUBLIC_KEY  = os.environ.get('VAPID_PUBLIC_KEY', '')
+VAPID_PRIVATE_KEY = os.environ.get('VAPID_PRIVATE_KEY', '')
 
 # Cloudflare R2 (cloud storage pro nahrané soubory)
 R2_ACCOUNT_ID = os.environ.get('R2_ACCOUNT_ID', '')
@@ -467,6 +469,15 @@ def init_db():
     )''')
     add_col('orders', 'platform_fee INTEGER NOT NULL DEFAULT 0')
 
+    c.execute('''CREATE TABLE IF NOT EXISTS push_subscriptions (
+        id         INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id    INTEGER NOT NULL,
+        endpoint   TEXT    NOT NULL UNIQUE,
+        p256dh     TEXT    NOT NULL,
+        auth       TEXT    NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )''')
+
     conn.commit()
     conn.close()
 
@@ -549,6 +560,47 @@ def initials(name):
     return ''.join(p[0] for p in parts[:2]).upper() if parts else '?'
 
 
+def send_web_push(user_id: int, title: str, body: str, url: str = '/'):
+    """Sends a browser push notification to all subscriptions of a user."""
+    if not VAPID_PRIVATE_KEY or not VAPID_PUBLIC_KEY:
+        return
+    try:
+        from pywebpush import webpush, WebPushException
+        import json, base64
+        pem = base64.urlsafe_b64decode(VAPID_PRIVATE_KEY + '==')
+        conn = get_db()
+        subs = conn.execute(
+            'SELECT endpoint, p256dh, auth FROM push_subscriptions WHERE user_id = ?',
+            (user_id,)
+        ).fetchall()
+        conn.close()
+        payload = json.dumps({'title': title, 'body': body, 'url': url})
+        dead = []
+        for sub in subs:
+            try:
+                webpush(
+                    subscription_info={'endpoint': sub['endpoint'],
+                                       'keys': {'p256dh': sub['p256dh'], 'auth': sub['auth']}},
+                    data=payload,
+                    vapid_private_key=pem,
+                    vapid_claims={'sub': 'mailto:admin@hearmeout.app',
+                                  'aud': sub['endpoint'].split('/', 3)[:3][2] if '/' in sub['endpoint'] else sub['endpoint']},
+                )
+            except WebPushException as ex:
+                if ex.response and ex.response.status_code in (404, 410):
+                    dead.append(sub['endpoint'])
+            except Exception:
+                pass
+        if dead:
+            c2 = get_db()
+            for ep in dead:
+                c2.execute('DELETE FROM push_subscriptions WHERE endpoint = ?', (ep,))
+            c2.commit()
+            c2.close()
+    except Exception as e:
+        print(f'[PUSH] {e}')
+
+
 def push_notif(conn, user_id, actor_id, notif_type, ref_id, ref_type, message):
     if user_id == actor_id:
         return
@@ -556,6 +608,7 @@ def push_notif(conn, user_id, actor_id, notif_type, ref_id, ref_type, message):
         'INSERT INTO notifications (user_id, actor_id, type, ref_id, ref_type, message) VALUES (?,?,?,?,?,?)',
         (user_id, actor_id, notif_type, ref_id, ref_type, message)
     )
+    send_web_push(user_id, 'Hear Me Out', message, '/')
 
 
 def require_login():
@@ -834,6 +887,52 @@ def global_search():
         'listings': [{'id': r['id'], 'title': r['title'], 'price': r['price'],
                       'currency': r['currency'], 'city': r['city'] or ''} for r in listings],
     })
+
+
+@app.route('/api/push/vapid-key')
+def push_vapid_key():
+    return jsonify({'publicKey': VAPID_PUBLIC_KEY})
+
+
+@app.route('/api/push/subscribe', methods=['POST'])
+def push_subscribe():
+    if 'user_id' not in session:
+        return jsonify({'error': 'Nepřihlášen'}), 401
+    data = request.json or {}
+    endpoint = data.get('endpoint', '')
+    p256dh   = (data.get('keys') or {}).get('p256dh', '')
+    auth     = (data.get('keys') or {}).get('auth', '')
+    if not endpoint or not p256dh or not auth:
+        return jsonify({'error': 'Neplatná subscription'}), 400
+    conn = get_db()
+    if conn._pg:
+        conn.execute(
+            'INSERT INTO push_subscriptions (user_id, endpoint, p256dh, auth) VALUES (?,?,?,?) ON CONFLICT (endpoint) DO UPDATE SET user_id=EXCLUDED.user_id, p256dh=EXCLUDED.p256dh, auth=EXCLUDED.auth',
+            (session['user_id'], endpoint, p256dh, auth)
+        )
+    else:
+        conn.execute(
+            'INSERT OR REPLACE INTO push_subscriptions (user_id, endpoint, p256dh, auth) VALUES (?,?,?,?)',
+            (session['user_id'], endpoint, p256dh, auth)
+        )
+    conn.commit()
+    conn.close()
+    return jsonify({'ok': True})
+
+
+@app.route('/api/push/unsubscribe', methods=['POST'])
+def push_unsubscribe():
+    if 'user_id' not in session:
+        return jsonify({'error': 'Nepřihlášen'}), 401
+    data = request.json or {}
+    endpoint = data.get('endpoint', '')
+    if endpoint:
+        conn = get_db()
+        conn.execute('DELETE FROM push_subscriptions WHERE endpoint = ? AND user_id = ?',
+                     (endpoint, session['user_id']))
+        conn.commit()
+        conn.close()
+    return jsonify({'ok': True})
 
 
 @app.route('/api/me')
