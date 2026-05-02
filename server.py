@@ -5,6 +5,11 @@ from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 import sqlite3
 import os
+try:
+    import psycopg2
+    import psycopg2.extras
+except ImportError:
+    psycopg2 = None
 import time
 import math
 import uuid
@@ -104,20 +109,96 @@ UPLOAD_FOLDER = os.environ.get('UPLOAD_FOLDER', 'uploads')
 ALLOWED_EXTENSIONS = {'mp3', 'wav', 'ogg', 'flac', 'm4a', 'aac'}
 DB_PATH = os.environ.get('DB_PATH', 'hearmeout.db')
 
+# Railway DATABASE_URL (PostgreSQL) or local SQLite
+DATABASE_URL = os.environ.get('DATABASE_URL', '')
+if DATABASE_URL.startswith('postgres://'):
+    DATABASE_URL = 'postgresql://' + DATABASE_URL[len('postgres://'):]
+
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 
-# ── Database ──────────────────────────────────────────────────────────────────
+# ── Database wrapper (SQLite locally, PostgreSQL in production) ───────────────
 
-def get_db():
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
-    return conn
+class DBCursor:
+    """Unified cursor for sqlite3 and psycopg2."""
+    __slots__ = ('_cur', '_pg')
+
+    def __init__(self, cur, pg: bool):
+        self._cur = cur
+        self._pg  = pg
+
+    @staticmethod
+    def _adapt(sql: str, pg: bool) -> str:
+        if not pg:
+            return sql
+        sql = sql.replace('?', '%s')
+        sql = sql.replace('INTEGER PRIMARY KEY AUTOINCREMENT', 'SERIAL PRIMARY KEY')
+        sql = sql.replace('last_insert_rowid()', 'lastval()')
+        sql = sql.replace('DEFAULT ""', "DEFAULT ''")
+        return sql
+
+    def execute(self, sql, params=()):
+        self._cur.execute(self._adapt(sql, self._pg), params)
+        return self
+
+    def fetchone(self):  return self._cur.fetchone()
+    def fetchall(self):  return self._cur.fetchall()
+    def __iter__(self):  return iter(self._cur)
+
+    @property
+    def lastrowid(self): return self._cur.lastrowid
+
+
+class DBConn:
+    """Unified connection wrapper — SQLite for local dev, PostgreSQL in prod."""
+
+    def __init__(self):
+        if DATABASE_URL and psycopg2:
+            self._conn = psycopg2.connect(
+                DATABASE_URL,
+                cursor_factory=psycopg2.extras.DictCursor,
+            )
+            self._pg = True
+        else:
+            self._conn = sqlite3.connect(DB_PATH)
+            self._conn.row_factory = sqlite3.Row
+            self._pg = False
+
+    def cursor(self) -> DBCursor:
+        if self._pg:
+            return DBCursor(
+                self._conn.cursor(cursor_factory=psycopg2.extras.DictCursor), True
+            )
+        return DBCursor(self._conn.cursor(), False)
+
+    def execute(self, sql, params=()):
+        c = self.cursor()
+        c.execute(sql, params)
+        return c
+
+    def commit(self):    self._conn.commit()
+    def close(self):     self._conn.close()
+    def rollback(self):  self._conn.rollback()
+
+
+def get_db() -> DBConn:
+    return DBConn()
 
 
 def init_db():
     conn = get_db()
     c = conn.cursor()
+
+    def add_col(table: str, col_def: str):
+        """Safely add a column to an existing table (idempotent)."""
+        if conn._pg:
+            c.execute(f'ALTER TABLE {table} ADD COLUMN IF NOT EXISTS {col_def}')
+        else:
+            try:
+                c.execute(f'ALTER TABLE {table} ADD COLUMN {col_def}')
+                conn.commit()
+            except Exception:
+                pass
 
     c.execute('''CREATE TABLE IF NOT EXISTS users (
         id            INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -151,11 +232,8 @@ def init_db():
                 'pro INTEGER DEFAULT 0',
                 'pro_expires TEXT DEFAULT NULL',
                 'stripe_customer_id TEXT DEFAULT NULL'):
-        try:
-            c.execute(f'ALTER TABLE users ADD COLUMN {col}')
-            conn.commit()
-        except Exception:
-            pass
+        add_col('users', col)
+    conn.commit()
 
     c.execute('''CREATE TABLE IF NOT EXISTS tracks (
         id         INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -174,11 +252,8 @@ def init_db():
     )''')
 
     for col in ('cover TEXT DEFAULT ""', 'video TEXT DEFAULT ""'):
-        try:
-            c.execute(f'ALTER TABLE tracks ADD COLUMN {col}')
-            conn.commit()
-        except Exception:
-            pass
+        add_col('tracks', col)
+    conn.commit()
 
     c.execute('''CREATE TABLE IF NOT EXISTS play_logs (
         id         INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -193,11 +268,8 @@ def init_db():
         track_id INTEGER NOT NULL,
         PRIMARY KEY (user_id, track_id)
     )''')
-    try:
-        c.execute('ALTER TABLE likes ADD COLUMN created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP')
-        conn.commit()
-    except Exception:
-        pass
+    add_col('likes', 'created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP')
+    conn.commit()
 
     c.execute('''CREATE TABLE IF NOT EXISTS follows (
         follower_id  INTEGER NOT NULL,
@@ -225,11 +297,8 @@ def init_db():
         FOREIGN KEY (receiver_id) REFERENCES users(id)
     )''')
     for col in ('content_type TEXT DEFAULT "text"', 'image TEXT DEFAULT ""'):
-        try:
-            c.execute(f'ALTER TABLE messages ADD COLUMN {col}')
-            conn.commit()
-        except Exception:
-            pass
+        add_col('messages', col)
+    conn.commit()
 
     c.execute('''CREATE TABLE IF NOT EXISTS favorite_cities (
         user_id  INTEGER NOT NULL,
@@ -285,11 +354,8 @@ def init_db():
                 'photo1 TEXT DEFAULT ""', 'photo2 TEXT DEFAULT ""',
                 'photo3 TEXT DEFAULT ""', 'photo4 TEXT DEFAULT ""',
                 'photo5 TEXT DEFAULT ""'):
-        try:
-            c.execute(f'ALTER TABLE events ADD COLUMN {col}')
-            conn.commit()
-        except Exception:
-            pass
+        add_col('events', col)
+    conn.commit()
 
     c.execute('''CREATE TABLE IF NOT EXISTS listings (
         id          INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -399,11 +465,7 @@ def init_db():
         ticket_code         TEXT,
         created_at          TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )''')
-    # Migration: add platform_fee to existing orders tables
-    try:
-        c.execute('ALTER TABLE orders ADD COLUMN platform_fee INTEGER NOT NULL DEFAULT 0')
-    except Exception:
-        pass
+    add_col('orders', 'platform_fee INTEGER NOT NULL DEFAULT 0')
 
     conn.commit()
     conn.close()

@@ -5,3 +5,4 @@ resend
 stripe
 boto3
 gunicorn
+psycopg2-binary
