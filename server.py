@@ -62,8 +62,8 @@ if STRIPE_SECRET_KEY:
     stripe.api_key = STRIPE_SECRET_KEY
 
 RESEND_API_KEY    = os.environ.get('RESEND_API_KEY', '')
-VAPID_PUBLIC_KEY  = os.environ.get('VAPID_PUBLIC_KEY', '')
-VAPID_PRIVATE_KEY = os.environ.get('VAPID_PRIVATE_KEY', '')
+VAPID_PUBLIC_KEY  = os.environ.get('PUSH_PUBLIC', '')
+VAPID_PRIVATE_KEY = os.environ.get('PUSH_PRIVATE', '')
 
 # Cloudflare R2 (cloud storage pro nahrané soubory)
 R2_ACCOUNT_ID = os.environ.get('R2_ACCOUNT_ID', '')
