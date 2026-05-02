@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#000000">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Hear Me Out">
+<link rel="apple-touch-icon" href="/icons/icon-192.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hear Me Out PRO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#000;--bg2:#080808;--bg3:#101010;--bg4:#181818;
+  --red:#8b0000;--red2:#b20000;--red3:#cc0000;
+  --txt:#e8e8e8;--txt2:#888;--txt3:#444;
+  --border:#1a1a1a;--border2:#222;--gold:#c9a84c;--gold2:#e8c96c;
+}
+body{background:var(--bg);color:var(--txt);font-family:'DM Mono',monospace;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:40px 24px}
+a{color:inherit;text-decoration:none}
+
+nav{width:100%;max-width:860px;display:flex;align-items:center;justify-content:space-between;margin-bottom:60px}
+.nav-brand{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:0.2em;color:var(--red2)}
+.nav-back{font-size:11px;color:var(--txt3);letter-spacing:0.08em}
+.nav-back:hover{color:var(--txt2)}
+
+.hero{text-align:center;margin-bottom:60px}
+.hero-label{font-size:11px;letter-spacing:0.25em;color:var(--gold);text-transform:uppercase;margin-bottom:12px}
+.hero-title{font-family:'Bebas Neue',sans-serif;font-size:72px;letter-spacing:0.08em;line-height:1;margin-bottom:16px}
+.hero-title span{color:var(--gold)}
+.hero-sub{font-size:13px;color:var(--txt2);letter-spacing:0.04em;line-height:1.7;max-width:480px;margin:0 auto}
+
+.plans{display:grid;grid-template-columns:1fr 1fr;gap:16px;width:100%;max-width:680px;margin-bottom:48px}
+@media(max-width:600px){.plans{grid-template-columns:1fr}}
+.plan{background:var(--bg2);border:1px solid var(--border2);padding:28px 24px}
+.plan.featured{border-color:var(--gold);position:relative}
+.plan-badge{position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:var(--gold);color:#000;font-size:9px;letter-spacing:0.2em;padding:3px 14px;font-family:'Bebas Neue',sans-serif}
+.plan-name{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:0.15em;margin-bottom:4px}
+.plan.featured .plan-name{color:var(--gold)}
+.plan-price{font-family:'Bebas Neue',sans-serif;font-size:42px;letter-spacing:0.05em;line-height:1;margin-bottom:4px}
+.plan-price span{font-size:16px;letter-spacing:0.1em;color:var(--txt3)}
+.plan-period{font-size:10px;color:var(--txt3);letter-spacing:0.1em;margin-bottom:24px}
+.plan-features{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:28px}
+.plan-features li{font-size:12px;color:var(--txt2);letter-spacing:0.03em;display:flex;align-items:flex-start;gap:10px;line-height:1.5}
+.plan-features li::before{content:'✓';color:var(--txt3);flex-shrink:0;margin-top:1px}
+.plan.featured .plan-features li::before{color:var(--gold)}
+.plan-features li.disabled{color:var(--txt3)}
+.plan-features li.disabled::before{content:'—';color:var(--txt3)}
+
+.plan-btn{width:100%;font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:0.15em;padding:14px;border:none;cursor:pointer;transition:all 0.15s}
+.plan-btn.free{background:transparent;border:1px solid var(--border2);color:var(--txt3)}
+.plan-btn.free:hover{border-color:var(--txt3);color:var(--txt2)}
+.plan-btn.pro{background:var(--gold);color:#000}
+.plan-btn.pro:hover{background:var(--gold2)}
+.plan-btn:disabled{opacity:0.5;cursor:not-allowed}
+
+.features-grid{width:100%;max-width:860px;margin-bottom:60px}
+.features-title{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:0.12em;text-align:center;color:var(--txt3);margin-bottom:28px}
+.features-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
+.feature-card{background:var(--bg2);border:1px solid var(--border2);padding:20px 18px}
+.feature-icon{font-size:22px;margin-bottom:10px}
+.feature-name{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:0.1em;color:var(--gold);margin-bottom:6px}
+.feature-desc{font-size:11px;color:var(--txt2);letter-spacing:0.03em;line-height:1.6}
+
+.faq{width:100%;max-width:680px;margin-bottom:60px}
+.faq-title{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:0.12em;text-align:center;color:var(--txt3);margin-bottom:24px}
+.faq-item{border-bottom:1px solid var(--border);padding:16px 0}
+.faq-q{font-size:12px;letter-spacing:0.06em;color:var(--txt);margin-bottom:8px}
+.faq-a{font-size:11px;color:var(--txt3);letter-spacing:0.04em;line-height:1.7}
+
+.msg{font-size:12px;color:var(--txt2);letter-spacing:0.04em;text-align:center;margin-top:12px;min-height:20px}
+.msg.error{color:var(--red3)}
+.msg.success{color:#4ade80}
+
+.already-pro{background:var(--bg2);border:1px solid var(--gold);padding:28px;text-align:center;width:100%;max-width:480px;margin-bottom:40px;display:none}
+.already-pro-title{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:0.1em;color:var(--gold);margin-bottom:8px}
+.already-pro-sub{font-size:12px;color:var(--txt2);letter-spacing:0.04em;margin-bottom:20px}
+.portal-btn{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:0.12em;padding:12px 24px;background:transparent;border:1px solid var(--gold);color:var(--gold);cursor:pointer;transition:all 0.15s}
+.portal-btn:hover{background:var(--gold);color:#000}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-brand">HEAR ME OUT</a>
+  <a href="/" class="nav-back">← Zpět na feed</a>
+</nav>
+
+<div class="hero">
+  <div class="hero-label">Prémiové předplatné</div>
+  <div class="hero-title">HEAR ME OUT <span>PRO</span></div>
+  <div class="hero-sub">Nástroje pro tvůrce, kteří to myslí vážně. Plná kontrola nad zvukem, daty a viditelností.</div>
+</div>
+
+<!-- already PRO banner -->
+<div class="already-pro" id="alreadyPro">
+  <div class="already-pro-title">★ Jsi PRO uživatel</div>
+  <div class="already-pro-sub">Děkujeme za podporu. Spravovat předplatné nebo ho zrušit můžeš přes zákaznický portál.</div>
+  <button class="portal-btn" onclick="openPortal()">Spravovat předplatné</button>
+  <div class="msg" id="portalMsg"></div>
+</div>
+
+<div class="plans" id="plansSection">
+  <!-- FREE -->
+  <div class="plan">
+    <div class="plan-name">FREE</div>
+    <div class="plan-price">0 <span>CZK</span></div>
+    <div class="plan-period">navždy zdarma</div>
+    <ul class="plan-features">
+      <li>Profil a poslech bez omezení</li>
+      <li>Nahrávání MP3 tracků</li>
+      <li>Bazar — nákup a prodej vybavení</li>
+      <li>Messaging a networking</li>
+      <li class="disabled">WAV nahrávání</li>
+      <li class="disabled">Detailní analytika</li>
+      <li class="disabled">PRO odznak</li>
+      <li class="disabled">Větší portfolio (až 8 fotek)</li>
+    </ul>
+    <button class="plan-btn free" onclick="window.location='/'">Používat zdarma</button>
+  </div>
+
+  <!-- PRO -->
+  <div class="plan featured">
+    <div class="plan-badge">DOPORUČUJEME</div>
+    <div class="plan-name">PRO</div>
+    <div class="plan-price">149 <span>CZK</span></div>
+    <div class="plan-period">/ měsíc · zruš kdykoliv</div>
+    <ul class="plan-features">
+      <li>Vše co FREE</li>
+      <li>Nahrávání WAV (nekomprimované audio)</li>
+      <li>Detailní analytika přehrávání a posluchačů</li>
+      <li>PRO odznak na profilu a ve feedu</li>
+      <li>Větší portfolio — až 8 fotek a videa</li>
+      <li>Prioritní zobrazení ve výsledcích hledání</li>
+    </ul>
+    <button class="plan-btn pro" id="proBtn" onclick="subscribePro()">Přejít na PRO</button>
+    <div class="msg" id="proMsg"></div>
+  </div>
+</div>
+
+<div class="features-grid">
+  <div class="features-title">CO DOSTANEŠ S PRO</div>
+  <div class="features-list">
+    <div class="feature-card">
+      <div class="feature-icon">🎚️</div>
+      <div class="feature-name">WAV Nahrávání</div>
+      <div class="feature-desc">Nahraj nekomprimované WAV soubory. Zachovej plnou kvalitu svého zvuku — žádné artefakty MP3 komprese.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📊</div>
+      <div class="feature-name">Analytika</div>
+      <div class="feature-desc">Zjisti z jakých měst jsou tvoji posluchači, kdo si tě uložil a jak se tvoje tracky šíří přes reposty.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">★</div>
+      <div class="feature-name">PRO Odznak</div>
+      <div class="feature-desc">Zlatý odznak u tvého jména buduje důvěryhodnost při hledání spolupráce s labels, agenty a dalšími tvůrci.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🖼️</div>
+      <div class="feature-name">Větší Portfolio</div>
+      <div class="feature-desc">Přidej až 8 fotek z vystoupení, studia nebo zákulisí. Ukaž víc ze světa kolem své hudby.</div>
+    </div>
+  </div>
+</div>
+
+<div class="faq">
+  <div class="faq-title">ČASTÉ DOTAZY</div>
+  <div class="faq-item">
+    <div class="faq-q">Mohu zrušit předplatné kdykoliv?</div>
+    <div class="faq-a">Ano, předplatné zrušíš kdykoliv přes zákaznický portál. Přístup k PRO funkcím máš do konce aktuálního zaplaceného období.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">Přijde mi o tracky když přejdu zpět na FREE?</div>
+    <div class="faq-a">Ne. Všechny nahrané tracky zůstanou na tvém profilu. Nové tracky ve WAV formátu ale budeš moci nahrávat jen s aktivním PRO předplatným.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">Jak je platba bezpečná?</div>
+    <div class="faq-a">Platby zpracovává Stripe — světový standard pro online platby. My neukládáme žádná čísla karet.</div>
+  </div>
+</div>
+
+<script>
+async function init() {
+  const res  = await fetch('/api/me');
+  const me   = res.ok ? await res.json() : null;
+  const pres = await fetch('/api/pro/status');
+  const ps   = pres.ok ? await pres.json() : {pro: false};
+
+  if (!me) {
+    document.getElementById('proBtn').textContent = 'Nejprve se přihlas';
+    document.getElementById('proBtn').onclick = () => window.location.href = '/login';
+    return;
+  }
+
+  if (ps.pro || me.pro) {
+    document.getElementById('alreadyPro').style.display = 'block';
+    document.getElementById('proBtn').disabled = true;
+    document.getElementById('proBtn').textContent = 'Již jsi PRO';
+  }
+
+  // check for success redirect
+  if (location.pathname === '/pro/success') {
+    document.getElementById('alreadyPro').style.display = 'block';
+    document.getElementById('alreadyPro').querySelector('.already-pro-sub').textContent =
+      'Vítej v PRO! Odznak a WAV nahrávání jsou ihned aktivní.';
+  }
+}
+
+async function subscribePro() {
+  const btn = document.getElementById('proBtn');
+  const msg = document.getElementById('proMsg');
+  btn.disabled = true; btn.textContent = 'Přesměrovávám...';
+  msg.textContent = ''; msg.className = 'msg';
+  const res  = await fetch('/api/pro/checkout', {method: 'POST'});
+  const data = await res.json();
+  if (data.url) {
+    window.location.href = data.url;
+  } else {
+    msg.textContent = data.error || 'Chyba při zahájení platby';
+    msg.className = 'msg error';
+    btn.disabled = false; btn.textContent = 'Přejít na PRO';
+  }
+}
+
+async function openPortal() {
+  const btn = document.querySelector('.portal-btn');
+  const msg = document.getElementById('portalMsg');
+  btn.disabled = true; btn.textContent = 'Načítám...';
+  const res  = await fetch('/api/pro/portal', {method: 'POST'});
+  const data = await res.json();
+  if (data.url) {
+    window.location.href = data.url;
+  } else {
+    msg.textContent = data.error || 'Chyba';
+    msg.className = 'msg error';
+    btn.disabled = false; btn.textContent = 'Spravovat předplatné';
+  }
+}
+
+init();
+</script>
+<script>if("serviceWorker"in navigator)navigator.serviceWorker.register("/sw.js");</script>
+</body>
+</html>

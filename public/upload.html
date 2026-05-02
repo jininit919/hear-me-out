@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#000000">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Hear Me Out">
+<link rel="apple-touch-icon" href="/icons/icon-192.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hear Me Out — Nahrát track</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#000;--bg2:#080808;--bg3:#101010;--bg4:#181818;
+  --red:#8b0000;--red2:#b20000;--red3:#cc0000;
+  --txt:#e8e8e8;--txt2:#888;--txt3:#444;
+  --border:#1a1a1a;--border2:#222;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--txt);font-family:'DM Mono',monospace;min-height:100vh}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-thumb{background:var(--red)}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(14,10,10,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;height:54px}
+.nav-logo{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:0.15em;color:var(--red2);text-decoration:none}
+.nav-logo span{color:var(--txt3);font-size:11px;font-family:'DM Mono',monospace;letter-spacing:0.08em;margin-left:6px;vertical-align:middle}
+.nav-back{margin-left:auto;font-size:10px;letter-spacing:0.1em;color:var(--txt3);cursor:pointer;display:flex;align-items:center;gap:6px;text-decoration:none;transition:color 0.15s}
+.nav-back:hover{color:var(--red2)}
+
+/* PAGE */
+.page{max-width:600px;margin:0 auto;padding:86px 24px 60px}
+.page-title{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:0.15em;color:var(--txt);margin-bottom:4px}
+.page-sub{font-size:10px;color:var(--txt3);letter-spacing:0.08em;margin-bottom:32px}
+
+/* DROP ZONE */
+.drop-zone{border:1px dashed var(--border2);padding:48px 24px;text-align:center;cursor:pointer;transition:all 0.2s;position:relative;margin-bottom:24px}
+.drop-zone:hover,.drop-zone.drag-over{border-color:var(--red);background:rgba(139,0,0,0.05)}
+.drop-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.drop-icon{font-size:36px;margin-bottom:12px;opacity:0.4}
+.drop-label{font-size:12px;letter-spacing:0.06em;color:var(--txt2);margin-bottom:6px}
+.drop-formats{font-size:9px;color:var(--txt3);letter-spacing:0.08em}
+.file-selected{font-size:11px;color:var(--red2);margin-top:10px;letter-spacing:0.05em;display:none}
+
+/* COVER UPLOAD */
+.cover-section{display:flex;gap:20px;align-items:flex-start;margin-bottom:24px}
+.cover-drop{width:160px;height:160px;flex-shrink:0;border:1px dashed var(--border2);cursor:pointer;position:relative;transition:all 0.2s;overflow:hidden;background:var(--bg3)}
+.cover-drop:hover,.cover-drop.drag-over{border-color:var(--red);background:rgba(139,0,0,0.05)}
+.cover-drop input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.cover-placeholder{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;pointer-events:none}
+.cover-placeholder .ci{font-size:28px;opacity:0.3}
+.cover-placeholder span{font-size:9px;color:var(--txt3);letter-spacing:0.08em;text-align:center;line-height:1.6;padding:0 8px}
+.cover-preview{width:100%;height:100%;object-fit:cover;display:none;position:absolute;inset:0}
+.cover-info{flex:1}
+.cover-title{font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--txt3);margin-bottom:8px}
+.cover-rules{font-size:10px;color:var(--txt2);letter-spacing:0.04em;line-height:1.8}
+.cover-rules li{margin-left:14px}
+.cover-error{font-size:10px;color:var(--red3);margin-top:8px;display:none}
+.cover-ok{font-size:10px;color:#4caf50;margin-top:8px;display:none}
+
+/* VIDEO UPLOAD */
+.video-section{margin-bottom:24px}
+.video-drop{border:1px dashed var(--border2);padding:24px;text-align:center;cursor:pointer;transition:all 0.2s;position:relative}
+.video-drop:hover,.video-drop.drag-over{border-color:#c9a84c;background:rgba(201,168,76,0.04)}
+.video-drop input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.video-drop-label{font-size:12px;letter-spacing:0.06em;color:var(--txt2);margin-bottom:4px}
+.video-drop-formats{font-size:9px;color:var(--txt3);letter-spacing:0.08em}
+.video-selected{font-size:11px;color:#c9a84c;margin-top:8px;letter-spacing:0.05em;display:none}
+.video-pro-lock{border:1px dashed var(--border);padding:20px;text-align:center;background:var(--bg2)}
+.video-pro-lock-text{font-size:11px;color:var(--txt3);letter-spacing:0.04em;line-height:1.7}
+.video-pro-lock-text a{color:#c9a84c}
+.video-preview{width:100%;margin-top:12px;display:none;background:#000;max-height:200px}
+/* PREVIEW PLAYER */
+.preview-player{background:var(--bg3);border:1px solid var(--border2);padding:14px 16px;margin-bottom:24px;display:none;align-items:center;gap:12px}
+.preview-play{width:32px;height:32px;border-radius:50%;background:var(--red);border:none;color:white;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;transition:background 0.15s}
+.preview-play:hover{background:var(--red2)}
+.preview-info{flex:1;min-width:0}
+.preview-name{font-size:11px;letter-spacing:0.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.preview-time{font-size:9px;color:var(--txt3);margin-top:3px;letter-spacing:0.04em}
+.preview-bar{width:100%;height:2px;background:var(--border2);margin-top:8px;cursor:pointer;position:relative}
+.preview-fill{height:100%;background:var(--red2);width:0%}
+
+/* FORM */
+.form{display:flex;flex-direction:column;gap:18px}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--txt3)}
+.field input,.field textarea,.field select{background:var(--bg3);border:1px solid var(--border2);color:var(--txt);font-family:'DM Mono',monospace;font-size:12px;padding:10px 14px;letter-spacing:0.05em;outline:none;transition:border-color 0.2s;width:100%}
+.field input::placeholder,.field textarea::placeholder{color:var(--txt3)}
+.field input:focus,.field textarea:focus{border-color:var(--red)}
+.field textarea{resize:vertical;min-height:80px;line-height:1.6}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+/* GENRE CHIPS */
+.genre-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.genre-chip{font-size:9px;letter-spacing:0.1em;text-transform:uppercase;padding:4px 12px;border:1px solid var(--border2);color:var(--txt3);cursor:pointer;transition:all 0.15s}
+.genre-chip:hover{border-color:var(--txt3);color:var(--txt2)}
+.genre-chip.active{border-color:var(--red);color:var(--red2);background:rgba(139,0,0,0.08)}
+
+/* SUBMIT */
+.submit-btn{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:0.15em;padding:15px;background:var(--red2);color:white;border:none;cursor:pointer;transition:all 0.15s;margin-top:8px}
+.submit-btn:hover:not(:disabled){background:var(--red3)}
+.submit-btn:disabled{opacity:0.45;cursor:not-allowed}
+
+/* PROGRESS */
+.upload-progress{display:none;flex-direction:column;gap:8px;margin-top:4px}
+.progress-bar{height:2px;background:var(--border2);position:relative;overflow:hidden}
+.progress-fill{height:100%;background:var(--red2);width:0%;transition:width 0.3s}
+.progress-label{font-size:9px;color:var(--txt3);letter-spacing:0.08em;text-align:center}
+
+/* ERROR / SUCCESS */
+.msg{font-size:11px;letter-spacing:0.04em;padding:12px 16px;border:1px solid;display:none;margin-top:4px}
+.msg.error{color:var(--red3);border-color:rgba(139,0,0,0.3);background:rgba(139,0,0,0.08)}
+.msg.success{color:#4caf50;border-color:rgba(76,175,80,0.3);background:rgba(76,175,80,0.06)}
+.msg.visible{display:block}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="/">HEAR ME OUT <span>Underground</span></a>
+  <a class="nav-back" href="/">← Zpět na feed</a>
+</nav>
+
+<div class="page">
+  <div class="page-title">Nahrát track</div>
+  <div class="page-sub">MP3 · WAV · OGG · FLAC · AAC — max. 100 MB</div>
+
+  <!-- DROP ZONE -->
+  <div class="drop-zone" id="dropZone">
+    <input type="file" id="fileInput" accept=".mp3,.wav,.ogg,.flac,.m4a,.aac" onchange="onFileSelected(this)">
+    <div class="drop-icon">♪</div>
+    <div class="drop-label">Přetáhni soubor sem nebo klikni pro výběr</div>
+    <div class="drop-formats">MP3 · WAV · OGG · FLAC · AAC</div>
+    <div class="file-selected" id="fileSelected"></div>
+  </div>
+
+  <!-- PREVIEW PLAYER -->
+  <div class="preview-player" id="previewPlayer">
+    <button class="preview-play" id="previewPlay" onclick="togglePreview()">▶</button>
+    <div style="flex:1;min-width:0">
+      <div class="preview-info">
+        <div class="preview-name" id="previewName">—</div>
+        <div class="preview-time" id="previewTime">0:00 / 0:00</div>
+      </div>
+      <div class="preview-bar" id="previewBar" onclick="seekPreview(event)">
+        <div class="preview-fill" id="previewFill"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COVER IMAGE -->
+  <div class="cover-section">
+    <div class="cover-drop" id="coverDrop">
+      <input type="file" id="coverInput" accept=".jpg,.jpeg,.png,.webp" onchange="onCoverSelected(this)">
+      <div class="cover-placeholder" id="coverPlaceholder">
+        <div class="ci">▣</div>
+        <span>Cover art<br>klikni nebo přetáhni</span>
+      </div>
+      <img class="cover-preview" id="coverPreview" alt="cover">
+    </div>
+    <div class="cover-info">
+      <div class="cover-title">Cover art (volitelné)</div>
+      <ul class="cover-rules">
+        <li>Čtvercový formát</li>
+        <li>JPG, PNG nebo WebP</li>
+      </ul>
+      <div class="cover-error" id="coverError"></div>
+      <div class="cover-ok" id="coverOk"></div>
+    </div>
+  </div>
+
+  <!-- VIDEO -->
+  <div class="video-section" id="videoSection">
+    <div class="cover-title" style="font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--txt3);margin-bottom:8px">Videoklip (volitelné · <span style="color:#c9a84c">PRO</span>)</div>
+    <div id="videoLock" class="video-pro-lock">
+      <div class="video-pro-lock-text">Nahrávání videí je dostupné pouze pro <a href="/pro">PRO uživatele</a>.<br>Upgraduj a přilož k tracku videoklip nebo záběry z živého vystoupení.</div>
+    </div>
+    <div id="videoDrop" class="video-drop" style="display:none">
+      <input type="file" id="videoInput" accept=".mp4,.mov,.webm,.avi" onchange="onVideoSelected(this)">
+      <div class="video-drop-label">🎬 Přetáhni video nebo klikni pro výběr</div>
+      <div class="video-drop-formats">MP4, MOV, WebM · max 500 MB</div>
+      <div class="video-selected" id="videoSelected"></div>
+      <video class="video-preview" id="videoPreview" controls muted playsinline></video>
+    </div>
+  </div>
+
+  <!-- FORM -->
+  <form class="form" id="uploadForm" onsubmit="doUpload(event)">
+
+    <div class="field">
+      <label>Název tracku *</label>
+      <input type="text" id="title" placeholder="Název skladby" required>
+    </div>
+
+    <div class="field">
+      <label>Žánr</label>
+      <input type="text" id="genre" placeholder="Hip-Hop, Techno, Experimental...">
+      <div class="genre-chips">
+        <div class="genre-chip" onclick="setGenre(this,'Hip-Hop')">Hip-Hop</div>
+        <div class="genre-chip" onclick="setGenre(this,'Trap')">Trap</div>
+        <div class="genre-chip" onclick="setGenre(this,'Techno')">Techno</div>
+        <div class="genre-chip" onclick="setGenre(this,'House')">House</div>
+        <div class="genre-chip" onclick="setGenre(this,'Drum & Bass')">Drum & Bass</div>
+        <div class="genre-chip" onclick="setGenre(this,'Ambient')">Ambient</div>
+        <div class="genre-chip" onclick="setGenre(this,'Experimental')">Experimental</div>
+        <div class="genre-chip" onclick="setGenre(this,'Punk')">Punk</div>
+        <div class="genre-chip" onclick="setGenre(this,'Hardcore')">Hardcore</div>
+        <div class="genre-chip" onclick="setGenre(this,'Jazz')">Jazz</div>
+        <div class="genre-chip" onclick="setGenre(this,'Folk')">Folk</div>
+        <div class="genre-chip" onclick="setGenre(this,'R&B')">R&B</div>
+        <div class="genre-chip" onclick="setGenre(this,'Noise')">Noise</div>
+        <div class="genre-chip" onclick="setGenre(this,'Metal')">Metal</div>
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field">
+        <label>Město</label>
+        <input type="text" id="city" placeholder="Praha, Brno, Bratislava...">
+      </div>
+      <div class="field">
+        <label>Trvání (automaticky)</label>
+        <input type="text" id="durationDisplay" placeholder="—" readonly style="color:var(--txt3)">
+        <input type="hidden" id="duration">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Popis / caption</label>
+      <textarea id="caption" placeholder="Pár slov o tracku, kontextu, featuringu..."></textarea>
+    </div>
+
+    <div class="msg error" id="errorMsg"></div>
+    <div class="msg success" id="successMsg"></div>
+
+    <div class="upload-progress" id="uploadProgress">
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="progress-label" id="progressLabel">Nahrávám...</div>
+    </div>
+
+    <button class="submit-btn" type="submit" id="submitBtn" disabled>NAHRÁT TRACK</button>
+  </form>
+</div>
+
+<audio id="previewAudio" preload="auto"></audio>
+
+<script>
+let selectedFile = null;
+let selectedCover = null;
+const previewAudio = document.getElementById('previewAudio');
+
+// ── Auth check + PRO status ───────────────────────────────────────────────────
+let isPro = false;
+let selectedVideo = null;
+fetch('/api/me').then(r => r.ok ? r.json() : null).then(me => {
+  if (!me) { window.location.href = '/login'; return; }
+  isPro = !!me.pro;
+  if (isPro) {
+    document.getElementById('videoLock').style.display = 'none';
+    document.getElementById('videoDrop').style.display = 'block';
+  }
+});
+
+// ── Drag & drop ───────────────────────────────────────────────────────────────
+const dropZone = document.getElementById('dropZone');
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+dropZone.addEventListener('drop', e => {
+  e.preventDefault();
+  dropZone.classList.remove('drag-over');
+  const f = e.dataTransfer.files[0];
+  if (f) loadFile(f);
+});
+
+function onFileSelected(input) {
+  if (input.files[0]) loadFile(input.files[0]);
+}
+
+function loadFile(file) {
+  const allowed = ['audio/mpeg','audio/wav','audio/ogg','audio/flac','audio/x-flac','audio/aac','audio/mp4','audio/x-m4a'];
+  const ext = file.name.split('.').pop().toLowerCase();
+  const allowedExt = ['mp3','wav','ogg','flac','aac','m4a'];
+  if (!allowedExt.includes(ext)) {
+    showMsg('error', 'Nepodporovaný formát. Použij MP3, WAV, OGG, FLAC nebo AAC.');
+    return;
+  }
+  if (ext === 'wav' && !isPro) {
+    showMsg('error', 'WAV nahrávání je dostupné pouze pro <a href="/pro" style="color:var(--gold,#c9a84c)">PRO uživatele</a>. PRO také odemkne nahrávání videí. Nahraj soubor ve formátu MP3.');
+    return;
+  }
+
+  selectedFile = file;
+  document.getElementById('fileSelected').style.display = 'block';
+  document.getElementById('fileSelected').textContent = '✓ ' + file.name + ' (' + fmtSize(file.size) + ')';
+  document.getElementById('submitBtn').disabled = false;
+
+  // auto-fill title from filename
+  const nameWithoutExt = file.name.replace(/\.[^.]+$/, '').replace(/[-_]/g, ' ');
+  if (!document.getElementById('title').value) {
+    document.getElementById('title').value = nameWithoutExt;
+  }
+
+  // preview player
+  const url = URL.createObjectURL(file);
+  previewAudio.src = url;
+  document.getElementById('previewName').textContent = file.name;
+  document.getElementById('previewPlayer').style.display = 'flex';
+
+  previewAudio.addEventListener('loadedmetadata', () => {
+    const d = fmt(previewAudio.duration);
+    document.getElementById('durationDisplay').value = d;
+    document.getElementById('duration').value = d;
+    document.getElementById('previewTime').textContent = '0:00 / ' + d;
+  }, {once: true});
+
+  hideMsg('error');
+}
+
+// ── Preview player ────────────────────────────────────────────────────────────
+function togglePreview() {
+  const btn = document.getElementById('previewPlay');
+  if (previewAudio.paused) { previewAudio.play(); btn.textContent = '▐▐'; }
+  else                     { previewAudio.pause(); btn.textContent = '▶'; }
+}
+
+function seekPreview(e) {
+  if (!previewAudio.duration) return;
+  const rect = document.getElementById('previewBar').getBoundingClientRect();
+  previewAudio.currentTime = ((e.clientX - rect.left) / rect.width) * previewAudio.duration;
+}
+
+previewAudio.addEventListener('timeupdate', () => {
+  if (!previewAudio.duration) return;
+  const pct = previewAudio.currentTime / previewAudio.duration;
+  document.getElementById('previewFill').style.width = (pct * 100) + '%';
+  document.getElementById('previewTime').textContent = fmt(previewAudio.currentTime) + ' / ' + fmt(previewAudio.duration);
+});
+previewAudio.addEventListener('ended', () => {
+  document.getElementById('previewPlay').textContent = '▶';
+});
+
+// ── Cover image ───────────────────────────────────────────────────────────────
+const coverDrop = document.getElementById('coverDrop');
+coverDrop.addEventListener('dragover', e => { e.preventDefault(); coverDrop.classList.add('drag-over'); });
+coverDrop.addEventListener('dragleave', () => coverDrop.classList.remove('drag-over'));
+coverDrop.addEventListener('drop', e => {
+  e.preventDefault();
+  coverDrop.classList.remove('drag-over');
+  const f = e.dataTransfer.files[0];
+  if (f) loadCover(f);
+});
+
+function onCoverSelected(input) {
+  if (input.files[0]) loadCover(input.files[0]);
+}
+
+function loadCover(file) {
+  const ext = file.name.split('.').pop().toLowerCase();
+  if (!['jpg','jpeg','png','webp'].includes(ext)) {
+    showCoverError('Nepodporovaný formát. Použij JPG, PNG nebo WebP.');
+    return;
+  }
+
+  const img = new Image();
+  const url = URL.createObjectURL(file);
+  img.onload = () => {
+    if (img.width !== img.height) {
+      showCoverError(`Obrázek musí být čtvercový (tvůj: ${img.width}×${img.height} px).`);
+      URL.revokeObjectURL(url);
+      return;
+    }
+
+    selectedCover = file;
+    document.getElementById('coverError').style.display = 'none';
+    document.getElementById('coverOk').style.display = 'block';
+    document.getElementById('coverOk').textContent = `✓ ${img.width}×${img.height} px · ${fmtSize(file.size)}`;
+    const preview = document.getElementById('coverPreview');
+    preview.src = url;
+    preview.style.display = 'block';
+    document.getElementById('coverPlaceholder').style.display = 'none';
+  };
+  img.src = url;
+}
+
+function showCoverError(msg) {
+  selectedCover = null;
+  document.getElementById('coverPreview').style.display = 'none';
+  document.getElementById('coverPlaceholder').style.display = 'flex';
+  document.getElementById('coverOk').style.display = 'none';
+  const el = document.getElementById('coverError');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+// ── Video upload ──────────────────────────────────────────────────────────────
+function onVideoSelected(input) {
+  if (input.files[0]) loadVideo(input.files[0]);
+}
+
+function loadVideo(file) {
+  const ext = file.name.split('.').pop().toLowerCase();
+  if (!['mp4','mov','webm','avi'].includes(ext)) {
+    alert('Nepodporovaný formát. Použij MP4, MOV nebo WebM.');
+    return;
+  }
+  if (file.size > 500 * 1024 * 1024) {
+    alert('Video je příliš velké. Maximum je 500 MB.');
+    return;
+  }
+  selectedVideo = file;
+  const el = document.getElementById('videoSelected');
+  el.style.display = 'block';
+  el.textContent = '✓ ' + file.name + ' (' + fmtSize(file.size) + ')';
+  const preview = document.getElementById('videoPreview');
+  preview.src = URL.createObjectURL(file);
+  preview.style.display = 'block';
+}
+
+// ── Genre chips ───────────────────────────────────────────────────────────────
+function setGenre(chip, genre) {
+  document.querySelectorAll('.genre-chip').forEach(c => c.classList.remove('active'));
+  const input = document.getElementById('genre');
+  if (input.value === genre) {
+    input.value = '';
+  } else {
+    input.value = genre;
+    chip.classList.add('active');
+  }
+}
+
+document.getElementById('genre').addEventListener('input', () => {
+  document.querySelectorAll('.genre-chip').forEach(c => c.classList.remove('active'));
+});
+
+// ── Upload ────────────────────────────────────────────────────────────────────
+async function doUpload(e) {
+  e.preventDefault();
+  if (!selectedFile) { showMsg('error', 'Vyber audio soubor.'); return; }
+
+  hideMsg('error');
+  hideMsg('success');
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = 'NAHRÁVÁM...';
+
+  document.getElementById('uploadProgress').style.display = 'flex';
+
+  const form = new FormData();
+  form.append('file',     selectedFile);
+  form.append('title',    document.getElementById('title').value.trim());
+  form.append('genre',    document.getElementById('genre').value.trim());
+  form.append('city',     document.getElementById('city').value.trim());
+  form.append('caption',  document.getElementById('caption').value.trim());
+  form.append('duration', document.getElementById('duration').value.trim());
+  if (selectedCover) form.append('cover', selectedCover);
+  if (selectedVideo) form.append('video', selectedVideo);
+
+  // XHR for progress
+  const xhr = new XMLHttpRequest();
+
+  xhr.upload.addEventListener('progress', ev => {
+    if (ev.lengthComputable) {
+      const pct = Math.round((ev.loaded / ev.total) * 100);
+      document.getElementById('progressFill').style.width = pct + '%';
+      document.getElementById('progressLabel').textContent = `Nahrávám... ${pct}%`;
+    }
+  });
+
+  xhr.addEventListener('load', () => {
+    let data;
+    try { data = JSON.parse(xhr.responseText); } catch { data = {}; }
+
+    document.getElementById('uploadProgress').style.display = 'none';
+
+    if (xhr.status === 200 && data.ok) {
+      showMsg('success', 'Track úspěšně nahrán! Přesměrovávám na feed...');
+      previewAudio.pause();
+      setTimeout(() => window.location.href = '/', 1800);
+    } else {
+      showMsg('error', data.error || 'Chyba nahrávání, zkus znovu.');
+      btn.disabled = false;
+      btn.textContent = 'NAHRÁT TRACK';
+    }
+  });
+
+  xhr.addEventListener('error', () => {
+    document.getElementById('uploadProgress').style.display = 'none';
+    showMsg('error', 'Síťová chyba, zkus znovu.');
+    btn.disabled = false;
+    btn.textContent = 'NAHRÁT TRACK';
+  });
+
+  xhr.open('POST', '/api/upload');
+  xhr.send(form);
+}
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+function fmt(s) {
+  if (!s || isNaN(s)) return '0:00';
+  return Math.floor(s/60) + ':' + String(Math.floor(s%60)).padStart(2,'0');
+}
+function fmtSize(bytes) {
+  if (bytes < 1024*1024) return (bytes/1024).toFixed(1) + ' KB';
+  return (bytes/1024/1024).toFixed(1) + ' MB';
+}
+function showMsg(type, text) {
+  const el = document.getElementById(type === 'error' ? 'errorMsg' : 'successMsg');
+  el.innerHTML = text;
+  el.classList.add('visible');
+}
+function hideMsg(type) {
+  document.getElementById(type === 'error' ? 'errorMsg' : 'successMsg').classList.remove('visible');
+}
+</script>
+
+<script>if("serviceWorker"in navigator)navigator.serviceWorker.register("/sw.js");</script>
+</body>
+</html>

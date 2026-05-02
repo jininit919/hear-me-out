@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#000000">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Hear Me Out">
+<link rel="apple-touch-icon" href="/icons/icon-192.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hear Me Out — Scanner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#000;--bg2:#080808;--bg3:#101010;--bg4:#181818;
+  --red:#8b0000;--red2:#b20000;--red3:#cc0000;
+  --txt:#e8e8e8;--txt2:#888;--txt3:#444;
+  --border:#1a1a1a;--border2:#222;
+  --green:#4ade80;
+}
+body{background:var(--bg);color:var(--txt);font-family:'DM Mono',monospace;min-height:100vh}
+a{color:inherit;text-decoration:none}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(0,0,0,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;height:54px;gap:16px}
+.nav-brand{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:0.15em;color:var(--red2)}
+.nav-title{font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--txt3)}
+.nav-back{margin-left:auto;font-size:10px;letter-spacing:0.08em;color:var(--txt3);transition:color 0.15s}
+.nav-back:hover{color:var(--red2)}
+
+.page{max-width:480px;margin:0 auto;padding:74px 24px 60px;display:flex;flex-direction:column;align-items:center;gap:20px}
+
+/* CAMERA */
+.cam-wrap{position:relative;width:100%;max-width:340px;aspect-ratio:1;background:var(--bg3);overflow:hidden;border:1px solid var(--border2)}
+#camVideo{width:100%;height:100%;object-fit:cover;display:block}
+.cam-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
+.cam-frame{width:60%;aspect-ratio:1;border:2px solid rgba(255,255,255,0.3);position:relative}
+.cam-frame::before,.cam-frame::after{content:'';position:absolute;width:18px;height:18px;border-color:var(--red2);border-style:solid}
+.cam-frame::before{top:-2px;left:-2px;border-width:2px 0 0 2px}
+.cam-frame::after{bottom:-2px;right:-2px;border-width:0 2px 2px 0}
+.cam-frame .corner-tr{position:absolute;top:-2px;right:-2px;width:18px;height:18px;border-top:2px solid var(--red2);border-right:2px solid var(--red2)}
+.cam-frame .corner-bl{position:absolute;bottom:-2px;left:-2px;width:18px;height:18px;border-bottom:2px solid var(--red2);border-left:2px solid var(--red2)}
+.cam-scan-line{position:absolute;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--red2),transparent);animation:scan 2s linear infinite}
+@keyframes scan{0%{top:0}100%{top:100%}}
+
+.cam-hint{font-size:10px;letter-spacing:0.1em;color:var(--txt3);text-align:center;text-transform:uppercase}
+
+/* RESULT */
+.result{width:100%;max-width:340px;border:1px solid var(--border2);background:var(--bg2);padding:20px;display:none}
+.result.show{display:block}
+.result-status{display:flex;align-items:center;gap:8px;font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:0.1em;margin-bottom:14px}
+.result-status.valid{color:var(--green)}
+.result-status.used{color:var(--txt3)}
+.result-status.error{color:var(--red2)}
+.result-row{font-size:12px;letter-spacing:0.04em;color:var(--txt2);margin-bottom:6px;display:flex;gap:8px}
+.result-row .lbl{color:var(--txt3);flex-shrink:0;width:70px}
+.result-code{font-size:10px;letter-spacing:0.14em;color:var(--txt3);margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
+
+.use-btn{width:100%;margin-top:14px;font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:0.14em;padding:12px;background:var(--green);color:#000;border:none;cursor:pointer;transition:opacity 0.15s}
+.use-btn:hover{opacity:0.85}
+.use-btn:disabled{opacity:0.4;cursor:default}
+
+.rescan-btn{width:100%;margin-top:10px;font-family:'Bebas Neue',sans-serif;font-size:12px;letter-spacing:0.14em;padding:10px;background:var(--bg3);color:var(--txt3);border:1px solid var(--border2);cursor:pointer;transition:all 0.15s}
+.rescan-btn:hover{color:var(--txt);border-color:var(--txt3)}
+
+/* MANUAL INPUT */
+.manual{width:100%;max-width:340px}
+.manual-label{font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:var(--txt3);margin-bottom:6px}
+.manual-row{display:flex;gap:8px}
+.manual-input{flex:1;background:var(--bg3);border:1px solid var(--border2);color:var(--txt);font-family:'DM Mono',monospace;font-size:12px;padding:9px 12px;outline:none;letter-spacing:0.08em;text-transform:uppercase;transition:border-color 0.2s}
+.manual-input:focus{border-color:var(--red)}
+.manual-input::placeholder{text-transform:none;letter-spacing:0.04em}
+.manual-btn{font-family:'Bebas Neue',sans-serif;font-size:12px;letter-spacing:0.1em;padding:9px 16px;background:var(--red2);color:#fff;border:none;cursor:pointer;transition:background 0.15s;flex-shrink:0}
+.manual-btn:hover{background:var(--red3)}
+
+.no-cam{font-size:11px;color:var(--txt3);letter-spacing:0.04em;text-align:center;padding:28px;border:1px dashed var(--border2);width:100%;max-width:340px;line-height:1.8}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-brand">HEAR ME OUT</a>
+  <div class="nav-title">Scanner</div>
+  <a href="/" class="nav-back">← Feed</a>
+</nav>
+
+<div class="page">
+
+  <div class="cam-wrap" id="camWrap">
+    <video id="camVideo" autoplay muted playsinline></video>
+    <div class="cam-overlay">
+      <div class="cam-frame">
+        <div class="corner-tr"></div>
+        <div class="corner-bl"></div>
+        <div class="cam-scan-line"></div>
+      </div>
+    </div>
+  </div>
+  <div class="cam-hint">Namiř kameru na QR kód vstupenky</div>
+
+  <canvas id="camCanvas" style="display:none"></canvas>
+
+  <div class="result" id="result">
+    <div class="result-status" id="resultStatus"></div>
+    <div id="resultBody"></div>
+    <div class="result-code" id="resultCode"></div>
+    <button class="use-btn" id="useBtn" style="display:none" onclick="markUsed()">✓ Označit jako použitou</button>
+    <button class="rescan-btn" onclick="rescan()">↺ Skenovat další</button>
+  </div>
+
+  <div class="manual">
+    <div class="manual-label">Nebo zadej kód ručně</div>
+    <div class="manual-row">
+      <input class="manual-input" id="manualInput" placeholder="např. A1B2C3D4E5F6G7H8" maxlength="32">
+      <button class="manual-btn" onclick="verifyCode(document.getElementById('manualInput').value.trim())">Ověřit</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function esc(s){ const d=document.createElement('div');d.textContent=s||'';return d.innerHTML; }
+
+let scanning = true;
+let lastCode = null;
+let ticketData = null;
+
+// ── Camera ────────────────────────────────────────────────────────────────────
+async function startCamera() {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: 'environment', width: { ideal: 640 }, height: { ideal: 640 } }
+    });
+    const video = document.getElementById('camVideo');
+    video.srcObject = stream;
+    video.play();
+    requestAnimationFrame(tick);
+  } catch (e) {
+    document.getElementById('camWrap').innerHTML =
+      '<div class="no-cam">Kamera není dostupná.<br>Použij ruční zadání kódu níže.</div>';
+  }
+}
+
+function tick() {
+  if (!scanning) return;
+  const video = document.getElementById('camVideo');
+  if (video.readyState !== video.HAVE_ENOUGH_DATA) { requestAnimationFrame(tick); return; }
+  const canvas = document.getElementById('camCanvas');
+  canvas.width  = video.videoWidth;
+  canvas.height = video.videoHeight;
+  const ctx = canvas.getContext('2d');
+  ctx.drawImage(video, 0, 0);
+  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  const qr = jsQR(imageData.data, imageData.width, imageData.height, { inversionAttempts: 'dontInvert' });
+  if (qr && qr.data && qr.data !== lastCode) {
+    lastCode = qr.data;
+    verifyCode(qr.data);
+    return;
+  }
+  requestAnimationFrame(tick);
+}
+
+// ── Verify ────────────────────────────────────────────────────────────────────
+async function verifyCode(code) {
+  if (!code) return;
+  scanning = false;
+  lastCode = code;
+
+  const res = await fetch(`/api/ticket/${encodeURIComponent(code)}`);
+  const result = document.getElementById('result');
+  result.classList.add('show');
+
+  if (res.status === 401) { window.location.href = '/login'; return; }
+
+  if (!res.ok) {
+    showResult('error', '✕ Neplatná vstupenka', null, code);
+    return;
+  }
+
+  ticketData = await res.json();
+
+  if (ticketData.status === 'used') {
+    showResult('used', '✕ Použito', ticketData, code);
+  } else if (ticketData.status === 'valid' || ticketData.status === 'paid') {
+    showResult('valid', '✓ Platná', ticketData, code);
+    if (ticketData.is_owner) {
+      document.getElementById('useBtn').style.display = 'block';
+    }
+  } else {
+    showResult('error', `✕ Stav: ${ticketData.status}`, ticketData, code);
+  }
+}
+
+function showResult(type, label, t, code) {
+  document.getElementById('resultStatus').className = `result-status ${type}`;
+  document.getElementById('resultStatus').textContent = label;
+  document.getElementById('resultCode').textContent = code;
+  document.getElementById('useBtn').style.display = 'none';
+
+  if (!t) {
+    document.getElementById('resultBody').innerHTML =
+      '<div class="result-row"><span class="lbl">Chyba</span> Vstupenka nenalezena v systému.</div>';
+    return;
+  }
+
+  const dateStr = t.event_date
+    ? new Date(t.event_date).toLocaleDateString('cs-CZ', {day:'numeric', month:'long', year:'numeric'})
+    : '';
+
+  document.getElementById('resultBody').innerHTML = `
+    <div class="result-row"><span class="lbl">Akce</span>${esc(t.event_title)}</div>
+    ${dateStr ? `<div class="result-row"><span class="lbl">Datum</span>${dateStr}${t.event_time ? ' · '+esc(t.event_time) : ''}</div>` : ''}
+    ${t.event_venue||t.event_city ? `<div class="result-row"><span class="lbl">Místo</span>${esc(t.event_venue||'')}${t.event_venue && t.event_city ? ', ' : ''}${esc(t.event_city||'')}</div>` : ''}
+    <div class="result-row"><span class="lbl">Držitel</span>${esc(t.holder)} <span style="color:var(--txt3)">@${esc(t.holder_user)}</span></div>
+    ${t.status === 'used' ? '<div class="result-row" style="color:var(--txt3);margin-top:6px">Tato vstupenka již byla použita.</div>' : ''}
+    ${!t.is_owner && type === 'valid' ? '<div class="result-row" style="color:var(--txt3);margin-top:6px">Nejsi organizátor — označení není dostupné.</div>' : ''}
+  `;
+}
+
+async function markUsed() {
+  if (!lastCode) return;
+  const btn = document.getElementById('useBtn');
+  btn.disabled = true;
+  btn.textContent = 'Označuji...';
+  const res = await fetch(`/api/ticket/${encodeURIComponent(lastCode)}/use`, { method: 'POST' });
+  if (res.status === 409) {
+    showResult('used', '✕ Použito', ticketData, lastCode);
+    return;
+  }
+  if (res.ok) {
+    document.getElementById('resultStatus').className = 'result-status valid';
+    document.getElementById('resultStatus').textContent = '✓ Označeno jako použité';
+    btn.style.display = 'none';
+  } else {
+    const d = await res.json();
+    btn.disabled = false;
+    btn.textContent = '✓ Označit jako použitou';
+    alert(d.error || 'Chyba');
+  }
+}
+
+function rescan() {
+  scanning = true;
+  lastCode = null;
+  ticketData = null;
+  document.getElementById('result').classList.remove('show');
+  document.getElementById('useBtn').style.display = 'none';
+  document.getElementById('manualInput').value = '';
+  requestAnimationFrame(tick);
+}
+
+document.getElementById('manualInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') verifyCode(e.target.value.trim());
+});
+
+startCamera();
+</script>
+<script>if("serviceWorker"in navigator)navigator.serviceWorker.register("/sw.js");</script>
+</body>
+</html>

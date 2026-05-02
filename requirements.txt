@@ -1,0 +1,7 @@
+flask
+flask-limiter
+werkzeug
+resend
+stripe
+boto3
+gunicorn

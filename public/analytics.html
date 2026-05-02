@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#000000">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Hear Me Out">
+<link rel="apple-touch-icon" href="/icons/icon-192.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hear Me Out — Analytika</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#000;--bg2:#080808;--bg3:#101010;--bg4:#181818;
+  --red:#8b0000;--red2:#b20000;--red3:#cc0000;
+  --txt:#e8e8e8;--txt2:#888;--txt3:#444;
+  --border:#1a1a1a;--border2:#222;--gold:#c9a84c;--gold2:#e8c96c;
+}
+body{background:var(--bg);color:var(--txt);font-family:'DM Mono',monospace;min-height:100vh}
+a{color:inherit;text-decoration:none}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:var(--red)}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(0,0,0,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;height:54px;gap:16px}
+.nav-brand{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:0.15em;color:var(--red2)}
+.nav-title{font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--txt3)}
+.nav-pro{font-size:9px;letter-spacing:0.12em;background:linear-gradient(90deg,#7a5c1e,#c9a84c);color:#000;padding:2px 7px;font-family:'Bebas Neue',sans-serif}
+.nav-back{margin-left:auto;font-size:10px;letter-spacing:0.08em;color:var(--txt3);transition:color 0.15s}
+.nav-back:hover{color:var(--red2)}
+
+.page{max-width:1100px;margin:0 auto;padding:74px 24px 60px}
+
+/* OVERVIEW CARDS */
+.overview{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:32px}
+@media(max-width:800px){.overview{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:500px){.overview{grid-template-columns:repeat(2,1fr)}}
+.ov-card{background:var(--bg2);border:1px solid var(--border2);padding:18px 16px}
+.ov-card.gold{border-color:rgba(201,168,76,0.3)}
+.ov-val{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:0.05em;line-height:1;margin-bottom:4px}
+.ov-card.gold .ov-val{color:var(--gold)}
+.ov-lbl{font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--txt3)}
+
+/* GRID */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+@media(max-width:700px){.grid2{grid-template-columns:1fr}}
+.grid3{display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:16px}
+@media(max-width:700px){.grid3{grid-template-columns:1fr}}
+
+.panel{background:var(--bg2);border:1px solid var(--border2);padding:20px}
+.panel-title{font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--txt3);margin-bottom:16px;display:flex;align-items:center;justify-content:space-between}
+.panel-title span{color:var(--txt2);font-size:9px;letter-spacing:0.06em;text-transform:none}
+
+/* BAR CHART */
+.chart{display:flex;align-items:flex-end;gap:3px;height:80px;overflow:hidden}
+.chart-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;min-width:0}
+.chart-bar{width:100%;background:var(--red2);border-radius:1px 1px 0 0;transition:height 0.3s ease;min-height:2px}
+.chart-bar:hover{background:var(--red3)}
+.chart-label{font-size:7px;color:var(--txt3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;text-align:center}
+.chart-empty{font-size:11px;color:var(--txt3);letter-spacing:0.04em;padding:20px 0;text-align:center;width:100%}
+
+/* CITIES */
+.city-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.city-name{font-size:12px;letter-spacing:0.04em;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.city-bar-wrap{flex:2;height:4px;background:var(--bg4);border-radius:2px;overflow:hidden}
+.city-bar{height:100%;background:var(--gold);border-radius:2px;transition:width 0.4s ease}
+.city-count{font-size:11px;color:var(--txt3);width:28px;text-align:right;flex-shrink:0}
+
+/* TRACKS TABLE */
+.track-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)}
+.track-row:last-child{border-bottom:none}
+.track-cover{width:36px;height:36px;background:var(--bg4);flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--txt3)}
+.track-cover img{width:100%;height:100%;object-fit:cover}
+.track-name{flex:1;font-size:12px;letter-spacing:0.03em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.track-stats{display:flex;gap:14px;flex-shrink:0}
+.track-stat{font-size:11px;color:var(--txt3);letter-spacing:0.04em;display:flex;align-items:center;gap:4px;white-space:nowrap}
+.track-stat .ic{font-size:10px}
+
+/* FANS */
+.fan-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)}
+.fan-row:last-child{border-bottom:none}
+.fan-avatar{width:32px;height:32px;border-radius:50%;background:var(--bg4);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--txt2);overflow:hidden}
+.fan-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.fan-info{flex:1;min-width:0}
+.fan-name{font-size:12px;letter-spacing:0.03em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fan-detail{font-size:10px;color:var(--txt3);letter-spacing:0.03em;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fan-action{font-size:9px;letter-spacing:0.08em;padding:2px 7px;border-radius:1px;flex-shrink:0}
+.fan-action.like{background:rgba(139,0,0,0.2);color:var(--red3)}
+.fan-action.repost{background:rgba(74,222,128,0.1);color:#4ade80}
+.fan-time{font-size:10px;color:var(--txt3);flex-shrink:0;white-space:nowrap}
+
+.empty{font-size:11px;color:var(--txt3);letter-spacing:0.04em;padding:16px 0;text-align:center}
+
+.pro-lock{background:var(--bg2);border:1px solid rgba(201,168,76,0.3);padding:40px;text-align:center;margin-top:60px}
+.pro-lock-title{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:0.1em;color:var(--gold);margin-bottom:8px}
+.pro-lock-sub{font-size:12px;color:var(--txt2);letter-spacing:0.04em;margin-bottom:20px;line-height:1.7}
+.pro-lock-btn{font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:0.15em;padding:14px 32px;background:var(--gold);color:#000;border:none;cursor:pointer;text-decoration:none;display:inline-block}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-brand">HEAR ME OUT</a>
+  <div class="nav-title">Analytika</div>
+  <div class="nav-pro">★ PRO</div>
+  <a href="/" class="nav-back">← Feed</a>
+</nav>
+
+<div class="page" id="page">
+  <div style="text-align:center;padding:60px 0;color:var(--txt3);font-size:12px">Načítám data...</div>
+</div>
+
+<script>
+function esc(s){ const d=document.createElement('div');d.textContent=s||'';return d.innerHTML; }
+
+async function init() {
+  const res  = await fetch('/api/analytics');
+  const page = document.getElementById('page');
+
+  if (res.status === 401) {
+    window.location.href = '/login'; return;
+  }
+  if (res.status === 403) {
+    page.innerHTML = `
+      <div class="pro-lock">
+        <div class="pro-lock-title">★ Analytika je PRO funkce</div>
+        <div class="pro-lock-sub">Zjisti z jakých měst jsou tví posluchači, kdo si přehrál tvoje tracky<br>a kdo tě sdílí dál. Dostupné s předplatným Hear Me Out PRO.</div>
+        <a href="/pro" class="pro-lock-btn">Přejít na PRO</a>
+      </div>`;
+    return;
+  }
+
+  const d = await res.json();
+  if (d.error) { page.innerHTML = `<div class="empty">${esc(d.error)}</div>`; return; }
+
+  page.innerHTML = buildPage(d);
+}
+
+function buildPage(d) {
+  const ov = d.overview;
+  return `
+    <!-- OVERVIEW -->
+    <div class="overview">
+      <div class="ov-card gold"><div class="ov-val">${ov.total_plays.toLocaleString()}</div><div class="ov-lbl">Přehrání celkem</div></div>
+      <div class="ov-card"><div class="ov-val">${ov.total_likes.toLocaleString()}</div><div class="ov-lbl">Liků celkem</div></div>
+      <div class="ov-card"><div class="ov-val">${ov.total_reposts.toLocaleString()}</div><div class="ov-lbl">Repostů</div></div>
+      <div class="ov-card"><div class="ov-val">${ov.total_followers.toLocaleString()}</div><div class="ov-lbl">Followerů</div></div>
+      <div class="ov-card"><div class="ov-val">${ov.track_count}</div><div class="ov-lbl">Tracků</div></div>
+    </div>
+
+    <!-- CHART + CITIES -->
+    <div class="grid3">
+      <div class="panel">
+        <div class="panel-title">Přehrání — posledních 30 dní <span>${d.plays_by_day.reduce((a,x)=>a+x.count,0)} přehrání</span></div>
+        ${buildChart(d.plays_by_day)}
+      </div>
+      <div class="panel">
+        <div class="panel-title">Top města posluchačů</div>
+        ${buildCities(d.top_cities)}
+      </div>
+    </div>
+
+    <!-- TRACKS + FANS -->
+    <div class="grid2">
+      <div class="panel">
+        <div class="panel-title">Tracky <span>${d.tracks.length} celkem</span></div>
+        ${buildTracks(d.tracks)}
+      </div>
+      <div class="panel">
+        <div class="panel-title">Nedávní fanoušci</div>
+        ${buildFans(d.recent_fans)}
+      </div>
+    </div>
+  `;
+}
+
+function buildChart(days) {
+  if (!days.length) return '<div class="chart-empty">Zatím žádná data</div>';
+  // fill missing days
+  const map = {};
+  days.forEach(d => map[d.date] = d.count);
+  const all = [];
+  for (let i = 29; i >= 0; i--) {
+    const dt = new Date(); dt.setDate(dt.getDate() - i);
+    const key = dt.toISOString().slice(0,10);
+    all.push({ date: key, count: map[key] || 0 });
+  }
+  const max = Math.max(...all.map(d => d.count), 1);
+  const bars = all.map(d => {
+    const h = Math.max(2, Math.round((d.count / max) * 76));
+    const lbl = d.date.slice(5); // MM-DD
+    return `<div class="chart-bar-wrap" title="${d.date}: ${d.count} přehrání">
+      <div class="chart-bar" style="height:${h}px"></div>
+      ${d.date.endsWith('-01') || d.date.slice(8)==='01' ? `<div class="chart-label">${lbl}</div>` : '<div class="chart-label"></div>'}
+    </div>`;
+  }).join('');
+  return `<div class="chart">${bars}</div>`;
+}
+
+function buildCities(cities) {
+  if (!cities.length) return '<div class="empty">Zatím žádná data</div>';
+  const max = cities[0].count;
+  return cities.map(c => `
+    <div class="city-row">
+      <div class="city-name">${esc(c.city)}</div>
+      <div class="city-bar-wrap"><div class="city-bar" style="width:${Math.round(c.count/max*100)}%"></div></div>
+      <div class="city-count">${c.count}</div>
+    </div>`).join('');
+}
+
+function buildTracks(tracks) {
+  if (!tracks.length) return '<div class="empty">Žádné tracky</div>';
+  return tracks.map(t => `
+    <div class="track-row">
+      <div class="track-cover">${t.cover ? `<img src="/uploads/${esc(t.cover)}">` : '♪'}</div>
+      <div class="track-name">${esc(t.title)}</div>
+      <div class="track-stats">
+        <div class="track-stat"><span class="ic">▶</span>${t.play_count}</div>
+        <div class="track-stat"><span class="ic">♥</span>${t.like_count}</div>
+        <div class="track-stat"><span class="ic">↺</span>${t.repost_count}</div>
+      </div>
+    </div>`).join('');
+}
+
+function buildFans(fans) {
+  if (!fans.length) return '<div class="empty">Zatím žádní fanoušci</div>';
+  return fans.map(f => {
+    const ini = (f.display_name || '?').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+    const av  = f.avatar ? `<img src="${esc(f.avatar)}">` : ini;
+    const action = f.action === 'like'
+      ? '<span class="fan-action like">♥ like</span>'
+      : '<span class="fan-action repost">↺ repost</span>';
+    return `
+    <div class="fan-row">
+      <a href="/profile/${esc(f.username)}" class="fan-avatar">${av}</a>
+      <div class="fan-info">
+        <div class="fan-name"><a href="/profile/${esc(f.username)}">${esc(f.display_name)}</a></div>
+        <div class="fan-detail">${esc(f.track_title)}</div>
+      </div>
+      ${action}
+      <div class="fan-time">${esc(f.created_at)}</div>
+    </div>`;
+  }).join('');
+}
+
+init();
+</script>
+<script>if("serviceWorker"in navigator)navigator.serviceWorker.register("/sw.js");</script>
+</body>
+</html>

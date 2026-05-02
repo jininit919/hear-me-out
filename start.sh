@@ -1,0 +1,9 @@
+#!/bin/bash
+cd "$(dirname "$0")"
+
+export RESEND_API_KEY=re_X5bjYdRS_9VTdwZWMEVPq7MohqcVK3pt3
+export STRIPE_SECRET_KEY=sk_test_51TSHDLKo7kqoQZN89SJ55HrhAjaA2LXOOT1Q2ugan8qGQFaKcxevtcQ229pMNoufVSNhUda8UFJ4fXlceZEbezh100Gha2hFL0
+export STRIPE_PUBLIC_KEY=pk_test_51TSHDLKo7kqoQZN8sp87sbexZfZ40aZs0QTixmMhbkgXz5ER7rtglqpMucoI2K8718kFNFDJX32WmJIGvnRxjPaU00KDThIan1
+export STRIPE_PRO_PRICE_ID=price_1TSOXxKo7kqoQZN8czJO8TYR
+
+python3 server.py

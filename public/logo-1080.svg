@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" width="1080" height="1080">
+  <defs>
+    <linearGradient id="barGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#cc2200"/>
+      <stop offset="100%" stop-color="#7a0000"/>
+    </linearGradient>
+    <linearGradient id="centerGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ff3300"/>
+      <stop offset="100%" stop-color="#8b0000"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1080" height="1080" fill="#000000"/>
+
+  <!-- Subtle grid texture -->
+  <line x1="0" y1="540" x2="1080" y2="540" stroke="#111" stroke-width="1"/>
+  <line x1="540" y1="0" x2="540" y2="1080" stroke="#111" stroke-width="1"/>
+
+  <!-- Waveform bars — centered at 540,430 -->
+  <!-- bar 1 -->
+  <rect x="310" y="390" width="52" height="80"  rx="10" fill="url(#barGrad)" opacity="0.85"/>
+  <!-- bar 2 -->
+  <rect x="382" y="340" width="52" height="180" rx="10" fill="url(#barGrad)" opacity="0.9"/>
+  <!-- bar 3 -->
+  <rect x="454" y="280" width="52" height="300" rx="10" fill="url(#centerGrad)"/>
+  <!-- bar 4 (center, tallest) -->
+  <rect x="514" y="230" width="52" height="400" rx="10" fill="url(#centerGrad)"/>
+  <!-- bar 5 -->
+  <rect x="574" y="280" width="52" height="300" rx="10" fill="url(#centerGrad)"/>
+  <!-- bar 6 -->
+  <rect x="646" y="340" width="52" height="180" rx="10" fill="url(#barGrad)" opacity="0.9"/>
+  <!-- bar 7 -->
+  <rect x="718" y="390" width="52" height="80"  rx="10" fill="url(#barGrad)" opacity="0.85"/>
+
+</svg>
