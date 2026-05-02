@@ -696,6 +696,33 @@ def logout():
     return jsonify({'ok': True})
 
 
+@app.route('/api/artists')
+def browse_artists():
+    q      = request.args.get('q', '').strip()
+    offset = max(0, int(request.args.get('offset', 0)))
+    limit  = min(24, int(request.args.get('limit', 24)))
+    conn   = get_db()
+    if q:
+        like = f'%{q}%'
+        rows = conn.execute('''
+            SELECT id, username, display_name, city, genres, avatar, emoji
+            FROM users WHERE display_name LIKE ? OR username LIKE ? OR city LIKE ? OR genres LIKE ?
+            ORDER BY display_name ASC LIMIT ? OFFSET ?
+        ''', (like, like, like, like, limit, offset)).fetchall()
+    else:
+        rows = conn.execute('''
+            SELECT id, username, display_name, city, genres, avatar, emoji
+            FROM users ORDER BY id DESC LIMIT ? OFFSET ?
+        ''', (limit, offset)).fetchall()
+    conn.close()
+    return jsonify([{
+        'id': r['id'], 'username': r['username'], 'display_name': r['display_name'],
+        'city': r['city'] or '', 'genres': r['genres'] or '',
+        'emoji': r['emoji'] or '',
+        'avatar': f'/uploads/{r["avatar"]}' if r['avatar'] else '',
+    } for r in rows])
+
+
 @app.route('/api/search')
 def global_search():
     q = request.args.get('q', '').strip()
