@@ -696,6 +696,57 @@ def logout():
     return jsonify({'ok': True})
 
 
+@app.route('/api/search')
+def global_search():
+    q = request.args.get('q', '').strip()
+    if len(q) < 2:
+        return jsonify({'tracks': [], 'artists': [], 'events': [], 'listings': []})
+    conn = get_db()
+    like = f'%{q}%'
+
+    tracks = conn.execute('''
+        SELECT t.id, t.title, t.genre, u.username, u.display_name, t.cover
+        FROM tracks t JOIN users u ON u.id = t.user_id
+        WHERE t.title LIKE ? OR t.genre LIKE ? OR u.display_name LIKE ? OR u.username LIKE ?
+        ORDER BY t.created_at DESC LIMIT 6
+    ''', (like, like, like, like)).fetchall()
+
+    artists = conn.execute('''
+        SELECT id, username, display_name, city, avatar
+        FROM users
+        WHERE display_name LIKE ? OR username LIKE ? OR city LIKE ?
+        LIMIT 6
+    ''', (like, like, like)).fetchall()
+
+    events = conn.execute('''
+        SELECT e.id, e.title, e.date, e.city, e.genre
+        FROM events e
+        WHERE e.title LIKE ? OR e.city LIKE ? OR e.genre LIKE ?
+        ORDER BY e.date ASC LIMIT 6
+    ''', (like, like, like)).fetchall()
+
+    listings = conn.execute('''
+        SELECT id, title, price, currency, city
+        FROM listings
+        WHERE (title LIKE ? OR city LIKE ?) AND status = "active"
+        LIMIT 6
+    ''', (like, like)).fetchall()
+
+    conn.close()
+    return jsonify({
+        'tracks':   [{'id': r['id'], 'title': r['title'], 'genre': r['genre'] or '',
+                      'username': r['username'], 'display_name': r['display_name'],
+                      'cover': f'/uploads/{r["cover"]}' if r['cover'] else ''} for r in tracks],
+        'artists':  [{'id': r['id'], 'username': r['username'], 'display_name': r['display_name'],
+                      'city': r['city'] or '',
+                      'avatar': f'/uploads/{r["avatar"]}' if r['avatar'] else ''} for r in artists],
+        'events':   [{'id': r['id'], 'title': r['title'], 'date': r['date'],
+                      'city': r['city'] or '', 'genre': r['genre'] or ''} for r in events],
+        'listings': [{'id': r['id'], 'title': r['title'], 'price': r['price'],
+                      'currency': r['currency'], 'city': r['city'] or ''} for r in listings],
+    })
+
+
 @app.route('/api/me')
 def me():
     if 'user_id' not in session:
