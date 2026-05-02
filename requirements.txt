@@ -6,4 +6,4 @@ stripe
 boto3
 gunicorn
 psycopg2-binary
-pywebpush
+pywebpush>=2.0.0
