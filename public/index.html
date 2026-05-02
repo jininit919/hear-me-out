@@ -3150,7 +3150,12 @@ async function subscribePush() {
   if (!('PushManager' in window))      { console.log('[Push] no PushManager'); return; }
   if (!('Notification' in window))     { console.log('[Push] no Notification'); return; }
   try {
-    const reg = await navigator.serviceWorker.ready;
+    // Safari needs the SW registered via getRegistration, not .ready
+    let reg = await navigator.serviceWorker.getRegistration('/');
+    if (!reg) {
+      reg = await navigator.serviceWorker.register('/sw.js');
+      await new Promise(r => setTimeout(r, 500));
+    }
     console.log('[Push] SW ready', reg);
 
     const existing = await reg.pushManager.getSubscription();
