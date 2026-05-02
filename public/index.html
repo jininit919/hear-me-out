@@ -1409,7 +1409,10 @@ let notifOpen = false;
 function toggleNotifPanel() {
   notifOpen = !notifOpen;
   document.getElementById('notifPanel').classList.toggle('open', notifOpen);
-  if (notifOpen) loadNotifications();
+  if (notifOpen) {
+    loadNotifications();
+    subscribePush();
+  }
 }
 
 document.addEventListener('click', e => {
