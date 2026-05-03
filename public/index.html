@@ -2245,6 +2245,7 @@ async function loadCities() {
   const fromApi = await fetch('/api/cities').then(r => r.json()).catch(() => []);
   const all = [...new Set([...predefined, ...fromApi])];
   const tagsEl = document.getElementById('cityTags');
+  if (!tagsEl) return;
   all.forEach(c => {
     const t = document.createElement('div');
     t.className = 'city-tag';
