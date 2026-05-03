@@ -1,7 +1,7 @@
 {
   "name": "Hear Me Out",
   "short_name": "HearMeOut",
-  "description": "Underground hudební platforma pro umělce a fanoušky",
+  "description": "Independent Music Network for artists and music lovers worldwide.",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait",

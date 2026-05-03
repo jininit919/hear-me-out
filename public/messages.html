@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="cs">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -11,7 +11,7 @@
 <meta name="apple-mobile-web-app-title" content="Hear Me Out">
 <link rel="apple-touch-icon" href="/icons/icon-192.png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hear Me Out — Zprávy</title>
+<title>Hear Me Out — Messages</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
 <style>
@@ -135,9 +135,9 @@ nav{flex-shrink:0;position:sticky;top:0;z-index:100;background:rgba(14,10,10,0.9
 <body>
 
 <nav>
-  <a class="nav-logo" href="/">HEAR ME OUT <span>Underground</span></a>
-  <a href="/messages" title="Zprávy" style="position:relative;width:34px;height:34px;display:flex;align-items:center;justify-content:center;color:var(--red2);font-size:17px;text-decoration:none"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><div id="msgBadge" style="display:none;position:absolute;top:4px;right:4px;min-width:14px;height:14px;border-radius:7px;background:var(--red2);border:1.5px solid var(--bg);font-size:9px;color:white;align-items:center;justify-content:center;padding:0 3px"></div></a>
-  <a class="nav-back" href="/">← Feed</a>
+  <a class="nav-logo" href="/">HEAR ME OUT <span>Network</span></a>
+  <a href="/messages" title="Messages" style="position:relative;width:34px;height:34px;display:flex;align-items:center;justify-content:center;color:var(--red2);font-size:17px;text-decoration:none"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><div id="msgBadge" style="display:none;position:absolute;top:4px;right:4px;min-width:14px;height:14px;border-radius:7px;background:var(--red2);border:1.5px solid var(--bg);font-size:9px;color:white;align-items:center;justify-content:center;padding:0 3px"></div></a>
+  <a class="nav-back" href="/">← Back</a>
 </nav>
 
 <div class="layout">
@@ -145,14 +145,14 @@ nav{flex-shrink:0;position:sticky;top:0;z-index:100;background:rgba(14,10,10,0.9
   <!-- CONVERSATIONS -->
   <div class="conv-panel">
     <div class="conv-header">
-      <span class="conv-header-title">Zprávy</span>
-      <button class="new-msg-btn" onclick="openNewMsg()">+ Nová</button>
+      <span class="conv-header-title">Messages</span>
+      <button class="new-msg-btn" onclick="openNewMsg()">+ New</button>
     </div>
     <div class="conv-search">
-      <input type="text" id="convSearch" placeholder="Hledat konverzaci...">
+      <input type="text" id="convSearch" placeholder="Search conversations...">
     </div>
     <div class="conv-list" id="convList">
-      <div class="loading">Načítám...</div>
+      <div class="loading">Loading...</div>
     </div>
   </div>
 
@@ -160,7 +160,7 @@ nav{flex-shrink:0;position:sticky;top:0;z-index:100;background:rgba(14,10,10,0.9
   <div class="chat-panel" id="chatPanel">
     <div class="chat-empty" id="chatEmpty">
       <div class="icon">◻</div>
-      <p>Vyber konverzaci<br>nebo začni novou zprávu.</p>
+      <p>Select a conversation<br>or start a new message.</p>
     </div>
   </div>
 
@@ -170,15 +170,15 @@ nav{flex-shrink:0;position:sticky;top:0;z-index:100;background:rgba(14,10,10,0.9
 <div class="modal-overlay" id="newMsgModal">
   <div class="modal">
     <div class="modal-title">
-      Nová zpráva
+      New message
       <button class="modal-close" onclick="closeNewMsg()">✕</button>
     </div>
     <div class="modal-err" id="newMsgErr"></div>
     <div class="mfield">
-      <label>Uživatelské jméno příjemce</label>
+      <label>Recipient username</label>
       <input type="text" id="newMsgUser" placeholder="username">
     </div>
-    <button class="modal-btn" onclick="startConversation()">OTEVŘÍT KONVERZACI</button>
+    <button class="modal-btn" onclick="startConversation()">OPEN CONVERSATION</button>
   </div>
 </div>
 
@@ -220,7 +220,7 @@ async function loadConversations() {
 function renderConvs(convs) {
   const el = document.getElementById('convList');
   if (!convs.length) {
-    el.innerHTML = '<div class="conv-empty">Zatím žádné konverzace.<br>Začni novou zprávou.</div>';
+    el.innerHTML = '<div class="conv-empty">No conversations yet.<br>Start a new message.</div>';
     return;
   }
   el.innerHTML = convs.map(c => {
@@ -266,20 +266,20 @@ async function openChat(userId, name, ini, avatar, username) {
       </a>
       <div class="chat-name"><a href="/profile/${esc(username)}">${esc(name)}</a></div>
     </div>
-    <div class="chat-messages" id="chatMessages"><div class="loading">Načítám...</div></div>
+    <div class="chat-messages" id="chatMessages"><div class="loading">Loading...</div></div>
     <div class="chat-input-bar">
       <div class="emoji-picker" id="emojiPicker">${buildEmojiPicker()}</div>
       <div class="img-preview-bar" id="imgPreviewBar">
         <img class="img-preview-thumb" id="imgPreviewThumb" src="" alt="">
         <div class="img-preview-name" id="imgPreviewName"></div>
-        <button class="img-preview-remove" onclick="clearPhoto()" title="Odebrat">✕</button>
+        <button class="img-preview-remove" onclick="clearPhoto()" title="Remove">✕</button>
       </div>
       <div class="chat-input-row">
         <button class="input-btn" id="emojiToggleBtn" onclick="toggleEmoji()" title="Emoji">😊</button>
-        <label class="input-btn" title="Poslat fotku" style="cursor:pointer">
+        <label class="input-btn" title="Send photo" style="cursor:pointer">
           📷<input type="file" id="photoInput" accept="image/*" style="display:none" onchange="onPhotoSelected(this)">
         </label>
-        <textarea class="chat-input" id="chatInput" placeholder="Napiš zprávu..." rows="1" onkeydown="inputKeydown(event)"></textarea>
+        <textarea class="chat-input" id="chatInput" placeholder="Write a message..." rows="1" onkeydown="inputKeydown(event)"></textarea>
         <button class="send-btn" onclick="sendMsg()" id="sendBtn">↑</button>
       </div>
     </div>`;
@@ -319,7 +319,7 @@ async function fetchMessages(userId) {
   if (!el) return;
 
   if (!data.messages.length) {
-    el.innerHTML = '<div style="text-align:center;color:var(--txt3);font-size:10px;padding:20px 0;letter-spacing:0.06em">Začni konverzaci 👋</div>';
+    el.innerHTML = '<div style="text-align:center;color:var(--txt3);font-size:10px;padding:20px 0;letter-spacing:0.06em">No messages yet 👋</div>';
     return;
   }
 
@@ -478,13 +478,13 @@ async function startConversation() {
 
   const res = await fetch('/api/profile/' + username);
   if (!res.ok) {
-    err.textContent = 'Uživatel nenalezen';
+    err.textContent = 'User not found';
     err.classList.add('visible');
     return;
   }
   const u = await res.json();
   if (u.id === myId) {
-    err.textContent = 'Nemůžeš si psát sám se sebou';
+    err.textContent = "You can't message yourself";
     err.classList.add('visible');
     return;
   }

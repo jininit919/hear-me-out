@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /uploads/
+Disallow: /verify
+Disallow: /upload
+
+Sitemap: https://hearmeout.app/sitemap.xml

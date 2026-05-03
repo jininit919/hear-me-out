@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="cs">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -11,7 +11,7 @@
 <meta name="apple-mobile-web-app-title" content="Hear Me Out">
 <link rel="apple-touch-icon" href="/icons/icon-192.png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hear Me Out — Nahrát track</title>
+<title>Hear Me Out — Upload track</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
 <style>
@@ -123,19 +123,19 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(14,10,10,0.9
 <body>
 
 <nav>
-  <a class="nav-logo" href="/">HEAR ME OUT <span>Underground</span></a>
-  <a class="nav-back" href="/">← Zpět na feed</a>
+  <a class="nav-logo" href="/">HEAR ME OUT <span>Network</span></a>
+  <a class="nav-back" href="/">← Back to feed</a>
 </nav>
 
 <div class="page">
-  <div class="page-title">Nahrát track</div>
+  <div class="page-title">Upload track</div>
   <div class="page-sub">MP3 · WAV · OGG · FLAC · AAC — max. 100 MB</div>
 
   <!-- DROP ZONE -->
   <div class="drop-zone" id="dropZone">
     <input type="file" id="fileInput" accept=".mp3,.wav,.ogg,.flac,.m4a,.aac" onchange="onFileSelected(this)">
     <div class="drop-icon">♪</div>
-    <div class="drop-label">Přetáhni soubor sem nebo klikni pro výběr</div>
+    <div class="drop-label">Drag a file here or click to browse</div>
     <div class="drop-formats">MP3 · WAV · OGG · FLAC · AAC</div>
     <div class="file-selected" id="fileSelected"></div>
   </div>
@@ -160,15 +160,15 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(14,10,10,0.9
       <input type="file" id="coverInput" accept=".jpg,.jpeg,.png,.webp" onchange="onCoverSelected(this)">
       <div class="cover-placeholder" id="coverPlaceholder">
         <div class="ci">▣</div>
-        <span>Cover art<br>klikni nebo přetáhni</span>
+        <span>Cover art<br>click or drag</span>
       </div>
       <img class="cover-preview" id="coverPreview" alt="cover">
     </div>
     <div class="cover-info">
-      <div class="cover-title">Cover art (volitelné)</div>
+      <div class="cover-title">Cover art (optional)</div>
       <ul class="cover-rules">
-        <li>Čtvercový formát</li>
-        <li>JPG, PNG nebo WebP</li>
+        <li>Square format</li>
+        <li>JPG, PNG or WebP</li>
       </ul>
       <div class="cover-error" id="coverError"></div>
       <div class="cover-ok" id="coverOk"></div>
@@ -177,13 +177,13 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(14,10,10,0.9
 
   <!-- VIDEO -->
   <div class="video-section" id="videoSection">
-    <div class="cover-title" style="font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--txt3);margin-bottom:8px">Videoklip (volitelné · <span style="color:#c9a84c">PRO</span>)</div>
+    <div class="cover-title" style="font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--txt3);margin-bottom:8px">Music video (optional · <span style="color:#c9a84c">PRO</span>)</div>
     <div id="videoLock" class="video-pro-lock">
-      <div class="video-pro-lock-text">Nahrávání videí je dostupné pouze pro <a href="/pro">PRO uživatele</a>.<br>Upgraduj a přilož k tracku videoklip nebo záběry z živého vystoupení.</div>
+      <div class="video-pro-lock-text">Video uploads are available for <a href="/pro">PRO members</a> only.<br>Upgrade to attach a music video or live performance footage to your track.</div>
     </div>
     <div id="videoDrop" class="video-drop" style="display:none">
       <input type="file" id="videoInput" accept=".mp4,.mov,.webm,.avi" onchange="onVideoSelected(this)">
-      <div class="video-drop-label">🎬 Přetáhni video nebo klikni pro výběr</div>
+      <div class="video-drop-label">🎬 Drag a video or click to browse</div>
       <div class="video-drop-formats">MP4, MOV, WebM · max 500 MB</div>
       <div class="video-selected" id="videoSelected"></div>
       <video class="video-preview" id="videoPreview" controls muted playsinline></video>
@@ -194,12 +194,12 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(14,10,10,0.9
   <form class="form" id="uploadForm" onsubmit="doUpload(event)">
 
     <div class="field">
-      <label>Název tracku *</label>
-      <input type="text" id="title" placeholder="Název skladby" required>
+      <label>Track title *</label>
+      <input type="text" id="title" placeholder="Track title" required>
     </div>
 
     <div class="field">
-      <label>Žánr</label>
+      <label>Genre</label>
       <input type="text" id="genre" placeholder="Hip-Hop, Techno, Experimental...">
       <div class="genre-chips">
         <div class="genre-chip" onclick="setGenre(this,'Hip-Hop')">Hip-Hop</div>
@@ -221,19 +221,19 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(14,10,10,0.9
 
     <div class="field-row">
       <div class="field">
-        <label>Město</label>
-        <input type="text" id="city" placeholder="Praha, Brno, Bratislava...">
+        <label>City</label>
+        <input type="text" id="city" placeholder="Prague, Brno, Bratislava...">
       </div>
       <div class="field">
-        <label>Trvání (automaticky)</label>
+        <label>Duration (auto)</label>
         <input type="text" id="durationDisplay" placeholder="—" readonly style="color:var(--txt3)">
         <input type="hidden" id="duration">
       </div>
     </div>
 
     <div class="field">
-      <label>Popis / caption</label>
-      <textarea id="caption" placeholder="Pár slov o tracku, kontextu, featuringu..."></textarea>
+      <label>Description / caption</label>
+      <textarea id="caption" placeholder="A few words about the track, context, features..."></textarea>
     </div>
 
     <div class="msg error" id="errorMsg"></div>
@@ -241,10 +241,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(14,10,10,0.9
 
     <div class="upload-progress" id="uploadProgress">
       <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-      <div class="progress-label" id="progressLabel">Nahrávám...</div>
+      <div class="progress-label" id="progressLabel">Uploading...</div>
     </div>
 
-    <button class="submit-btn" type="submit" id="submitBtn" disabled>NAHRÁT TRACK</button>
+    <button class="submit-btn" type="submit" id="submitBtn" disabled>UPLOAD TRACK</button>
   </form>
 </div>
 
@@ -287,11 +287,11 @@ function loadFile(file) {
   const ext = file.name.split('.').pop().toLowerCase();
   const allowedExt = ['mp3','wav','ogg','flac','aac','m4a'];
   if (!allowedExt.includes(ext)) {
-    showMsg('error', 'Nepodporovaný formát. Použij MP3, WAV, OGG, FLAC nebo AAC.');
+    showMsg('error', 'Unsupported format. Use MP3, WAV, OGG, FLAC or AAC.');
     return;
   }
   if (ext === 'wav' && !isPro) {
-    showMsg('error', 'WAV nahrávání je dostupné pouze pro <a href="/pro" style="color:var(--gold,#c9a84c)">PRO uživatele</a>. PRO také odemkne nahrávání videí. Nahraj soubor ve formátu MP3.');
+    showMsg('error', 'WAV uploads are available for <a href="/pro" style="color:var(--gold,#c9a84c)">PRO members</a> only. PRO also unlocks video uploads. Please upload an MP3 instead.');
     return;
   }
 
@@ -363,7 +363,7 @@ function onCoverSelected(input) {
 function loadCover(file) {
   const ext = file.name.split('.').pop().toLowerCase();
   if (!['jpg','jpeg','png','webp'].includes(ext)) {
-    showCoverError('Nepodporovaný formát. Použij JPG, PNG nebo WebP.');
+    showCoverError('Unsupported format. Use JPG, PNG or WebP.');
     return;
   }
 
@@ -371,7 +371,7 @@ function loadCover(file) {
   const url = URL.createObjectURL(file);
   img.onload = () => {
     if (img.width !== img.height) {
-      showCoverError(`Obrázek musí být čtvercový (tvůj: ${img.width}×${img.height} px).`);
+      showCoverError(`Image must be square (yours: ${img.width}×${img.height} px).`);
       URL.revokeObjectURL(url);
       return;
     }
@@ -406,11 +406,11 @@ function onVideoSelected(input) {
 function loadVideo(file) {
   const ext = file.name.split('.').pop().toLowerCase();
   if (!['mp4','mov','webm','avi'].includes(ext)) {
-    alert('Nepodporovaný formát. Použij MP4, MOV nebo WebM.');
+    alert('Unsupported format. Use MP4, MOV or WebM.');
     return;
   }
   if (file.size > 500 * 1024 * 1024) {
-    alert('Video je příliš velké. Maximum je 500 MB.');
+    alert('Video is too large. Maximum is 500 MB.');
     return;
   }
   selectedVideo = file;
@@ -441,14 +441,14 @@ document.getElementById('genre').addEventListener('input', () => {
 // ── Upload ────────────────────────────────────────────────────────────────────
 async function doUpload(e) {
   e.preventDefault();
-  if (!selectedFile) { showMsg('error', 'Vyber audio soubor.'); return; }
+  if (!selectedFile) { showMsg('error', 'Select an audio file.'); return; }
 
   hideMsg('error');
   hideMsg('success');
 
   const btn = document.getElementById('submitBtn');
   btn.disabled = true;
-  btn.textContent = 'NAHRÁVÁM...';
+  btn.textContent = 'UPLOADING...';
 
   document.getElementById('uploadProgress').style.display = 'flex';
 
@@ -469,7 +469,7 @@ async function doUpload(e) {
     if (ev.lengthComputable) {
       const pct = Math.round((ev.loaded / ev.total) * 100);
       document.getElementById('progressFill').style.width = pct + '%';
-      document.getElementById('progressLabel').textContent = `Nahrávám... ${pct}%`;
+      document.getElementById('progressLabel').textContent = `Uploading... ${pct}%`;
     }
   });
 
@@ -480,21 +480,21 @@ async function doUpload(e) {
     document.getElementById('uploadProgress').style.display = 'none';
 
     if (xhr.status === 200 && data.ok) {
-      showMsg('success', 'Track úspěšně nahrán! Přesměrovávám na feed...');
+      showMsg('success', 'Track uploaded! Redirecting to feed...');
       previewAudio.pause();
       setTimeout(() => window.location.href = '/', 1800);
     } else {
-      showMsg('error', data.error || 'Chyba nahrávání, zkus znovu.');
+      showMsg('error', data.error || 'Upload failed, please try again.');
       btn.disabled = false;
-      btn.textContent = 'NAHRÁT TRACK';
+      btn.textContent = 'UPLOAD TRACK';
     }
   });
 
   xhr.addEventListener('error', () => {
     document.getElementById('uploadProgress').style.display = 'none';
-    showMsg('error', 'Síťová chyba, zkus znovu.');
+    showMsg('error', 'Network error, please try again.');
     btn.disabled = false;
-    btn.textContent = 'NAHRÁT TRACK';
+    btn.textContent = 'UPLOAD TRACK';
   });
 
   xhr.open('POST', '/api/upload');

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="cs">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -11,7 +11,12 @@
 <meta name="apple-mobile-web-app-title" content="Hear Me Out">
 <link rel="apple-touch-icon" href="/icons/icon-192.png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hear Me Out — Přihlášení</title>
+<title>Hear Me Out — Sign in</title>
+<meta name="description" content="Sign in or create your account on Hear Me Out — the global network for independent artists.">
+<meta property="og:title" content="Hear Me Out — Independent Music Network">
+<meta property="og:description" content="A global network for independent artists. Share tracks, find collaborations, sell gear.">
+<meta property="og:image" content="https://hearmeout.app/icons/icon-512.png">
+<meta name="robots" content="noindex">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
 <style>
@@ -60,63 +65,68 @@ body{background:var(--bg);color:var(--txt);font-family:'DM Mono',monospace;min-h
 <body>
 
 <div class="brand">HEAR ME OUT</div>
-<div class="brand-sub">Underground · CZ / SK Independent Music</div>
+<div class="brand-sub">Independent Music Network</div>
 
 <div class="card">
   <div class="tabs">
-    <button class="tab active" onclick="switchTab('login')">Přihlásit se</button>
-    <button class="tab" onclick="switchTab('register')">Registrace</button>
+    <button class="tab active" onclick="switchTab('login')">Sign in</button>
+    <button class="tab" onclick="switchTab('register')">Sign up</button>
   </div>
 
   <!-- LOGIN -->
   <form class="form active" id="loginForm" onsubmit="doLogin(event)">
     <div class="error-msg" id="loginError"></div>
     <div class="field">
-      <label>Uživatelské jméno</label>
+      <label>Username</label>
       <input type="text" id="loginUsername" placeholder="username" autocomplete="username" required>
     </div>
     <div class="field">
-      <label>Heslo</label>
+      <label>Password</label>
       <input type="password" id="loginPassword" placeholder="••••••" autocomplete="current-password" required>
     </div>
-    <button class="submit-btn" type="submit" id="loginBtn">PŘIHLÁSIT SE</button>
+    <button class="submit-btn" type="submit" id="loginBtn">SIGN IN</button>
+    <div class="hint"><a href="/forgot-password" style="color:#555">Forgot your password?</a></div>
   </form>
 
   <!-- REGISTER -->
   <form class="form" id="registerForm" onsubmit="doRegister(event)">
     <div class="error-msg" id="registerError"></div>
     <div class="field">
-      <label>Uživatelské jméno *</label>
-      <input type="text" id="regUsername" placeholder="jen písmena a čísla" autocomplete="username" required>
+      <label>Username *</label>
+      <input type="text" id="regUsername" placeholder="letters and numbers only" autocomplete="username" required>
     </div>
     <div class="field">
-      <label>Umělecké jméno / nick *</label>
-      <input type="text" id="regDisplayName" placeholder="jak tě bude vidět svět" required>
+      <label>Artist name / nickname *</label>
+      <input type="text" id="regDisplayName" placeholder="how the world will see you" required>
     </div>
     <div class="field">
       <label>E-mail *</label>
-      <input type="email" id="regEmail" placeholder="tvuj@email.cz" autocomplete="email" required>
+      <input type="email" id="regEmail" placeholder="you@email.com" autocomplete="email" required>
     </div>
     <div class="field">
-      <label>Telefon (nepovinné)</label>
-      <input type="tel" id="regPhone" placeholder="+420 xxx xxx xxx" autocomplete="tel">
+      <label>Phone (optional)</label>
+      <input type="tel" id="regPhone" placeholder="+1 xxx xxx xxxx" autocomplete="tel">
     </div>
     <div class="field-row">
       <div class="field">
-        <label>Město</label>
-        <input type="text" id="regCity" placeholder="Praha, Brno...">
+        <label>City</label>
+        <input type="text" id="regCity" placeholder="New York, LA...">
       </div>
       <div class="field">
-        <label>Žánr(y)</label>
+        <label>Genre(s)</label>
         <input type="text" id="regGenres" placeholder="Hip-Hop, Techno...">
       </div>
     </div>
     <div class="field">
-      <label>Heslo * (min. 6 znaků)</label>
+      <label>Password * (min. 6 characters)</label>
       <input type="password" id="regPassword" placeholder="••••••" autocomplete="new-password" required>
     </div>
-    <button class="submit-btn" type="submit" id="registerBtn">VYTVOŘIT ÚČET</button>
-    <div class="hint">Na e-mail ti pošleme ověřovací kód. Registrací souhlasíš s <a href="/terms" style="color:#555">podmínkami</a>.</div>
+    <div class="field" style="flex-direction:row;align-items:flex-start;gap:10px">
+      <input type="checkbox" id="regTerms" required style="width:auto;margin-top:2px;accent-color:var(--red2)">
+      <label for="regTerms" style="font-size:10px;color:var(--txt3);letter-spacing:0.04em;line-height:1.6;text-transform:none;cursor:pointer">I agree to the <a href="/terms" style="color:#666" target="_blank">terms of use</a> and <a href="/privacy" style="color:#666" target="_blank">privacy policy</a></label>
+    </div>
+    <button class="submit-btn" type="submit" id="registerBtn">CREATE ACCOUNT</button>
+    <div class="hint">We'll send a verification code to your email to confirm your account.</div>
   </form>
 </div>
 
@@ -141,7 +151,7 @@ async function doLogin(e) {
   hideError('loginError');
   const btn = document.getElementById('loginBtn');
   btn.disabled = true;
-  btn.textContent = 'PŘIHLAŠUJI...';
+  btn.textContent = 'SIGNING IN...';
 
   const res = await fetch('/api/login', {
     method: 'POST',
@@ -156,9 +166,9 @@ async function doLogin(e) {
   if (data.ok) {
     window.location.href = '/';
   } else {
-    showError('loginError', data.error || 'Chyba přihlášení');
+    showError('loginError', data.error || 'Sign in failed');
     btn.disabled = false;
-    btn.textContent = 'PŘIHLÁSIT SE';
+    btn.textContent = 'SIGN IN';
   }
 }
 
@@ -167,7 +177,7 @@ async function doRegister(e) {
   hideError('registerError');
   const btn = document.getElementById('registerBtn');
   btn.disabled = true;
-  btn.textContent = 'REGISTRUJI...';
+  btn.textContent = 'CREATING ACCOUNT...';
 
   const res = await fetch('/api/register', {
     method: 'POST',
@@ -187,9 +197,9 @@ async function doRegister(e) {
   if (data.ok) {
     window.location.href = data.verify ? '/verify' : '/';
   } else {
-    showError('registerError', data.error || 'Chyba registrace');
+    showError('registerError', data.error || 'Registration failed');
     btn.disabled = false;
-    btn.textContent = 'VYTVOŘIT ÚČET';
+    btn.textContent = 'CREATE ACCOUNT';
   }
 }
 </script>

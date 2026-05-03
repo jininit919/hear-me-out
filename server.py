@@ -478,6 +478,15 @@ def init_db():
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )''')
 
+    c.execute('''CREATE TABLE IF NOT EXISTS password_reset_tokens (
+        id         INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id    INTEGER NOT NULL,
+        token      TEXT    NOT NULL UNIQUE,
+        expires_at TEXT    NOT NULL,
+        used       INTEGER DEFAULT 0,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )''')
+
     conn.commit()
     conn.close()
 
@@ -613,7 +622,7 @@ def push_notif(conn, user_id, actor_id, notif_type, ref_id, ref_type, message):
 
 def require_login():
     if 'user_id' not in session:
-        return jsonify({'error': 'Nejsi přihlášen'}), 401
+        return jsonify({'error': 'Not signed in'}), 401
     return None
 
 
@@ -622,6 +631,14 @@ def require_login():
 @app.route('/sw.js')
 def service_worker():
     return send_from_directory('public', 'sw.js', mimetype='application/javascript')
+
+@app.route('/robots.txt')
+def robots():
+    return send_from_directory('public', 'robots.txt', mimetype='text/plain')
+
+@app.route('/sitemap.xml')
+def sitemap():
+    return send_from_directory('public', 'sitemap.xml', mimetype='application/xml')
 
 @app.route('/manifest.json')
 def manifest():
@@ -684,21 +701,21 @@ def register():
     phone        = data.get('phone', '').strip()
 
     if not username or not display_name or not password or not email:
-        return jsonify({'error': 'Vyplň uživatelské jméno, jméno, e-mail a heslo'}), 400
+        return jsonify({'error': 'Please enter a username, display name, email and password'}), 400
     if len(username) > 30:
-        return jsonify({'error': 'Uživatelské jméno je příliš dlouhé (max 30 znaků)'}), 400
+        return jsonify({'error': 'Username is too long (max 30 characters)'}), 400
     if len(display_name) > 60:
-        return jsonify({'error': 'Jméno je příliš dlouhé (max 60 znaků)'}), 400
+        return jsonify({'error': 'Display name is too long (max 60 characters)'}), 400
     if len(password) < 6:
-        return jsonify({'error': 'Heslo musí mít alespoň 6 znaků'}), 400
+        return jsonify({'error': 'Password must be at least 6 characters'}), 400
     if len(password) > 128:
-        return jsonify({'error': 'Heslo je příliš dlouhé (max 128 znaků)'}), 400
+        return jsonify({'error': 'Password is too long (max 128 characters)'}), 400
     if len(email) > 254:
-        return jsonify({'error': 'E-mail je příliš dlouhý'}), 400
+        return jsonify({'error': 'Email is too long'}), 400
     if not username.replace('_', '').isalnum():
-        return jsonify({'error': 'Uživatelské jméno smí obsahovat jen písmena, čísla a podtržítko'}), 400
+        return jsonify({'error': 'Username may only contain letters, numbers and underscores'}), 400
     if '@' not in email or '.' not in email:
-        return jsonify({'error': 'Zadej platný e-mail'}), 400
+        return jsonify({'error': 'Please enter a valid email address'}), 400
 
     code    = str(random.randint(100000, 999999))
     expires = (datetime.utcnow() + timedelta(minutes=15)).isoformat()
@@ -707,7 +724,7 @@ def register():
     existing_email = conn.execute('SELECT id FROM users WHERE email = ?', (email,)).fetchone()
     if existing_email:
         conn.close()
-        return jsonify({'error': 'Tento e-mail je již registrován'}), 400
+        return jsonify({'error': 'This email is already registered'}), 400
     try:
         conn.execute(
             'INSERT INTO users (username, display_name, city, genres, password_hash, email, phone, verified, verify_code, verify_expires) VALUES (?, ?, ?, ?, ?, ?, ?, 0, ?, ?)',
@@ -723,17 +740,17 @@ def register():
         session['pending_verify']    = True
     except sqlite3.IntegrityError:
         conn.close()
-        return jsonify({'error': 'Toto uživatelské jméno je již obsazeno'}), 400
+        return jsonify({'error': 'Username already taken'}), 400
     finally:
         conn.close()
 
-    send_email(email, 'Hear Me Out — ověření účtu', f'''
+    send_email(email, 'Hear Me Out — verify your account', f'''
     <div style="background:#000;color:#ccc;font-family:monospace;padding:40px;max-width:480px;margin:0 auto">
       <div style="font-size:28px;letter-spacing:0.2em;color:#b20000;margin-bottom:8px">HEAR ME OUT</div>
-      <div style="font-size:12px;color:#555;margin-bottom:32px;letter-spacing:0.1em">Underground · CZ/SK Independent Music</div>
-      <p style="margin-bottom:16px">Ahoj <strong>{display_name}</strong>, zadej tento kód pro ověření účtu:</p>
+      <div style="font-size:12px;color:#555;margin-bottom:32px;letter-spacing:0.1em">Independent Music Network</div>
+      <p style="margin-bottom:16px">Hi <strong>{display_name}</strong>, enter this code to verify your account:</p>
       <div style="font-size:40px;letter-spacing:0.3em;color:#c62828;background:#0e0e0e;padding:20px;text-align:center;border:1px solid #1a1a1a;margin:24px 0">{code}</div>
-      <p style="color:#555;font-size:12px">Kód platí 15 minut. Pokud jsi registraci nezahájil/a, ignoruj tento e-mail.</p>
+      <p style="color:#555;font-size:12px">Code valid for 15 minutes. If you didn't sign up, ignore this email.</p>
     </div>''')
 
     return jsonify({'ok': True, 'verify': True})
@@ -743,19 +760,19 @@ def register():
 @limiter.limit('10 per hour')
 def verify_email():
     if 'user_id' not in session:
-        return jsonify({'error': 'Nepřihlášen'}), 401
+        return jsonify({'error': 'Not signed in'}), 401
     data = request.get_json()
     code = (data.get('code') or '').strip()
     conn = get_db()
     user = conn.execute('SELECT * FROM users WHERE id = ?', (session['user_id'],)).fetchone()
     if not user:
-        conn.close(); return jsonify({'error': 'Uživatel nenalezen'}), 404
+        conn.close(); return jsonify({'error': 'User not found'}), 404
     if user['verified']:
         conn.close(); return jsonify({'ok': True})
     if not user['verify_code'] or user['verify_code'] != code:
-        conn.close(); return jsonify({'error': 'Nesprávný kód'}), 400
+        conn.close(); return jsonify({'error': 'Incorrect code'}), 400
     if datetime.utcnow().isoformat() > user['verify_expires']:
-        conn.close(); return jsonify({'error': 'Kód vypršel — vyžádej nový'}), 400
+        conn.close(); return jsonify({'error': 'Code expired — request a new one'}), 400
     conn.execute('UPDATE users SET verified = 1, verify_code = NULL, verify_expires = NULL WHERE id = ?', (session['user_id'],))
     conn.commit(); conn.close()
     session.pop('pending_verify', None)
@@ -766,7 +783,7 @@ def verify_email():
 @limiter.limit('5 per hour')
 def resend_verify():
     if 'user_id' not in session:
-        return jsonify({'error': 'Nepřihlášen'}), 401
+        return jsonify({'error': 'Not signed in'}), 401
     conn = get_db()
     user = conn.execute('SELECT * FROM users WHERE id = ?', (session['user_id'],)).fetchone()
     if not user or user['verified']:
@@ -775,14 +792,83 @@ def resend_verify():
     expires = (datetime.utcnow() + timedelta(minutes=15)).isoformat()
     conn.execute('UPDATE users SET verify_code = ?, verify_expires = ? WHERE id = ?', (code, expires, user['id']))
     conn.commit(); conn.close()
-    send_email(user['email'], 'Hear Me Out — nový ověřovací kód', f'''
+    send_email(user['email'], 'Hear Me Out — new verification code', f'''
     <div style="background:#000;color:#ccc;font-family:monospace;padding:40px;max-width:480px;margin:0 auto">
       <div style="font-size:28px;letter-spacing:0.2em;color:#b20000;margin-bottom:32px">HEAR ME OUT</div>
-      <p style="margin-bottom:16px">Tvůj nový ověřovací kód:</p>
+      <p style="margin-bottom:16px">Your new verification code:</p>
       <div style="font-size:40px;letter-spacing:0.3em;color:#c62828;background:#0e0e0e;padding:20px;text-align:center;border:1px solid #1a1a1a;margin:24px 0">{code}</div>
-      <p style="color:#555;font-size:12px">Kód platí 15 minut.</p>
+      <p style="color:#555;font-size:12px">Code valid for 15 minutes.</p>
     </div>''')
     return jsonify({'ok': True})
+
+
+@app.route('/api/forgot-password', methods=['POST'])
+@limiter.limit('5 per hour')
+def forgot_password():
+    data  = request.get_json()
+    email = (data.get('email') or '').strip().lower()
+    if not email:
+        return jsonify({'error': 'Please enter your email address'}), 400
+    conn = get_db()
+    user = conn.execute('SELECT id, display_name FROM users WHERE email = ?', (email,)).fetchone()
+    if not user:
+        conn.close()
+        # Don't reveal whether email exists
+        return jsonify({'ok': True})
+    token   = uuid.uuid4().hex + uuid.uuid4().hex
+    expires = (datetime.utcnow() + timedelta(hours=1)).isoformat()
+    conn.execute(
+        'INSERT INTO password_reset_tokens (user_id, token, expires_at) VALUES (?, ?, ?)',
+        (user['id'], token, expires)
+    )
+    conn.commit()
+    conn.close()
+    reset_url = request.host_url.rstrip('/') + f'/reset-password?token={token}'
+    send_email(email, 'Hear Me Out — password reset', f'''
+    <div style="background:#000;color:#ccc;font-family:monospace;padding:40px;max-width:480px;margin:0 auto">
+      <div style="font-size:28px;letter-spacing:0.2em;color:#b20000;margin-bottom:8px">HEAR ME OUT</div>
+      <div style="font-size:12px;color:#555;margin-bottom:32px;letter-spacing:0.1em">Independent Music Network</div>
+      <p style="margin-bottom:24px">Hi <strong>{user['display_name']}</strong>, we received a password reset request for your account.</p>
+      <a href="{reset_url}" style="display:block;background:#b20000;color:#fff;text-align:center;padding:16px;font-family:sans-serif;font-size:14px;letter-spacing:0.1em;text-decoration:none;margin-bottom:24px">RESET YOUR PASSWORD</a>
+      <p style="color:#555;font-size:12px">Link valid for 1 hour. If you didn't request this, ignore this email.</p>
+    </div>''')
+    return jsonify({'ok': True})
+
+
+@app.route('/api/reset-password', methods=['POST'])
+@limiter.limit('10 per hour')
+def reset_password():
+    data     = request.get_json()
+    token    = (data.get('token') or '').strip()
+    password = data.get('password', '')
+    if not token or len(password) < 6:
+        return jsonify({'error': 'Invalid request'}), 400
+    conn = get_db()
+    row = conn.execute(
+        'SELECT * FROM password_reset_tokens WHERE token = ? AND used = 0',
+        (token,)
+    ).fetchone()
+    if not row:
+        conn.close()
+        return jsonify({'error': 'Invalid or already used link'}), 400
+    if datetime.utcnow().isoformat() > row['expires_at']:
+        conn.close()
+        return jsonify({'error': 'Link expired — please request a new one'}), 400
+    new_hash = generate_password_hash(password)
+    conn.execute('UPDATE users SET password_hash = ? WHERE id = ?', (new_hash, row['user_id']))
+    conn.execute('UPDATE password_reset_tokens SET used = 1 WHERE token = ?', (token,))
+    conn.commit()
+    conn.close()
+    return jsonify({'ok': True})
+
+
+@app.route('/forgot-password')
+def forgot_password_page():
+    return send_from_directory('public', 'forgot-password.html')
+
+@app.route('/reset-password')
+def reset_password_page():
+    return send_from_directory('public', 'forgot-password.html')
 
 
 @app.route('/api/login', methods=['POST'])
@@ -797,7 +883,7 @@ def login():
     conn.close()
 
     if not user or not check_password_hash(user['password_hash'], password):
-        return jsonify({'error': 'Špatné uživatelské jméno nebo heslo'}), 401
+        return jsonify({'error': 'Invalid credentials'}), 401
 
     session['user_id']      = user['id']
     session['username']     = user['username']
@@ -897,13 +983,13 @@ def push_vapid_key():
 @app.route('/api/push/subscribe', methods=['POST'])
 def push_subscribe():
     if 'user_id' not in session:
-        return jsonify({'error': 'Nepřihlášen'}), 401
+        return jsonify({'error': 'Not signed in'}), 401
     data = request.json or {}
     endpoint = data.get('endpoint', '')
     p256dh   = (data.get('keys') or {}).get('p256dh', '')
     auth     = (data.get('keys') or {}).get('auth', '')
     if not endpoint or not p256dh or not auth:
-        return jsonify({'error': 'Neplatná subscription'}), 400
+        return jsonify({'error': 'Invalid subscription'}), 400
     conn = get_db()
     if conn._pg:
         conn.execute(
@@ -923,7 +1009,7 @@ def push_subscribe():
 @app.route('/api/push/unsubscribe', methods=['POST'])
 def push_unsubscribe():
     if 'user_id' not in session:
-        return jsonify({'error': 'Nepřihlášen'}), 401
+        return jsonify({'error': 'Not signed in'}), 401
     data = request.json or {}
     endpoint = data.get('endpoint', '')
     if endpoint:
@@ -1062,20 +1148,20 @@ def upload_track():
         return err
 
     if 'file' not in request.files:
-        return jsonify({'error': 'Chybí soubor'}), 400
+        return jsonify({'error': 'No file provided'}), 400
 
     f = request.files['file']
     if not f.filename:
-        return jsonify({'error': 'Chybí soubor'}), 400
+        return jsonify({'error': 'No file provided'}), 400
     if not allowed_audio(f):
-        return jsonify({'error': 'Nepodporovaný formát nebo poškozený soubor. Použij MP3, WAV, OGG, FLAC nebo AAC'}), 400
+        return jsonify({'error': 'Unsupported format or corrupted file. Please use MP3, WAV, OGG, FLAC or AAC'}), 400
     ext = f.filename.rsplit('.', 1)[-1].lower()
     if ext == 'wav':
         conn = get_db()
         user = conn.execute('SELECT pro FROM users WHERE id = ?', (session['user_id'],)).fetchone()
         conn.close()
         if not user or not user['pro']:
-            return jsonify({'error': 'WAV soubory jsou pouze pro PRO uživatele. Upgraduj na PRO nebo nahraj MP3.', 'pro_required': True}), 403
+            return jsonify({'error': 'WAV files are available to PRO users only. Upgrade to PRO or upload an MP3.', 'pro_required': True}), 403
 
     title    = request.form.get('title', '').strip()
     genre    = request.form.get('genre', '').strip()
@@ -1084,7 +1170,7 @@ def upload_track():
     duration = request.form.get('duration', '').strip()
 
     if not title:
-        return jsonify({'error': 'Zadej název tracku'}), 400
+        return jsonify({'error': 'Please enter a track title'}), 400
 
     safe   = secure_filename(f.filename)
     unique = f"{session['user_id']}_{int(time.time())}_{safe}"
@@ -1137,13 +1223,13 @@ def upload_track():
 @app.route('/api/tracks/<int:track_id>', methods=['PATCH'])
 def edit_track(track_id):
     if 'user_id' not in session:
-        return jsonify({'error': 'Nepřihlášen'}), 401
+        return jsonify({'error': 'Not signed in'}), 401
     conn = get_db()
     row = conn.execute('SELECT * FROM tracks WHERE id = ?', (track_id,)).fetchone()
     if not row:
-        conn.close(); return jsonify({'error': 'Track nenalezen'}), 404
+        conn.close(); return jsonify({'error': 'Track not found'}), 404
     if row['user_id'] != session['user_id']:
-        conn.close(); return jsonify({'error': 'Zakázáno'}), 403
+        conn.close(); return jsonify({'error': 'Forbidden'}), 403
 
     title   = request.form.get('title', row['title']).strip() or row['title']
     genre   = request.form.get('genre', row['genre']).strip()
@@ -1169,13 +1255,13 @@ def edit_track(track_id):
 @app.route('/api/tracks/<int:track_id>', methods=['DELETE'])
 def delete_track(track_id):
     if 'user_id' not in session:
-        return jsonify({'error': 'Nepřihlášen'}), 401
+        return jsonify({'error': 'Not signed in'}), 401
     conn = get_db()
     row = conn.execute('SELECT * FROM tracks WHERE id = ?', (track_id,)).fetchone()
     if not row:
-        conn.close(); return jsonify({'error': 'Track nenalezen'}), 404
+        conn.close(); return jsonify({'error': 'Track not found'}), 404
     if row['user_id'] != session['user_id']:
-        conn.close(); return jsonify({'error': 'Zakázáno'}), 403
+        conn.close(); return jsonify({'error': 'Forbidden'}), 403
     conn.execute('DELETE FROM tracks WHERE id = ?', (track_id,))
     conn.commit(); conn.close()
     return jsonify({'ok': True})
@@ -1260,7 +1346,7 @@ def toggle_repost(track_id):
     else:
         track_owner = conn.execute('SELECT user_id FROM tracks WHERE id = ?', (track_id,)).fetchone()
         if track_owner and track_owner['user_id'] == session['user_id']:
-            conn.close(); return jsonify({'error': 'Nemůžeš repostovat vlastní track'}), 400
+            conn.close(); return jsonify({'error': "You can't repost your own track"}), 400
         conn.execute('INSERT INTO reposts (user_id, track_id) VALUES (?, ?)',
                      (session['user_id'], track_id))
         reposted = True
@@ -1327,15 +1413,16 @@ def get_comments(track_id):
 
 
 @app.route('/api/tracks/<int:track_id>/comments', methods=['POST'])
+@limiter.limit('30 per hour')
 def add_comment(track_id):
     err = require_login()
     if err: return err
     text = (request.json or {}).get('text', '').strip()
     if not text or len(text) > 500:
-        return jsonify({'error': 'Neplatný komentář'}), 400
+        return jsonify({'error': 'Invalid comment'}), 400
     conn = get_db()
     if not conn.execute('SELECT 1 FROM tracks WHERE id = ?', (track_id,)).fetchone():
-        conn.close(); return jsonify({'error': 'Track nenalezen'}), 404
+        conn.close(); return jsonify({'error': 'Track not found'}), 404
     cur = conn.execute(
         'INSERT INTO comments (track_id, user_id, text) VALUES (?, ?, ?)',
         (track_id, session['user_id'], text)
@@ -1355,7 +1442,7 @@ def add_comment(track_id):
     return jsonify({
         'id':           comment_id,
         'text':         text,
-        'created_at':   'právě teď',
+        'created_at':   'just now',
         'user_id':      session['user_id'],
         'is_own':       True,
         'username':     row['username'],
@@ -1373,9 +1460,9 @@ def delete_comment(comment_id):
     conn = get_db()
     row = conn.execute('SELECT user_id FROM comments WHERE id = ?', (comment_id,)).fetchone()
     if not row:
-        conn.close(); return jsonify({'error': 'Komentář nenalezen'}), 404
+        conn.close(); return jsonify({'error': 'Comment not found'}), 404
     if row['user_id'] != session['user_id']:
-        conn.close(); return jsonify({'error': 'Zakázáno'}), 403
+        conn.close(); return jsonify({'error': 'Forbidden'}), 403
     conn.execute('DELETE FROM comments WHERE id = ?', (comment_id,))
     conn.commit(); conn.close()
     return jsonify({'ok': True})
@@ -1439,7 +1526,7 @@ def notifications_count():
 @app.route('/api/notifications/read-all', methods=['POST'])
 def read_all_notifications():
     if 'user_id' not in session:
-        return jsonify({'error': 'Nepřihlášen'}), 401
+        return jsonify({'error': 'Not signed in'}), 401
     conn = get_db()
     conn.execute('UPDATE notifications SET read = 1 WHERE user_id = ?', (session['user_id'],))
     conn.commit(); conn.close()
@@ -1449,7 +1536,7 @@ def read_all_notifications():
 @app.route('/api/notifications/<int:nid>', methods=['DELETE'])
 def delete_notification(nid):
     if 'user_id' not in session:
-        return jsonify({'error': 'Nepřihlášen'}), 401
+        return jsonify({'error': 'Not signed in'}), 401
     conn = get_db()
     conn.execute('DELETE FROM notifications WHERE id = ? AND user_id = ?', (nid, session['user_id']))
     conn.commit(); conn.close()
@@ -1478,15 +1565,16 @@ def get_news():
     } for r in rows])
 
 @app.route('/api/news', methods=['POST'])
+@limiter.limit('20 per hour')
 def post_news():
     if 'user_id' not in session:
-        return jsonify({'error': 'Nepřihlášen'}), 401
+        return jsonify({'error': 'Not signed in'}), 401
     data = request.get_json()
     text = (data.get('text') or '').strip()
     if not text:
-        return jsonify({'error': 'Prázdný příspěvek'}), 400
+        return jsonify({'error': 'Post cannot be empty'}), 400
     if len(text) > 300:
-        return jsonify({'error': 'Max 300 znaků'}), 400
+        return jsonify({'error': 'Max 300 characters'}), 400
     conn = get_db()
     cur = conn.execute('INSERT INTO news (user_id, text) VALUES (?, ?)', (session['user_id'], text))
     conn.commit()
@@ -1507,13 +1595,13 @@ def post_news():
 @app.route('/api/news/<int:nid>', methods=['DELETE'])
 def delete_news(nid):
     if 'user_id' not in session:
-        return jsonify({'error': 'Nepřihlášen'}), 401
+        return jsonify({'error': 'Not signed in'}), 401
     conn = get_db()
     row = conn.execute('SELECT user_id FROM news WHERE id = ?', (nid,)).fetchone()
     if not row:
-        conn.close(); return jsonify({'error': 'Nenalezeno'}), 404
+        conn.close(); return jsonify({'error': 'Not found'}), 404
     if row['user_id'] != session['user_id']:
-        conn.close(); return jsonify({'error': 'Zakázáno'}), 403
+        conn.close(); return jsonify({'error': 'Forbidden'}), 403
     conn.execute('DELETE FROM news WHERE id = ?', (nid,))
     conn.commit(); conn.close()
     return jsonify({'ok': True})
@@ -1545,7 +1633,7 @@ def toggle_follow(user_id):
     if err:
         return err
     if user_id == session['user_id']:
-        return jsonify({'error': 'Nemůžeš sledovat sám sebe'}), 400
+        return jsonify({'error': "You can't follow yourself"}), 400
 
     conn     = get_db()
     existing = conn.execute('SELECT 1 FROM follows WHERE follower_id = ? AND following_id = ?',
@@ -1703,7 +1791,7 @@ def get_profile(username):
     u = conn.execute('SELECT id, username, display_name, city, genres, bio, avatar, emoji, photo1, photo2, photo3, photo4, lat, lng, created_at, pro FROM users WHERE username = ?', (username,)).fetchone()
     if not u:
         conn.close()
-        return jsonify({'error': 'Uživatel nenalezen'}), 404
+        return jsonify({'error': 'User not found'}), 404
 
     tracks = conn.execute('''
         SELECT t.*, EXISTS(SELECT 1 FROM likes WHERE user_id = ? AND track_id = t.id) AS liked
@@ -1776,15 +1864,15 @@ def update_profile():
         emoji = ''
 
     if not display_name:
-        return jsonify({'error': 'Jméno nesmí být prázdné'}), 400
+        return jsonify({'error': 'Display name cannot be empty'}), 400
     if len(display_name) > 60:
-        return jsonify({'error': 'Jméno je příliš dlouhé (max 60 znaků)'}), 400
+        return jsonify({'error': 'Display name is too long (max 60 characters)'}), 400
     if len(bio) > 500:
-        return jsonify({'error': 'Bio je příliš dlouhé (max 500 znaků)'}), 400
+        return jsonify({'error': 'Bio is too long (max 500 characters)'}), 400
     if len(city) > 80:
-        return jsonify({'error': 'Město je příliš dlouhé'}), 400
+        return jsonify({'error': 'City name is too long'}), 400
     if len(genres) > 200:
-        return jsonify({'error': 'Žánry jsou příliš dlouhé'}), 400
+        return jsonify({'error': 'Genres field is too long'}), 400
 
     conn = get_db()
     if lat is not None and lng is not None:
@@ -1879,7 +1967,7 @@ def get_messages(other_id):
     conn.close()
 
     if not other:
-        return jsonify({'error': 'Uživatel nenalezen'}), 404
+        return jsonify({'error': 'User not found'}), 404
 
     return jsonify({
         'other': {
@@ -1911,7 +1999,7 @@ def send_message(other_id):
         img = request.files['image']
         ext = img.filename.rsplit('.', 1)[-1].lower() if img.filename else ''
         if ext not in ('jpg', 'jpeg', 'png', 'webp', 'gif'):
-            return jsonify({'error': 'Nepodporovaný formát obrázku'}), 400
+            return jsonify({'error': 'Unsupported image format'}), 400
         safe   = secure_filename(img.filename)
         unique = f"msg_{session['user_id']}_{int(time.time())}_{safe}"
         save_upload(img, unique)
@@ -1924,9 +2012,9 @@ def send_message(other_id):
     data    = request.get_json(silent=True) or {}
     content = data.get('content', '').strip()
     if not content:
-        return jsonify({'error': 'Zpráva nesmí být prázdná'}), 400
+        return jsonify({'error': 'Message cannot be empty'}), 400
     if len(content) > 2000:
-        return jsonify({'error': 'Zpráva je příliš dlouhá'}), 400
+        return jsonify({'error': 'Message is too long'}), 400
 
     conn = get_db()
     conn.execute('INSERT INTO messages (sender_id, receiver_id, content, content_type) VALUES (?, ?, ?, ?)',
@@ -1971,9 +2059,9 @@ def add_favorite_city():
         lat = float(data.get('lat'))
         lng = float(data.get('lng'))
     except (TypeError, ValueError):
-        return jsonify({'error': 'Neplatné souřadnice'}), 400
+        return jsonify({'error': 'Invalid coordinates'}), 400
     if not name:
-        return jsonify({'error': 'Chybí název'}), 400
+        return jsonify({'error': 'Name is required'}), 400
     conn = get_db()
     try:
         conn.execute('INSERT OR IGNORE INTO favorite_cities (user_id, name, lat, lng) VALUES (?, ?, ?, ?)',
@@ -2087,13 +2175,13 @@ def create_event():
     except (TypeError, ValueError): lng = None
 
     if not title or not date:
-        return jsonify({'error': 'Název a datum jsou povinné'}), 400
+        return jsonify({'error': 'Title and date are required'}), 400
     if len(title) > 120:
-        return jsonify({'error': 'Název je příliš dlouhý (max 120 znaků)'}), 400
+        return jsonify({'error': 'Title is too long (max 120 characters)'}), 400
     if len(description) > 2000:
-        return jsonify({'error': 'Popis je příliš dlouhý (max 2000 znaků)'}), 400
+        return jsonify({'error': 'Description is too long (max 2000 characters)'}), 400
     if len(venue) > 120:
-        return jsonify({'error': 'Místo konání je příliš dlouhé'}), 400
+        return jsonify({'error': 'Venue name is too long'}), 400
 
     photos = []
     for i in range(1, 6):
@@ -2141,7 +2229,7 @@ def get_my_events():
 @app.route('/api/events/<int:event_id>/save', methods=['POST'])
 def save_event(event_id):
     if 'user_id' not in session:
-        return jsonify({'error': 'Nepřihlášen'}), 401
+        return jsonify({'error': 'Not signed in'}), 401
     conn = get_db()
     existing = conn.execute('SELECT 1 FROM event_saves WHERE user_id=? AND event_id=?',
                             (session['user_id'], event_id)).fetchone()
@@ -2165,7 +2253,7 @@ def save_event(event_id):
 @app.route('/api/calendar')
 def get_calendar():
     if 'user_id' not in session:
-        return jsonify({'error': 'Nepřihlášen'}), 401
+        return jsonify({'error': 'Not signed in'}), 401
     conn = get_db()
     today = datetime.now().strftime('%Y-%m-%d')
     rows = conn.execute('''
@@ -2186,7 +2274,7 @@ def get_calendar():
 @app.route('/api/profile/<username>/events')
 def get_profile_events(username):
     if 'user_id' not in session:
-        return jsonify({'error': 'Nepřihlášen'}), 401
+        return jsonify({'error': 'Not signed in'}), 401
     conn = get_db()
     user = conn.execute('SELECT id FROM users WHERE username = ?', (username,)).fetchone()
     if not user:
@@ -2217,10 +2305,10 @@ def delete_event(event_id):
     event = conn.execute('SELECT user_id FROM events WHERE id = ?', (event_id,)).fetchone()
     if not event:
         conn.close()
-        return jsonify({'error': 'Akce nenalezena'}), 404
+        return jsonify({'error': 'Event not found'}), 404
     if event['user_id'] != session['user_id']:
         conn.close()
-        return jsonify({'error': 'Nemáš oprávnění'}), 403
+        return jsonify({'error': 'Not authorized'}), 403
 
     conn.execute('DELETE FROM events WHERE id = ?', (event_id,))
     conn.commit()
@@ -2238,7 +2326,7 @@ def get_profile_playlists(username):
     user = conn.execute('SELECT id FROM users WHERE username = ?', (username,)).fetchone()
     if not user:
         conn.close()
-        return jsonify({'error': 'Uživatel nenalezen'}), 404
+        return jsonify({'error': 'User not found'}), 404
     is_own = user['id'] == session['user_id']
     if is_own:
         rows = conn.execute('SELECT * FROM playlists WHERE user_id = ? ORDER BY created_at DESC', (user['id'],)).fetchall()
@@ -2271,10 +2359,10 @@ def get_playlist(pid):
     pl = conn.execute('SELECT * FROM playlists WHERE id = ?', (pid,)).fetchone()
     if not pl:
         conn.close()
-        return jsonify({'error': 'Playlist nenalezen'}), 404
+        return jsonify({'error': 'Playlist not found'}), 404
     if not pl['is_public'] and pl['user_id'] != session['user_id']:
         conn.close()
-        return jsonify({'error': 'Soukromý playlist'}), 403
+        return jsonify({'error': 'Private playlist'}), 403
     tracks = conn.execute(
         '''SELECT t.id, t.title, t.genre, t.filename, t.cover, t.duration, t.like_count,
                   u.display_name, u.username
@@ -2312,7 +2400,7 @@ def create_playlist():
     data = request.get_json()
     name = data.get('name', '').strip()
     if not name:
-        return jsonify({'error': 'Název je povinný'}), 400
+        return jsonify({'error': 'Name is required'}), 400
     is_public = 1 if data.get('is_public', True) else 0
     conn = get_db()
     cur = conn.execute(
@@ -2333,7 +2421,7 @@ def update_playlist(pid):
     pl = conn.execute('SELECT * FROM playlists WHERE id = ?', (pid,)).fetchone()
     if not pl or pl['user_id'] != session['user_id']:
         conn.close()
-        return jsonify({'error': 'Nenalezeno'}), 404
+        return jsonify({'error': 'Not found'}), 404
     data = request.get_json()
     name      = data.get('name', pl['name']).strip() or pl['name']
     is_public = 1 if data.get('is_public', bool(pl['is_public'])) else 0
@@ -2351,7 +2439,7 @@ def delete_playlist(pid):
     pl = conn.execute('SELECT user_id FROM playlists WHERE id = ?', (pid,)).fetchone()
     if not pl or pl['user_id'] != session['user_id']:
         conn.close()
-        return jsonify({'error': 'Nenalezeno'}), 404
+        return jsonify({'error': 'Not found'}), 404
     conn.execute('DELETE FROM playlists WHERE id = ?', (pid,))
     conn.commit()
     conn.close()
@@ -2366,7 +2454,7 @@ def add_to_playlist(pid):
     pl = conn.execute('SELECT user_id FROM playlists WHERE id = ?', (pid,)).fetchone()
     if not pl or pl['user_id'] != session['user_id']:
         conn.close()
-        return jsonify({'error': 'Nenalezeno'}), 404
+        return jsonify({'error': 'Not found'}), 404
     track_id = request.get_json().get('track_id')
     pos = conn.execute('SELECT COUNT(*) FROM playlist_tracks WHERE playlist_id = ?', (pid,)).fetchone()[0]
     try:
@@ -2387,7 +2475,7 @@ def remove_from_playlist(pid, tid):
     pl = conn.execute('SELECT user_id FROM playlists WHERE id = ?', (pid,)).fetchone()
     if not pl or pl['user_id'] != session['user_id']:
         conn.close()
-        return jsonify({'error': 'Nenalezeno'}), 404
+        return jsonify({'error': 'Not found'}), 404
     conn.execute('DELETE FROM playlist_tracks WHERE playlist_id = ? AND track_id = ?', (pid, tid))
     conn.commit()
     conn.close()
@@ -2465,6 +2553,7 @@ def get_listings():
 
 
 @app.route('/api/listings', methods=['POST'])
+@limiter.limit('10 per hour')
 def create_listing():
     err = require_login()
     if err: return err
@@ -2478,13 +2567,13 @@ def create_listing():
     currency = request.form.get('currency', 'CZK').strip()
 
     if not title or price <= 0:
-        return jsonify({'error': 'Název a cena jsou povinné'}), 400
+        return jsonify({'error': 'Title and price are required'}), 400
     if len(title) > 120:
-        return jsonify({'error': 'Název je příliš dlouhý (max 120 znaků)'}), 400
+        return jsonify({'error': 'Title is too long (max 120 characters)'}), 400
     if len(description) > 2000:
-        return jsonify({'error': 'Popis je příliš dlouhý (max 2000 znaků)'}), 400
+        return jsonify({'error': 'Description is too long (max 2000 characters)'}), 400
     if price > 10_000_000:
-        return jsonify({'error': 'Cena je příliš vysoká'}), 400
+        return jsonify({'error': 'Price is too high'}), 400
 
     photos = []
     for i in range(1, 6):
@@ -2514,7 +2603,7 @@ def update_listing(lid):
     conn = get_db()
     lst = conn.execute('SELECT * FROM listings WHERE id = ?', (lid,)).fetchone()
     if not lst or lst['user_id'] != session['user_id']:
-        conn.close(); return jsonify({'error': 'Nenalezeno'}), 404
+        conn.close(); return jsonify({'error': 'Not found'}), 404
     data = request.get_json()
     status = data.get('status', lst['status'])
     conn.execute('UPDATE listings SET status = ? WHERE id = ?', (status, lid))
@@ -2529,7 +2618,7 @@ def delete_listing(lid):
     conn = get_db()
     lst = conn.execute('SELECT user_id FROM listings WHERE id = ?', (lid,)).fetchone()
     if not lst or lst['user_id'] != session['user_id']:
-        conn.close(); return jsonify({'error': 'Nenalezeno'}), 404
+        conn.close(); return jsonify({'error': 'Not found'}), 404
     conn.execute('DELETE FROM listings WHERE id = ?', (lid,))
     conn.commit(); conn.close()
     return jsonify({'ok': True})
@@ -2613,10 +2702,10 @@ def get_skill_categories():
 @app.route('/api/skills', methods=['POST'])
 def create_skill():
     if 'user_id' not in session:
-        return jsonify({'error': 'Nepřihlášen'}), 401
+        return jsonify({'error': 'Not signed in'}), 401
     d = request.get_json()
     if not d or not d.get('title') or not d.get('category'):
-        return jsonify({'error': 'Vyplň název a kategorii'}), 400
+        return jsonify({'error': 'Title and category are required'}), 400
     conn = get_db()
     conn.execute(
         'INSERT INTO skill_listings (user_id,title,description,category,subcategory,price_from,price_to,currency,delivery_days,city,remote) VALUES (?,?,?,?,?,?,?,?,?,?,?)',
@@ -2633,7 +2722,7 @@ def create_skill():
 @app.route('/api/skills/<int:sid>', methods=['DELETE'])
 def delete_skill(sid):
     if 'user_id' not in session:
-        return jsonify({'error': 'Nepřihlášen'}), 401
+        return jsonify({'error': 'Not signed in'}), 401
     conn = get_db()
     row = conn.execute('SELECT user_id FROM skill_listings WHERE id=?', (sid,)).fetchone()
     if not row or row['user_id'] != session['user_id']:
@@ -2646,7 +2735,7 @@ def delete_skill(sid):
 @app.route('/api/skills/<int:sid>/like', methods=['POST'])
 def like_skill(sid):
     if 'user_id' not in session:
-        return jsonify({'error': 'Nepřihlášen'}), 401
+        return jsonify({'error': 'Not signed in'}), 401
     conn = get_db()
     existing = conn.execute('SELECT 1 FROM skill_likes WHERE user_id=? AND skill_id=?', (session['user_id'], sid)).fetchone()
     if existing:
@@ -2672,12 +2761,12 @@ def analytics_page():
 @app.route('/api/analytics')
 def analytics():
     if 'user_id' not in session:
-        return jsonify({'error': 'Nepřihlášen'}), 401
+        return jsonify({'error': 'Not signed in'}), 401
     conn = get_db()
     user = conn.execute('SELECT pro FROM users WHERE id = ?', (session['user_id'],)).fetchone()
     if not user or not user['pro']:
         conn.close()
-        return jsonify({'error': 'Analytika je dostupná pouze pro PRO uživatele'}), 403
+        return jsonify({'error': 'Analytics is available to PRO users only'}), 403
 
     uid = session['user_id']
 
@@ -2782,14 +2871,14 @@ def analytics():
 @app.route('/api/pro/checkout', methods=['POST'])
 def pro_checkout():
     if 'user_id' not in session:
-        return jsonify({'error': 'Nepřihlášen'}), 401
+        return jsonify({'error': 'Not signed in'}), 401
     if not STRIPE_PRO_PRICE_ID:
-        return jsonify({'error': 'PRO předplatné není nakonfigurováno'}), 500
+        return jsonify({'error': 'PRO subscription is not configured'}), 500
     conn = get_db()
     user = conn.execute('SELECT email, stripe_customer_id, pro FROM users WHERE id = ?', (session['user_id'],)).fetchone()
     conn.close()
     if user['pro']:
-        return jsonify({'error': 'Již jsi PRO uživatel'}), 400
+        return jsonify({'error': 'You are already a PRO user'}), 400
     customer_id = user['stripe_customer_id']
     try:
         if not customer_id:
@@ -2814,12 +2903,12 @@ def pro_checkout():
 @app.route('/api/pro/portal', methods=['POST'])
 def pro_portal():
     if 'user_id' not in session:
-        return jsonify({'error': 'Nepřihlášen'}), 401
+        return jsonify({'error': 'Not signed in'}), 401
     conn = get_db()
     user = conn.execute('SELECT stripe_customer_id FROM users WHERE id = ?', (session['user_id'],)).fetchone()
     conn.close()
     if not user or not user['stripe_customer_id']:
-        return jsonify({'error': 'Nemáš aktivní předplatné'}), 400
+        return jsonify({'error': 'You have no active subscription'}), 400
     try:
         portal = stripe.billing_portal.Session.create(
             customer=user['stripe_customer_id'],
@@ -2856,13 +2945,13 @@ def stripe_public_key():
 @app.route('/api/listings/<int:lid>/checkout', methods=['POST'])
 def listing_checkout(lid):
     if 'user_id' not in session:
-        return jsonify({'error': 'Nepřihlášen'}), 401
+        return jsonify({'error': 'Not signed in'}), 401
     conn = get_db()
     listing = conn.execute('SELECT * FROM listings WHERE id = ? AND status = "active"', (lid,)).fetchone()
     if not listing:
-        conn.close(); return jsonify({'error': 'Inzerát nenalezen nebo již prodán'}), 404
+        conn.close(); return jsonify({'error': 'Listing not found or already sold'}), 404
     if listing['user_id'] == session['user_id']:
-        conn.close(); return jsonify({'error': 'Nemůžeš koupit vlastní inzerát'}), 400
+        conn.close(); return jsonify({'error': "You can't buy your own listing"}), 400
     amount_czk = listing['price']
     fee_czk    = max(1, round(amount_czk * PLATFORM_FEE_LISTING))
     currency   = listing['currency'].lower()
@@ -2882,7 +2971,7 @@ def listing_checkout(lid):
                     'price_data': {
                         'currency': currency,
                         'unit_amount': fee_czk * 100,
-                        'product_data': {'name': f'Poplatek platformy ({int(PLATFORM_FEE_LISTING*100)} %)'},
+                        'product_data': {'name': f'Platform fee ({int(PLATFORM_FEE_LISTING*100)} %)'},
                     },
                     'quantity': 1,
                 },
@@ -2892,7 +2981,7 @@ def listing_checkout(lid):
             cancel_url=request.host_url + '?bazar=1',
         )
     except stripe.error.AuthenticationError:
-        conn.close(); return jsonify({'error': 'Stripe klíč není nastaven — přidej STRIPE_SECRET_KEY do prostředí'}), 500
+        conn.close(); return jsonify({'error': 'Stripe key not configured — add STRIPE_SECRET_KEY to your environment'}), 500
     order_code = str(uuid.uuid4())[:8].upper()
     conn.execute(
         'INSERT INTO orders (user_id, item_type, item_id, stripe_session_id, amount, platform_fee, currency, status, ticket_code) VALUES (?,?,?,?,?,?,?,?,?)',
@@ -2913,18 +3002,18 @@ def get_ticket_types(event_id):
 @app.route('/api/events/<int:event_id>/ticket-types', methods=['POST'])
 def create_ticket_type(event_id):
     if 'user_id' not in session:
-        return jsonify({'error': 'Nepřihlášen'}), 401
+        return jsonify({'error': 'Not signed in'}), 401
     conn = get_db()
     ev = conn.execute('SELECT user_id FROM events WHERE id = ?', (event_id,)).fetchone()
     if not ev or ev['user_id'] != session['user_id']:
-        conn.close(); return jsonify({'error': 'Zakázáno'}), 403
+        conn.close(); return jsonify({'error': 'Forbidden'}), 403
     data = request.get_json()
     name     = (data.get('name') or '').strip()
     price    = int(data.get('price') or 0)
     capacity = int(data.get('capacity') or 0)
     currency = (data.get('currency') or 'CZK').upper()
     if not name or price < 0:
-        conn.close(); return jsonify({'error': 'Neplatná data'}), 400
+        conn.close(); return jsonify({'error': 'Invalid data'}), 400
     cur = conn.execute(
         'INSERT INTO ticket_types (event_id, name, price, currency, capacity) VALUES (?,?,?,?,?)',
         (event_id, name, price, currency, capacity)
@@ -2937,14 +3026,14 @@ def create_ticket_type(event_id):
 @app.route('/api/ticket-types/<int:tt_id>', methods=['DELETE'])
 def delete_ticket_type(tt_id):
     if 'user_id' not in session:
-        return jsonify({'error': 'Nepřihlášen'}), 401
+        return jsonify({'error': 'Not signed in'}), 401
     conn = get_db()
     tt = conn.execute('''
         SELECT tt.*, e.user_id as owner FROM ticket_types tt
         JOIN events e ON e.id = tt.event_id WHERE tt.id = ?
     ''', (tt_id,)).fetchone()
     if not tt or tt['owner'] != session['user_id']:
-        conn.close(); return jsonify({'error': 'Zakázáno'}), 403
+        conn.close(); return jsonify({'error': 'Forbidden'}), 403
     conn.execute('DELETE FROM ticket_types WHERE id = ?', (tt_id,))
     conn.commit(); conn.close()
     return jsonify({'ok': True})
@@ -2952,18 +3041,18 @@ def delete_ticket_type(tt_id):
 @app.route('/api/ticket-types/<int:tt_id>/checkout', methods=['POST'])
 def ticket_checkout(tt_id):
     if 'user_id' not in session:
-        return jsonify({'error': 'Nepřihlášen'}), 401
+        return jsonify({'error': 'Not signed in'}), 401
     conn = get_db()
     tt = conn.execute('''
         SELECT tt.*, e.title as event_title, e.date as event_date, e.user_id as owner
         FROM ticket_types tt JOIN events e ON e.id = tt.event_id WHERE tt.id = ?
     ''', (tt_id,)).fetchone()
     if not tt:
-        conn.close(); return jsonify({'error': 'Vstupenka nenalezena'}), 404
+        conn.close(); return jsonify({'error': 'Ticket not found'}), 404
     if tt['owner'] == session['user_id']:
-        conn.close(); return jsonify({'error': 'Nemůžeš koupit vstupenku na vlastní akci'}), 400
+        conn.close(); return jsonify({'error': "You can't buy a ticket to your own event"}), 400
     if tt['capacity'] > 0 and tt['sold'] >= tt['capacity']:
-        conn.close(); return jsonify({'error': 'Vstupenky jsou vyprodány'}), 400
+        conn.close(); return jsonify({'error': 'Tickets are sold out'}), 400
     label    = f"{tt['event_title']} — {tt['name']} ({tt['event_date']})"
     price    = tt['price']
     fee_czk  = max(1, round(price * PLATFORM_FEE_TICKET))
@@ -3055,7 +3144,7 @@ def stripe_webhook():
 @app.route('/api/my-orders')
 def my_orders():
     if 'user_id' not in session:
-        return jsonify({'error': 'Nepřihlášen'}), 401
+        return jsonify({'error': 'Not signed in'}), 401
     conn = get_db()
     rows = conn.execute(
         'SELECT * FROM orders WHERE user_id = ? ORDER BY created_at DESC', (session['user_id'],)
@@ -3089,7 +3178,7 @@ def verify_order():
             pass
     conn.close()
     if not order:
-        return jsonify({'error': 'Objednávka nenalezena'}), 404
+        return jsonify({'error': 'Order not found'}), 404
     return jsonify(dict(order))
 
 
@@ -3107,19 +3196,19 @@ def scan_page():
 @app.route('/api/ticket/<code>')
 def get_ticket(code):
     if 'user_id' not in session:
-        return jsonify({'error': 'Nepřihlášen'}), 401
+        return jsonify({'error': 'Not signed in'}), 401
     conn = get_db()
     order = conn.execute(
         "SELECT o.*, u.display_name, u.username, u.emoji FROM orders o JOIN users u ON o.user_id=u.id WHERE o.ticket_code=?",
         (code,)
     ).fetchone()
     if not order:
-        conn.close(); return jsonify({'error': 'Lístek nenalezen'}), 404
+        conn.close(); return jsonify({'error': 'Ticket not found'}), 404
     # get event info
     ev = conn.execute('SELECT * FROM events WHERE id=?', (order['item_id'],)).fetchone()
     conn.close()
     if not ev:
-        return jsonify({'error': 'Akce nenalezena'}), 404
+        return jsonify({'error': 'Event not found'}), 404
     return jsonify({
         'code':         order['ticket_code'],
         'status':       order['status'],
@@ -3142,21 +3231,29 @@ def get_ticket(code):
 @app.route('/api/ticket/<code>/use', methods=['POST'])
 def use_ticket(code):
     if 'user_id' not in session:
-        return jsonify({'error': 'Nepřihlášen'}), 401
+        return jsonify({'error': 'Not signed in'}), 401
     conn = get_db()
     order = conn.execute("SELECT * FROM orders WHERE ticket_code=?", (code,)).fetchone()
     if not order:
-        conn.close(); return jsonify({'error': 'Lístek nenalezen'}), 404
+        conn.close(); return jsonify({'error': 'Ticket not found'}), 404
     ev = conn.execute('SELECT user_id FROM events WHERE id=?', (order['item_id'],)).fetchone()
     if not ev or ev['user_id'] != session['user_id']:
         conn.close(); return jsonify({'error': 'Nejsi organizátor této akce'}), 403
     if order['status'] == 'used':
-        conn.close(); return jsonify({'error': 'Lístek již byl použit', 'status': 'used'}), 409
+        conn.close(); return jsonify({'error': 'Ticket already used', 'status': 'used'}), 409
     if order['status'] not in ('valid', 'paid'):
-        conn.close(); return jsonify({'error': f'Lístek je neplatný (status: {order["status"]})'}), 400
+        conn.close(); return jsonify({'error': f'Invalid ticket (status: {order["status"]})'}), 400
     conn.execute("UPDATE orders SET status='used' WHERE ticket_code=?", (code,))
     conn.commit(); conn.close()
     return jsonify({'ok': True, 'status': 'used'})
+
+@app.errorhandler(404)
+def not_found(e):
+    return send_from_directory('public', '404.html'), 404
+
+@app.errorhandler(429)
+def rate_limited(e):
+    return jsonify({'error': 'Too many requests — please try again later'}), 429
 
 # Inicializace DB při startu (funguje i pro gunicorn)
 init_db()

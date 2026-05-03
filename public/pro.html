@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="cs">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -11,7 +11,17 @@
 <meta name="apple-mobile-web-app-title" content="Hear Me Out">
 <link rel="apple-touch-icon" href="/icons/icon-192.png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hear Me Out PRO</title>
+<title>Hear Me Out PRO — Premium subscription</title>
+<meta name="description" content="Hear Me Out PRO — WAV uploads, detailed analytics, PRO badge, and a larger portfolio. 149 CZK/month.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://hearmeout.app/pro">
+<meta property="og:title" content="Hear Me Out PRO — Premium subscription">
+<meta property="og:description" content="WAV uploads, detailed analytics, PRO badge, and a larger portfolio. 149 CZK/month, cancel anytime.">
+<meta property="og:image" content="https://hearmeout.app/icons/icon-512.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Hear Me Out PRO">
+<meta name="twitter:description" content="WAV uploads, detailed analytics, PRO badge. 149 CZK/month.">
+<meta name="twitter:image" content="https://hearmeout.app/icons/icon-512.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
 <style>
@@ -89,20 +99,20 @@ nav{width:100%;max-width:860px;display:flex;align-items:center;justify-content:s
 
 <nav>
   <a href="/" class="nav-brand">HEAR ME OUT</a>
-  <a href="/" class="nav-back">← Zpět na feed</a>
+  <a href="/" class="nav-back">← Back to feed</a>
 </nav>
 
 <div class="hero">
-  <div class="hero-label">Prémiové předplatné</div>
+  <div class="hero-label">Premium subscription</div>
   <div class="hero-title">HEAR ME OUT <span>PRO</span></div>
-  <div class="hero-sub">Nástroje pro tvůrce, kteří to myslí vážně. Plná kontrola nad zvukem, daty a viditelností.</div>
+  <div class="hero-sub">Tools for creators who mean business. Full control over your sound, data, and visibility.</div>
 </div>
 
 <!-- already PRO banner -->
 <div class="already-pro" id="alreadyPro">
-  <div class="already-pro-title">★ Jsi PRO uživatel</div>
-  <div class="already-pro-sub">Děkujeme za podporu. Spravovat předplatné nebo ho zrušit můžeš přes zákaznický portál.</div>
-  <button class="portal-btn" onclick="openPortal()">Spravovat předplatné</button>
+  <div class="already-pro-title">★ You're a PRO member</div>
+  <div class="already-pro-sub">Thanks for your support. Manage or cancel your subscription via the customer portal.</div>
+  <button class="portal-btn" onclick="openPortal()">Manage subscription</button>
   <div class="msg" id="portalMsg"></div>
 </div>
 
@@ -111,79 +121,79 @@ nav{width:100%;max-width:860px;display:flex;align-items:center;justify-content:s
   <div class="plan">
     <div class="plan-name">FREE</div>
     <div class="plan-price">0 <span>CZK</span></div>
-    <div class="plan-period">navždy zdarma</div>
+    <div class="plan-period">free forever</div>
     <ul class="plan-features">
-      <li>Profil a poslech bez omezení</li>
-      <li>Nahrávání MP3 tracků</li>
-      <li>Bazar — nákup a prodej vybavení</li>
-      <li>Messaging a networking</li>
-      <li class="disabled">WAV nahrávání</li>
-      <li class="disabled">Detailní analytika</li>
-      <li class="disabled">PRO odznak</li>
-      <li class="disabled">Větší portfolio (až 8 fotek)</li>
+      <li>Profile and unlimited listening</li>
+      <li>MP3 track uploads</li>
+      <li>Marketplace — buy and sell gear</li>
+      <li>Messaging and networking</li>
+      <li class="disabled">WAV uploads</li>
+      <li class="disabled">Detailed analytics</li>
+      <li class="disabled">PRO badge</li>
+      <li class="disabled">Larger portfolio (up to 8 photos)</li>
     </ul>
-    <button class="plan-btn free" onclick="window.location='/'">Používat zdarma</button>
+    <button class="plan-btn free" onclick="window.location='/'">Use for free</button>
   </div>
 
   <!-- PRO -->
   <div class="plan featured">
-    <div class="plan-badge">DOPORUČUJEME</div>
+    <div class="plan-badge">RECOMMENDED</div>
     <div class="plan-name">PRO</div>
     <div class="plan-price">149 <span>CZK</span></div>
-    <div class="plan-period">/ měsíc · zruš kdykoliv</div>
+    <div class="plan-period">/ month · cancel anytime</div>
     <ul class="plan-features">
-      <li>Vše co FREE</li>
-      <li>Nahrávání WAV (nekomprimované audio)</li>
-      <li>Nahrávání videoklipu k tracku (MP4, MOV, WebM)</li>
-      <li>Detailní analytika přehrávání a posluchačů</li>
-      <li>PRO odznak na profilu a ve feedu</li>
-      <li>Větší portfolio — až 8 fotek a videa</li>
-      <li>Prioritní zobrazení ve výsledcích hledání</li>
+      <li>Everything in FREE</li>
+      <li>WAV uploads (uncompressed audio)</li>
+      <li>Music video upload per track (MP4, MOV, WebM)</li>
+      <li>Detailed playback and listener analytics</li>
+      <li>PRO badge on profile and in the feed</li>
+      <li>Larger portfolio — up to 8 photos and video</li>
+      <li>Priority placement in search results</li>
     </ul>
-    <button class="plan-btn pro" id="proBtn" onclick="subscribePro()">Přejít na PRO</button>
+    <button class="plan-btn pro" id="proBtn" onclick="subscribePro()">Go PRO</button>
     <div class="msg" id="proMsg"></div>
   </div>
 </div>
 
 <div class="features-grid">
-  <div class="features-title">CO DOSTANEŠ S PRO</div>
+  <div class="features-title">WHAT YOU GET WITH PRO</div>
   <div class="features-list">
     <div class="feature-card">
       <div class="feature-icon">🎚️</div>
-      <div class="feature-name">WAV Nahrávání</div>
-      <div class="feature-desc">Nahraj nekomprimované WAV soubory. Zachovej plnou kvalitu svého zvuku — žádné artefakty MP3 komprese.</div>
+      <div class="feature-name">WAV Uploads</div>
+      <div class="feature-desc">Upload uncompressed WAV files. Keep your audio at full quality — no MP3 compression artifacts.</div>
     </div>
     <div class="feature-card">
       <div class="feature-icon">📊</div>
-      <div class="feature-name">Analytika</div>
-      <div class="feature-desc">Zjisti z jakých měst jsou tvoji posluchači, kdo si tě uložil a jak se tvoje tracky šíří přes reposty.</div>
+      <div class="feature-name">Analytics</div>
+      <div class="feature-desc">See which cities your listeners come from, who saved your profile, and how your tracks spread through reposts.</div>
     </div>
     <div class="feature-card">
       <div class="feature-icon">★</div>
-      <div class="feature-name">PRO Odznak</div>
-      <div class="feature-desc">Zlatý odznak u tvého jména buduje důvěryhodnost při hledání spolupráce s labels, agenty a dalšími tvůrci.</div>
+      <div class="feature-name">PRO Badge</div>
+      <div class="feature-desc">A gold badge next to your name builds credibility when reaching out to labels, agents, and fellow creators.</div>
     </div>
     <div class="feature-card">
       <div class="feature-icon">🖼️</div>
-      <div class="feature-name">Větší Portfolio</div>
-      <div class="feature-desc">Přidej až 8 fotek z vystoupení, studia nebo zákulisí. Ukaž víc ze světa kolem své hudby.</div>
+      <div class="feature-name">Larger Portfolio</div>
+      <div class="feature-desc">Add up to 8 photos from shows, the studio, or behind the scenes. Show more of the world around your music.</div>
     </div>
   </div>
 </div>
 
 <div class="faq">
-  <div class="faq-title">ČASTÉ DOTAZY</div>
+  <div class="faq-title">FAQ</div>
   <div class="faq-item">
-    <div class="faq-q">Mohu zrušit předplatné kdykoliv?</div>
-    <div class="faq-a">Ano, předplatné zrušíš kdykoliv přes zákaznický portál. Přístup k PRO funkcím máš do konce aktuálního zaplaceného období.</div>
+    <div class="faq-q">Can I cancel anytime?</div>
+    <div class="faq-a">Yes, cancel anytime via the customer portal. You keep access to PRO features until the end of your current billing period.</div>
   </div>
   <div class="faq-item">
-    <div class="faq-q">Přijde mi o tracky když přejdu zpět na FREE?</div>
-    <div class="faq-a">Ne. Všechny nahrané tracky zůstanou na tvém profilu. Nové tracky ve WAV formátu ale budeš moci nahrávat jen s aktivním PRO předplatným.</div>
+    <div class="faq-q">Will I lose my tracks if I go back to FREE?</div>
+    <div class="faq-a">No. All uploaded tracks stay on your profile. You just won't be able to upload new WAV tracks without an active PRO subscription.</div>
   </div>
   <div class="faq-item">
-    <div class="faq-q">Jak je platba bezpečná?</div>
-    <div class="faq-a">Platby zpracovává Stripe — světový standard pro online platby. My neukládáme žádná čísla karet.</div>
+    <div class="faq-q">Is payment secure?</div>
+    <div class="faq-a">Payments are processed by Stripe — the global standard for online payments. We never store card details.</div>
   </div>
 </div>
 
@@ -195,7 +205,7 @@ async function init() {
   const ps   = pres.ok ? await pres.json() : {pro: false};
 
   if (!me) {
-    document.getElementById('proBtn').textContent = 'Nejprve se přihlas';
+    document.getElementById('proBtn').textContent = 'Sign in first';
     document.getElementById('proBtn').onclick = () => window.location.href = '/login';
     return;
   }
@@ -203,45 +213,45 @@ async function init() {
   if (ps.pro || me.pro) {
     document.getElementById('alreadyPro').style.display = 'block';
     document.getElementById('proBtn').disabled = true;
-    document.getElementById('proBtn').textContent = 'Již jsi PRO';
+    document.getElementById('proBtn').textContent = 'Already PRO';
   }
 
   // check for success redirect
   if (location.pathname === '/pro/success') {
     document.getElementById('alreadyPro').style.display = 'block';
     document.getElementById('alreadyPro').querySelector('.already-pro-sub').textContent =
-      'Vítej v PRO! Odznak a WAV nahrávání jsou ihned aktivní.';
+      'Welcome to PRO! Your badge and WAV uploads are active immediately.';
   }
 }
 
 async function subscribePro() {
   const btn = document.getElementById('proBtn');
   const msg = document.getElementById('proMsg');
-  btn.disabled = true; btn.textContent = 'Přesměrovávám...';
+  btn.disabled = true; btn.textContent = 'Redirecting...';
   msg.textContent = ''; msg.className = 'msg';
   const res  = await fetch('/api/pro/checkout', {method: 'POST'});
   const data = await res.json();
   if (data.url) {
     window.location.href = data.url;
   } else {
-    msg.textContent = data.error || 'Chyba při zahájení platby';
+    msg.textContent = data.error || 'Payment error';
     msg.className = 'msg error';
-    btn.disabled = false; btn.textContent = 'Přejít na PRO';
+    btn.disabled = false; btn.textContent = 'Go PRO';
   }
 }
 
 async function openPortal() {
   const btn = document.querySelector('.portal-btn');
   const msg = document.getElementById('portalMsg');
-  btn.disabled = true; btn.textContent = 'Načítám...';
+  btn.disabled = true; btn.textContent = 'Loading...';
   const res  = await fetch('/api/pro/portal', {method: 'POST'});
   const data = await res.json();
   if (data.url) {
     window.location.href = data.url;
   } else {
-    msg.textContent = data.error || 'Chyba';
+    msg.textContent = data.error || 'Error';
     msg.className = 'msg error';
-    btn.disabled = false; btn.textContent = 'Spravovat předplatné';
+    btn.disabled = false; btn.textContent = 'Manage subscription';
   }
 }
 

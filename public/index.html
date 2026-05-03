@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="cs">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -11,7 +11,17 @@
 <meta name="apple-mobile-web-app-title" content="Hear Me Out">
 <link rel="apple-touch-icon" href="/icons/icon-192.png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hear Me Out</title>
+<title>Hear Me Out — Independent Music Network</title>
+<meta name="description" content="Hear Me Out is a global network for independent artists. Share tracks, find collaborations, sell gear.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://hearmeout.app/">
+<meta property="og:title" content="Hear Me Out — Independent Music Network">
+<meta property="og:description" content="A global network for independent artists. Share tracks, find collaborations, sell gear.">
+<meta property="og:image" content="https://hearmeout.app/icons/icon-512.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Hear Me Out — Independent Music Network">
+<meta name="twitter:description" content="A global network for independent artists. Share tracks, find collaborations, sell gear.">
+<meta name="twitter:image" content="https://hearmeout.app/icons/icon-512.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/theme.css">
@@ -261,6 +271,18 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(14,10,10,0.9
 .filter-active-badge{font-size:13px;color:var(--red2);letter-spacing:0.06em;padding:3px 8px;border:1px solid var(--red);background:var(--redglow)}
 .filter-clear{font-size:13px;letter-spacing:0.08em;color:var(--txt3);cursor:pointer;margin-left:auto;transition:color 0.15s;background:none;border:none;font-family:'DM Mono',monospace;padding:0}
 .filter-clear:hover{color:var(--red2)}
+
+/* ONBOARDING BANNER */
+.onboarding{background:linear-gradient(135deg,#0e0000 0%,#1a0000 100%);border:1px solid #3a0000;border-left:3px solid var(--red2);padding:20px 20px 20px 24px;margin:16px 0;position:relative}
+.onboarding-title{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:0.15em;color:var(--red2);margin-bottom:6px}
+.onboarding-sub{font-size:11px;color:var(--txt2);letter-spacing:0.04em;line-height:1.7;margin-bottom:16px}
+.onboarding-steps{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.onboarding-step{display:flex;align-items:center;gap:12px;font-size:11px;letter-spacing:0.04em}
+.onboarding-step-num{width:20px;height:20px;border:1px solid var(--red);color:var(--red2);font-family:'Bebas Neue',sans-serif;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.onboarding-step a{color:var(--txt);text-decoration:none;border-bottom:1px solid var(--border2);transition:border-color 0.15s}
+.onboarding-step a:hover{border-color:var(--red2);color:var(--red2)}
+.onboarding-close{position:absolute;top:12px;right:14px;background:none;border:none;color:var(--txt3);cursor:pointer;font-size:16px;line-height:1;padding:4px}
+.onboarding-close:hover{color:var(--txt)}
 
 /* VIEW TABS */
 .view-tabs{display:flex;border-bottom:1px solid var(--border);background:var(--bg)}
@@ -630,20 +652,20 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(14,10,10,0.9
 <!-- NAV -->
 <nav>
   <div class="nav-left">
-    <a class="nav-icon" href="/upload" title="Nahrát track">↑</a>
-    <a class="nav-icon" href="/library" title="Moje knihovna"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="3" width="12" height="1.5" rx="0.75" fill="currentColor"/><rect x="2" y="7" width="12" height="1.5" rx="0.75" fill="currentColor"/><rect x="2" y="11" width="8" height="1.5" rx="0.75" fill="currentColor"/></svg></a>
+    <a class="nav-icon" href="/upload" title="Upload track">↑</a>
+    <a class="nav-icon" href="/library" title="My library"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="3" width="12" height="1.5" rx="0.75" fill="currentColor"/><rect x="2" y="7" width="12" height="1.5" rx="0.75" fill="currentColor"/><rect x="2" y="11" width="8" height="1.5" rx="0.75" fill="currentColor"/></svg></a>
   </div>
   <a class="nav-logo" href="/">HEAR ME OUT</a>
   <div class="nav-icons">
-    <a class="nav-icon" href="/analytics" id="analyticsNavBtn" title="Analytika" style="display:none"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="1.5" y="8.5" width="3" height="6" rx="0.5" stroke="currentColor" stroke-width="1.5"/><rect x="6.5" y="5.5" width="3" height="9" rx="0.5" stroke="currentColor" stroke-width="1.5"/><rect x="11.5" y="2.5" width="3" height="12" rx="0.5" stroke="currentColor" stroke-width="1.5"/></svg></a>
+    <a class="nav-icon" href="/analytics" id="analyticsNavBtn" title="Analytics" style="display:none"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="1.5" y="8.5" width="3" height="6" rx="0.5" stroke="currentColor" stroke-width="1.5"/><rect x="6.5" y="5.5" width="3" height="9" rx="0.5" stroke="currentColor" stroke-width="1.5"/><rect x="11.5" y="2.5" width="3" height="12" rx="0.5" stroke="currentColor" stroke-width="1.5"/></svg></a>
     <a class="nav-icon" href="/pro" title="Hear Me Out PRO" id="proNavBtn" style="font-family:'Bebas Neue',sans-serif;font-size:11px;letter-spacing:0.1em;color:var(--txt3)">PRO</a>
-    <button class="nav-icon" id="themeToggle" onclick="toggleTheme()" title="Přepnout motiv" style="background:none;border:none;cursor:pointer;font-size:16px">☀</button>
-    <a class="nav-icon nav-mobile-only" href="/events" title="Kalendář" style="font-size:16px">◷</a>
-    <button class="nav-icon" id="searchBtn" onclick="openSearch()" title="Hledat" style="background:none;border:none;cursor:pointer"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M10 10L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
-    <button class="nav-icon notif-bell" id="notifBell" onclick="toggleNotifPanel()" title="Notifikace" style="background:none;border:none;cursor:pointer;position:relative"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 2.5a3.5 3.5 0 0 0-3.5 3.5v2.8L3 11h10l-1.5-2.2V6A3.5 3.5 0 0 0 8 2.5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M6.5 11a1.5 1.5 0 0 0 3 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><div class="notif-badge" id="notifBadge"></div>
+    <button class="nav-icon" id="themeToggle" onclick="toggleTheme()" title="Toggle theme" style="background:none;border:none;cursor:pointer;font-size:16px">☀</button>
+    <a class="nav-icon nav-mobile-only" href="/events" title="Calendar" style="font-size:16px">◷</a>
+    <button class="nav-icon" id="searchBtn" onclick="openSearch()" title="Search" style="background:none;border:none;cursor:pointer"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M10 10L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+    <button class="nav-icon notif-bell" id="notifBell" onclick="toggleNotifPanel()" title="Notifications" style="background:none;border:none;cursor:pointer;position:relative"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 2.5a3.5 3.5 0 0 0-3.5 3.5v2.8L3 11h10l-1.5-2.2V6A3.5 3.5 0 0 0 8 2.5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M6.5 11a1.5 1.5 0 0 0 3 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><div class="notif-badge" id="notifBadge"></div>
     </button>
-    <a class="nav-icon" href="/messages" title="Zprávy" id="msgIcon" style="position:relative"><svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 4.5 L10.5 4.5 M8 2 L10.5 4.5 L8 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 12.5 L6.5 12.5 M9 10 L6.5 12.5 L9 15" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="msg-badge" id="msgBadge"></div></a>
-    <div class="nav-avatar" id="navAvatar" title="Můj profil" onclick="goProfile()">??</div>
+    <a class="nav-icon" href="/messages" title="Messages" id="msgIcon" style="position:relative"><svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 4.5 L10.5 4.5 M8 2 L10.5 4.5 L8 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 12.5 L6.5 12.5 M9 10 L6.5 12.5 L9 15" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="msg-badge" id="msgBadge"></div></a>
+    <div class="nav-avatar" id="navAvatar" title="My profile" onclick="goProfile()">??</div>
   </div>
 </nav>
 
@@ -651,18 +673,18 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(14,10,10,0.9
 
   <!-- SIDEBAR LEFT -->
   <aside class="sidebar-left" style="position:relative">
-    <button class="sidebar-toggle" id="toggleLeft" onclick="toggleSidebar('left')" title="Skrýt/zobrazit">‹</button>
+    <button class="sidebar-toggle" id="toggleLeft" onclick="toggleSidebar('left')" title="Hide/show">‹</button>
     <div class="sidebar-search">
-      <input type="text" id="searchInput" placeholder="Hledat umělce, tracky...">
+      <input type="text" id="searchInput" placeholder="Search artists, tracks...">
     </div>
     <div class="sidebar-section sidebar-collapsible collapsed" id="favTracksSection">
-      <div class="sidebar-label" onclick="toggleSidebarSection('favTracksSection')">◫ Moje knihovna</div>
+      <div class="sidebar-label" onclick="toggleSidebarSection('favTracksSection')">◫ My library</div>
       <div class="sidebar-collapsible-body scrollable">
         <div id="sidebarFavTracks"></div>
       </div>
     </div>
     <div class="sidebar-section sidebar-collapsible collapsed" id="myCalSection">
-      <div class="sidebar-label" onclick="toggleSidebarSection('myCalSection')">◷ Můj kalendář</div>
+      <div class="sidebar-label" onclick="toggleSidebarSection('myCalSection')">◷ My calendar</div>
       <div class="sidebar-collapsible-body scrollable">
         <div id="sidebarMyCal"></div>
       </div>
@@ -670,12 +692,12 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(14,10,10,0.9
     <div class="sidebar-section">
       <div class="sidebar-label">Menu</div>
       <div class="sidebar-link active" id="linkFeed" onclick="switchToView('feed');filterCity('All')"><span class="icon">⌂</span> Feed</div>
-      <div class="sidebar-link" onclick="window.location.href='/events'"><span class="icon">◷</span> Kalendář</div>
+      <div class="sidebar-link" onclick="window.location.href='/events'"><span class="icon">◷</span> Events</div>
       <div class="sidebar-link" id="linkBazar"  onclick="switchToView('bazar')"><span class="icon"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 1.5H12.5A0.5 0.5 0 0 1 13 2V6.5L7 12.5L1.5 7L7.5 1H8Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><circle cx="10.5" cy="3.5" r="0.9" fill="currentColor"/></svg></span> Bazar</div>
       <div class="sidebar-link" id="linkSkills" onclick="switchToView('skills')"><span class="icon"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7 1.5l1.6 3.2 3.6.5-2.6 2.5.6 3.6L7 9.6l-3.2 1.7.6-3.6L1.8 5.2l3.6-.5L7 1.5z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg></span> Skills</div>
     </div>
     <div class="sidebar-section sidebar-collapsible collapsed" id="genreSection">
-      <div class="sidebar-label" onclick="toggleSidebarSection('genreSection')">Žánry</div>
+      <div class="sidebar-label" onclick="toggleSidebarSection('genreSection')">Genres</div>
       <div class="sidebar-collapsible-body scrollable">
       <div id="sidebarGenres">
         <div class="sidebar-link" onclick="filterSidebarGenre('Pop',this)"><span class="icon">♪</span> Pop</div>
@@ -690,7 +712,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(14,10,10,0.9
         <div class="sidebar-link" onclick="filterSidebarGenre('Metal',this)"><span class="icon">♪</span> Metal</div>
         <div class="sidebar-link" onclick="filterSidebarGenre('Alternative',this)"><span class="icon">♪</span> Alternative</div>
         <div class="sidebar-link" onclick="filterSidebarGenre('Soul',this)"><span class="icon">♪</span> Soul</div>
-        <div class="sidebar-link" onclick="filterSidebarGenre('Klasická hudba',this)"><span class="icon">♪</span> Klasická hudba</div>
+        <div class="sidebar-link" onclick="filterSidebarGenre('Classical',this)"><span class="icon">♪</span> Classical</div>
         <div class="sidebar-link" onclick="filterSidebarGenre('Jazz',this)"><span class="icon">♪</span> Jazz</div>
         <div class="sidebar-link" onclick="filterSidebarGenre('Reggae',this)"><span class="icon">♪</span> Reggae</div>
         <div class="sidebar-link" onclick="filterSidebarGenre('Folk',this)"><span class="icon">♪</span> Folk</div>
@@ -702,7 +724,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(14,10,10,0.9
       </div>
     </div>
     <div class="sidebar-section sidebar-collapsible collapsed" id="citySection">
-      <div class="sidebar-label" onclick="toggleSidebarSection('citySection')">Města</div>
+      <div class="sidebar-label" onclick="toggleSidebarSection('citySection')">Cities</div>
       <div class="sidebar-collapsible-body scrollable">
         <div id="sidebarFavCities" style="margin-bottom:4px"></div>
         <div id="sidebarCities">
@@ -721,38 +743,59 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(14,10,10,0.9
     </div>
     <div class="sidebar-spacer"></div>
     <div class="sidebar-section">
-      <div class="sidebar-link" onclick="doLogout()"><span class="icon">←</span> Odhlásit se</div>
+      <div class="sidebar-link" onclick="doLogout()"><span class="icon">←</span> Sign out</div>
     </div>
     <div class="sidebar-legal">
-      <a href="/privacy" style="font-size:11px;color:var(--txt3);letter-spacing:0.06em;text-decoration:none" onmouseover="this.style.color='#c62828'" onmouseout="this.style.color=''">Ochrana osobních údajů</a>
-      <a href="/terms"   style="font-size:11px;color:var(--txt3);letter-spacing:0.06em;text-decoration:none" onmouseover="this.style.color='#c62828'" onmouseout="this.style.color=''">Obchodní podmínky</a>
-      <a href="mailto:info@hearmeout.cz" style="font-size:11px;color:var(--txt3);letter-spacing:0.06em;text-decoration:none" onmouseover="this.style.color='#c62828'" onmouseout="this.style.color=''">Kontakt</a>
+      <a href="/privacy" style="font-size:11px;color:var(--txt3);letter-spacing:0.06em;text-decoration:none" onmouseover="this.style.color='#c62828'" onmouseout="this.style.color=''">Privacy Policy</a>
+      <a href="/terms"   style="font-size:11px;color:var(--txt3);letter-spacing:0.06em;text-decoration:none" onmouseover="this.style.color='#c62828'" onmouseout="this.style.color=''">Terms of Service</a>
+      <a href="mailto:info@hearmeout.cz" style="font-size:11px;color:var(--txt3);letter-spacing:0.06em;text-decoration:none" onmouseover="this.style.color='#c62828'" onmouseout="this.style.color=''">Contact</a>
     </div>
   </aside>
 
   <!-- MAIN FEED -->
   <main class="feed" id="feedContainer">
 
+    <!-- ONBOARDING BANNER -->
+    <div class="onboarding" id="onboardingBanner" style="display:none">
+      <button class="onboarding-close" onclick="dismissOnboarding()" title="Close">×</button>
+      <div class="onboarding-title">Welcome to Hear Me Out 👋</div>
+      <div class="onboarding-sub">You're new here. 3 steps to get started:</div>
+      <div class="onboarding-steps">
+        <div class="onboarding-step">
+          <div class="onboarding-step-num">1</div>
+          <span><a href="/upload">Upload your first track</a> — MP3 or WAV</span>
+        </div>
+        <div class="onboarding-step">
+          <div class="onboarding-step-num">2</div>
+          <span><a href="#" onclick="goProfile();return false">Complete your profile</a> — photo, bio, genres</span>
+        </div>
+        <div class="onboarding-step">
+          <div class="onboarding-step-num">3</div>
+          <span>Follow some <a href="#" onclick="switchToView('artists');dismissOnboarding();return false">artists</a> and see what they're up to</span>
+        </div>
+      </div>
+    </div>
+
     <!-- VIEW TABS -->
     <div class="view-tabs">
       <div class="view-tab active" id="vtFeed"   onclick="switchToView('feed')">♪ Feed</div>
       <div class="view-tab" id="vtBazar"  onclick="switchToView('bazar')" style="display:flex;align-items:center;justify-content:center;gap:5px"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 1.5H12.5A0.5 0.5 0 0 1 13 2V6.5L7 12.5L1.5 7L7.5 1H8Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><circle cx="10.5" cy="3.5" r="0.9" fill="currentColor"/></svg> Bazar</div>
       <div class="view-tab" id="vtSkills" onclick="switchToView('skills')" style="display:flex;align-items:center;justify-content:center;gap:5px"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7 1.5l1.6 3.2 3.6.5-2.6 2.5.6 3.6L7 9.6l-3.2 1.7.6-3.6L1.8 5.2l3.6-.5L7 1.5z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg> Skills</div>
-      <div class="view-tab" id="vtArtists" onclick="switchToView('artists')" style="display:flex;align-items:center;justify-content:center;gap:5px"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="4.5" r="2.5" stroke="currentColor" stroke-width="1.4"/><path d="M2 12c0-2.8 2.2-5 5-5s5 2.2 5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg> Umělci</div>
+      <div class="view-tab" id="vtArtists" onclick="switchToView('artists')" style="display:flex;align-items:center;justify-content:center;gap:5px"><svg width="13" height="13" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="4.5" r="2.5" stroke="currentColor" stroke-width="1.4"/><path d="M2 12c0-2.8 2.2-5 5-5s5 2.2 5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg> Artists</div>
     </div>
 
     <!-- ARTISTS VIEW -->
     <div id="artistsView" style="display:none">
       <div class="bazar-wrap">
         <div class="bazar-header">
-          <span class="bazar-title" style="display:flex;align-items:center;gap:8px"><svg width="18" height="18" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="4.5" r="2.5" stroke="currentColor" stroke-width="1.4"/><path d="M2 12c0-2.8 2.2-5 5-5s5 2.2 5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg> Umělci</span>
+          <span class="bazar-title" style="display:flex;align-items:center;gap:8px"><svg width="18" height="18" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="4.5" r="2.5" stroke="currentColor" stroke-width="1.4"/><path d="M2 12c0-2.8 2.2-5 5-5s5 2.2 5 5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg> Artists</span>
         </div>
         <div class="bazar-filters">
-          <input class="bazar-search" id="artistSearch" placeholder="Hledat umělce, město, žánr..." oninput="debounceArtists()">
+          <input class="bazar-search" id="artistSearch" placeholder="Search artists, city, genre..." oninput="debounceArtists()">
         </div>
         <div id="artistsGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;padding:16px 0"></div>
         <div id="artistsMore" style="text-align:center;padding:16px;display:none">
-          <button class="bazar-add-btn" onclick="loadArtists(true)" style="background:none;border:1px solid var(--border2);color:var(--txt3)">Načíst více</button>
+          <button class="bazar-add-btn" onclick="loadArtists(true)" style="background:none;border:1px solid var(--border2);color:var(--txt3)">Load more</button>
         </div>
       </div>
     </div>
@@ -762,19 +805,19 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(14,10,10,0.9
       <div class="bazar-wrap">
         <div class="bazar-header">
           <span class="bazar-title" style="display:flex;align-items:center;gap:8px"><svg width="18" height="18" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 1.5H12.5A0.5 0.5 0 0 1 13 2V6.5L7 12.5L1.5 7L7.5 1H8Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><circle cx="10.5" cy="3.5" r="0.9" fill="currentColor"/></svg> Bazar</span>
-          <button class="bazar-add-btn" onclick="openAddListing()">+ Přidat inzerát</button>
+          <button class="bazar-add-btn" onclick="openAddListing()">+ Add listing</button>
         </div>
         <div class="bazar-filters">
-          <input class="bazar-search" id="bzSearch" placeholder="Hledat inzeráty..." oninput="debounceBazar()">
+          <input class="bazar-search" id="bzSearch" placeholder="Search listings..." oninput="debounceBazar()">
           <select class="bazar-sort" id="bzSort" onchange="loadListings()">
-            <option value="newest">Nejnovější</option>
-            <option value="price_asc">Cena ↑</option>
-            <option value="price_desc">Cena ↓</option>
+            <option value="newest">Newest</option>
+            <option value="price_asc">Price ↑</option>
+            <option value="price_desc">Price ↓</option>
           </select>
         </div>
         <div class="bazar-filters" id="bzCatChips" style="margin-bottom:8px"></div>
         <div class="bazar-filters" id="bzCondChips" style="margin-bottom:16px"></div>
-        <div class="listing-grid" id="listingGrid"><div class="loading">Načítám inzeráty...</div></div>
+        <div class="listing-grid" id="listingGrid"><div class="loading">Loading listings...</div></div>
       </div>
     </div>
 
@@ -783,22 +826,22 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(14,10,10,0.9
       <div class="bazar-wrap">
         <div class="bazar-header">
           <span class="bazar-title" style="display:flex;align-items:center;gap:8px"><svg width="18" height="18" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7 1.5l1.6 3.2 3.6.5-2.6 2.5.6 3.6L7 9.6l-3.2 1.7.6-3.6L1.8 5.2l3.6-.5L7 1.5z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg> Skills</span>
-          <button class="bazar-add-btn" onclick="openAddSkill()">+ Nabídnout službu</button>
+          <button class="bazar-add-btn" onclick="openAddSkill()">+ Offer a service</button>
         </div>
         <div class="bazar-filters">
-          <input class="bazar-search" id="skSearch" placeholder="Hledat služby..." oninput="debounceSkills()">
+          <input class="bazar-search" id="skSearch" placeholder="Search services..." oninput="debounceSkills()">
           <select class="bazar-sort" id="skSort" onchange="loadSkills()">
-            <option value="newest">Nejnovější</option>
-            <option value="price_asc">Cena ↑</option>
-            <option value="price_desc">Cena ↓</option>
+            <option value="newest">Newest</option>
+            <option value="price_asc">Price ↑</option>
+            <option value="price_desc">Price ↓</option>
           </select>
         </div>
         <div class="sk-cat-tabs" id="skCatTabs"></div>
         <div class="bazar-filters" id="skSubChips" style="margin-bottom:8px;flex-wrap:wrap"></div>
         <label class="sk-remote-toggle">
-          <input type="checkbox" id="skRemote" onchange="loadSkills()"> Pouze remote
+          <input type="checkbox" id="skRemote" onchange="loadSkills()"> Remote only
         </label>
-        <div class="skill-grid" id="skillGrid"><div class="loading">Načítám služby...</div></div>
+        <div class="skill-grid" id="skillGrid"><div class="loading">Loading services...</div></div>
       </div>
     </div>
 
@@ -806,25 +849,25 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(14,10,10,0.9
     <div class="filter-topbar">
       <button class="filter-toggle-btn" id="filterToggleBtn" onclick="toggleFilterPanel()">
         <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><line x1="1" y1="3" x2="10" y2="3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><line x1="3" y1="6" x2="8" y2="6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><line x1="5" y1="9" x2="6" y2="9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
-        Filtry
+        Filters
         <span class="arrow">▾</span>
       </button>
       <div id="activeFilterBadge" class="filter-active-badge" style="display:none"></div>
-      <button class="filter-clear" id="filterClearBtn" onclick="clearFilters()" style="display:none">✕ zrušit</button>
+      <button class="filter-clear" id="filterClearBtn" onclick="clearFilters()" style="display:none">✕ clear</button>
     </div>
 
     <!-- FILTER PANEL -->
     <div class="filter-panel" id="filterPanel">
       <div class="filter-section">
-        <div class="filter-label">Žánr</div>
+        <div class="filter-label">Genre</div>
         <div class="chips-wrap" id="genreChips"></div>
       </div>
       <div class="filter-section">
-        <div class="filter-label">Město</div>
+        <div class="filter-label">City</div>
         <div class="chips-wrap" id="cityChips">
           <button class="filter-chip gps-btn" id="nearMeBtn" onclick="useMyLocation()">
             <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><circle cx="5" cy="5" r="3" stroke="currentColor" stroke-width="1.4"/><line x1="5" y1="0" x2="5" y2="2.2" stroke="currentColor" stroke-width="1.4"/><line x1="5" y1="7.8" x2="5" y2="10" stroke="currentColor" stroke-width="1.4"/><line x1="0" y1="5" x2="2.2" y2="5" stroke="currentColor" stroke-width="1.4"/><line x1="7.8" y1="5" x2="10" y2="5" stroke="currentColor" stroke-width="1.4"/></svg>
-            Poblíž mě
+            Near me
           </button>
           <button class="filter-chip" onclick="filterByCity('Praha',50.0755,14.4378)">Praha</button>
           <button class="filter-chip" onclick="filterByCity('Brno',49.1951,16.6068)">Brno</button>
@@ -842,20 +885,20 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(14,10,10,0.9
 
     <!-- Stories bar (static) -->
 
-    <div id="feedPosts"><div class="loading">Načítám feed...</div></div>
+    <div id="feedPosts"><div class="loading">Loading feed...</div></div>
   </main>
 
   <!-- SIDEBAR RIGHT -->
   <aside class="sidebar-right" style="position:relative">
-    <button class="sidebar-toggle" id="toggleRight" onclick="toggleSidebar('right')" title="Skrýt/zobrazit">›</button>
+    <button class="sidebar-toggle" id="toggleRight" onclick="toggleSidebar('right')" title="Hide/show">›</button>
 
     <div class="widget">
-      <div class="widget-title">Aktuality</div>
+      <div class="widget-title">Updates</div>
       <div class="news-form" id="newsForm">
-        <textarea class="news-input" id="newsInput" rows="2" placeholder="Co se děje?" maxlength="300" oninput="newsCharCount()"></textarea>
+        <textarea class="news-input" id="newsInput" rows="2" placeholder="What's going on?" maxlength="300" oninput="newsCharCount()"></textarea>
         <div style="display:flex;align-items:center;justify-content:space-between">
           <span class="news-char" id="newsChar">300</span>
-          <button class="news-submit" onclick="submitNews()">Přidat</button>
+          <button class="news-submit" onclick="submitNews()">Post</button>
         </div>
       </div>
       <div class="news-list" id="newsList"></div>
@@ -863,12 +906,12 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(14,10,10,0.9
 
     <div class="widget">
       <div class="widget-title">Trending</div>
-      <div id="trendingList"><div style="font-size:12px;color:var(--txt3)">Načítám...</div></div>
+      <div id="trendingList"><div style="font-size:12px;color:var(--txt3)">Loading...</div></div>
     </div>
 
     <div class="widget">
-      <div class="widget-title">Navrhovaní umělci</div>
-      <div id="suggestedList"><div style="font-size:12px;color:var(--txt3)">Načítám...</div></div>
+      <div class="widget-title">Suggested artists</div>
+      <div id="suggestedList"><div style="font-size:12px;color:var(--txt3)">Loading...</div></div>
     </div>
 
 
@@ -878,7 +921,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(14,10,10,0.9
 
 <!-- UPLOAD BUTTON -->
 <div class="upload-bar">
-  <a class="upload-btn" href="/upload">↑ Nahrát track</a>
+  <a class="upload-btn" href="/upload">↑ Upload track</a>
 </div>
 
 <!-- NOW PLAYING BAR -->
@@ -908,18 +951,18 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(14,10,10,0.9
 <!-- ADD LISTING MODAL -->
 <div class="modal-overlay" id="listingModal">
   <div class="modal" style="max-width:540px">
-    <div class="modal-title">Nový inzerát<button class="modal-close" onclick="closeAddListing()">✕</button></div>
+    <div class="modal-title">New listing<button class="modal-close" onclick="closeAddListing()">✕</button></div>
     <form id="listingForm" class="lst-form" onsubmit="submitListing(event)">
       <div class="merror" id="listingError"></div>
 
       <!-- PHOTO SLOTS -->
       <div class="lst-field">
-        <label>Fotky produktu</label>
+        <label>Product photos</label>
         <div class="lst-photo-grid">
           <div class="lst-photo-slot main-slot" id="lstSlot0" onclick="lstSlotClick(0)">
             <input type="file" id="lstFile0" accept="image/*" onchange="lstSlotChange(0,this)" style="display:none">
             <span style="font-size:32px;opacity:0.3">▣</span>
-            <span class="slot-label">Hlavní foto</span>
+            <span class="slot-label">Main photo</span>
             <button type="button" class="slot-rm" onclick="lstSlotRemove(event,0)">✕</button>
           </div>
           <div class="lst-photo-slot" id="lstSlot1" onclick="lstSlotClick(1)">
@@ -946,45 +989,45 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(14,10,10,0.9
       </div>
 
       <div class="lst-field">
-        <label>Název *</label>
-        <input type="text" id="lstTitle" required placeholder="Co prodáváš?">
+        <label>Title *</label>
+        <input type="text" id="lstTitle" required placeholder="What are you selling?">
       </div>
 
       <div class="lst-row">
         <div class="lst-field">
-          <label>Kategorie</label>
+          <label>Category</label>
           <select id="lstCategory">
-            <option value="">— vyber —</option>
-            <option>Kytary &amp; Baskytary</option><option>Bicí &amp; Perkuse</option>
-            <option>Klávesy &amp; Syntezátory</option><option>DJ &amp; Elektronika</option>
-            <option>Studiové vybavení</option><option>Zesilovače &amp; Aparáty</option>
-            <option>Efekty &amp; Pedály</option><option>Sluchátka &amp; Mikrofony</option>
-            <option>Vinylové desky</option><option>Ostatní</option>
+            <option value="">— select —</option>
+            <option>Guitars &amp; Bass</option><option>Drums &amp; Percussion</option>
+            <option>Keys &amp; Synths</option><option>DJ &amp; Electronics</option>
+            <option>Studio gear</option><option>Amps &amp; Cabinets</option>
+            <option>Effects &amp; Pedals</option><option>Headphones &amp; Mics</option>
+            <option>Vinyl records</option><option>Other</option>
           </select>
         </div>
         <div class="lst-field">
-          <label>Město</label>
-          <input type="text" id="lstCity" placeholder="Praha, Brno...">
+          <label>City</label>
+          <input type="text" id="lstCity" placeholder="Prague, London...">
         </div>
       </div>
 
       <div class="lst-field">
-        <label>Stav</label>
+        <label>Condition</label>
         <div class="cond-toggle">
-          <button type="button" class="cond-btn active" data-val="new"      onclick="setCondition(this)">Nové</button>
-          <button type="button" class="cond-btn"        data-val="like_new" onclick="setCondition(this)">Jako nové</button>
-          <button type="button" class="cond-btn"        data-val="good"     onclick="setCondition(this)">Dobré</button>
-          <button type="button" class="cond-btn"        data-val="fair"     onclick="setCondition(this)">Přiměřené</button>
+          <button type="button" class="cond-btn active" data-val="new"      onclick="setCondition(this)">New</button>
+          <button type="button" class="cond-btn"        data-val="like_new" onclick="setCondition(this)">Like new</button>
+          <button type="button" class="cond-btn"        data-val="good"     onclick="setCondition(this)">Good</button>
+          <button type="button" class="cond-btn"        data-val="fair"     onclick="setCondition(this)">Fair</button>
         </div>
       </div>
 
       <div class="lst-row">
         <div class="lst-field">
-          <label>Cena *</label>
+          <label>Price *</label>
           <input type="number" id="lstPrice" required min="1" placeholder="0" style="font-size:16px;padding:10px 14px">
         </div>
         <div class="lst-field">
-          <label>Měna</label>
+          <label>Currency</label>
           <div class="curr-toggle">
             <button type="button" class="curr-btn active" id="currCZK" onclick="setCurrency('CZK')">CZK</button>
             <button type="button" class="curr-btn"        id="currEUR" onclick="setCurrency('EUR')">EUR</button>
@@ -993,11 +1036,11 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(14,10,10,0.9
       </div>
 
       <div class="lst-field">
-        <label>Popis</label>
-        <textarea id="lstDesc" placeholder="Stav, stáří, příslušenství, důvod prodeje..."></textarea>
+        <label>Description</label>
+        <textarea id="lstDesc" placeholder="Condition, age, accessories, reason for selling..."></textarea>
       </div>
 
-      <button class="lst-submit" type="submit" id="lstSave">PŘIDAT INZERÁT</button>
+      <button class="lst-submit" type="submit" id="lstSave">ADD LISTING</button>
     </form>
   </div>
 </div>
@@ -1016,34 +1059,34 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(14,10,10,0.9
 <!-- EDIT TRACK MODAL -->
 <div class="modal-overlay" id="editTrackModal">
   <div class="modal" style="max-width:480px">
-    <div class="modal-title">Upravit track<button class="modal-close" onclick="closeEditTrack()">✕</button></div>
+    <div class="modal-title">Edit track<button class="modal-close" onclick="closeEditTrack()">✕</button></div>
     <form id="editTrackForm" class="lst-form" onsubmit="submitEditTrack(event)">
       <input type="hidden" id="etTrackId">
       <div class="lst-field">
-        <label>Cover foto</label>
+        <label>Cover photo</label>
         <div id="etCoverPreview" style="width:80px;height:80px;background:var(--bg3);border:1px dashed var(--border2);border-radius:4px;overflow:hidden;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--txt3);font-size:13px" onclick="document.getElementById('etCoverFile').click()">
           <span>+ Foto</span>
         </div>
         <input type="file" id="etCoverFile" accept="image/*" style="display:none" onchange="previewEtCover(this)">
       </div>
       <div class="lst-field">
-        <label>Název *</label>
+        <label>Title *</label>
         <input type="text" id="etTitle" required>
       </div>
       <div class="lst-field">
-        <label>Žánr</label>
+        <label>Genre</label>
         <input type="text" id="etGenre" placeholder="Hip-hop, Techno...">
       </div>
       <div class="lst-field">
-        <label>Město</label>
-        <input type="text" id="etCity" placeholder="Praha, Brno...">
+        <label>City</label>
+        <input type="text" id="etCity" placeholder="London, Berlin...">
       </div>
       <div class="lst-field">
-        <label>Popis</label>
+        <label>Description</label>
         <textarea id="etCaption" rows="3" style="resize:vertical"></textarea>
       </div>
       <div class="sk-error" id="etError"></div>
-      <button type="submit" class="lst-submit" id="etSave">ULOŽIT ZMĚNY</button>
+      <button type="submit" class="lst-submit" id="etSave">SAVE CHANGES</button>
     </form>
   </div>
 </div>
@@ -1051,50 +1094,50 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(14,10,10,0.9
 <!-- ADD SKILL MODAL -->
 <div class="modal-overlay" id="skillModal">
   <div class="modal" style="max-width:520px">
-    <div class="modal-title">Nová nabídka služby<button class="modal-close" onclick="closeAddSkill()">✕</button></div>
+    <div class="modal-title">New service listing<button class="modal-close" onclick="closeAddSkill()">✕</button></div>
     <form id="skillForm" class="sk-form" onsubmit="submitSkill(event)">
       <div class="sk-field">
-        <label>Kategorie *</label>
+        <label>Category *</label>
         <select id="skCatSel" onchange="updateSkSubSel()" required></select>
       </div>
       <div class="sk-field">
-        <label>Podkategorie</label>
+        <label>Subcategory</label>
         <select id="skSubSel"></select>
       </div>
       <div class="sk-field">
-        <label>Název nabídky *</label>
-        <input type="text" id="skTitle" required placeholder="Např. Profesionální mixáž vaší písničky">
+        <label>Listing title *</label>
+        <input type="text" id="skTitle" required placeholder="e.g. Professional mix of your track">
       </div>
       <div class="sk-field">
-        <label>Popis</label>
-        <textarea id="skDesc" placeholder="Co přesně nabízíš, jak pracuješ, co dostane klient..."></textarea>
+        <label>Description</label>
+        <textarea id="skDesc" placeholder="What exactly you offer, how you work, what the client gets..."></textarea>
       </div>
       <div class="sk-row">
         <div class="sk-field">
-          <label>Cena od (CZK)</label>
+          <label>Price from (CZK)</label>
           <input type="number" id="skPriceFrom" min="0" placeholder="0">
         </div>
         <div class="sk-field">
-          <label>Cena do (CZK)</label>
+          <label>Price to (CZK)</label>
           <input type="number" id="skPriceTo" min="0" placeholder="0">
         </div>
       </div>
       <div class="sk-row">
         <div class="sk-field">
-          <label>Dodání (dny)</label>
+          <label>Delivery (days)</label>
           <input type="number" id="skDays" min="1" value="7">
         </div>
         <div class="sk-field">
-          <label>Město</label>
-          <input type="text" id="skCity" placeholder="Praha, Brno...">
+          <label>City</label>
+          <input type="text" id="skCity" placeholder="London, Berlin...">
         </div>
       </div>
       <div class="sk-remote-row">
         <input type="checkbox" id="skRemoteCheck" checked>
-        <label for="skRemoteCheck">Nabízím remote / online spolupráci</label>
+        <label for="skRemoteCheck">Available for remote / online collaboration</label>
       </div>
       <div class="sk-error" id="skillError"></div>
-      <button type="submit" class="sk-submit" id="skSave">ZVEŘEJNIT NABÍDKU</button>
+      <button type="submit" class="sk-submit" id="skSave">PUBLISH LISTING</button>
     </form>
   </div>
 </div>
@@ -1143,7 +1186,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(14,10,10,0.9
   <div class="search-wrap">
     <div class="search-input-row">
       <svg width="20" height="20" viewBox="0 0 16 16" fill="none"><circle cx="6.5" cy="6.5" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M10 10L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-      <input id="globalInput" type="text" placeholder="Hledat tracky, umělce, akce, bazar..." autocomplete="off" autofocus>
+      <input id="globalInput" type="text" placeholder="Search tracks, artists, events, marketplace..." autocomplete="off" autofocus>
       <button class="search-close" onclick="closeSearch()">✕</button>
     </div>
     <div class="sr-results" id="srResults"></div>
@@ -1188,9 +1231,10 @@ async function init() {
     subscribePush();
   } else {
     currentUser = null;
-    navAv.innerHTML = `<a href="/login" style="color:var(--red2);font-size:12px;letter-spacing:0.08em;text-decoration:none">Přihlásit</a>`;
+    navAv.innerHTML = `<a href="/login" style="color:var(--red2);font-size:12px;letter-spacing:0.08em;text-decoration:none">Sign in</a>`;
   }
 
+  if (me) checkOnboarding();
   loadGenreChips();
   loadFeed();
   loadNews();
@@ -1216,7 +1260,7 @@ async function init() {
 const PRESET_GENRES = [
   'Pop','Hip Hop / Rap','Rock','EDM','R&B','Reggaeton / Latin Pop','K-Pop',
   'Country','Indie Rock / Indie Pop','Metal','Alternative','Soul',
-  'Klasická hudba','Jazz','Reggae','Folk','Blues','Punk','Funk','Lo-Fi / Ambient'
+  'Classical','Jazz','Reggae','Folk','Blues','Punk','Funk','Lo-Fi / Ambient'
 ];
 
 async function loadGenreChips() {
@@ -1264,23 +1308,23 @@ function filterByCity(name, lat, lng) {
 
 function useMyLocation() {
   const btn = document.getElementById('nearMeBtn');
-  if (!navigator.geolocation) { showToast('GPS není dostupné v tomto prohlížeči'); return; }
+  if (!navigator.geolocation) { showToast('GPS not available in this browser'); return; }
   btn.classList.add('locating');
-  btn.innerHTML = `<svg width="10" height="10" viewBox="0 0 10 10" fill="none"><circle cx="5" cy="5" r="3" stroke="currentColor" stroke-width="1.4"/><line x1="5" y1="0" x2="5" y2="2.2" stroke="currentColor" stroke-width="1.4"/><line x1="5" y1="7.8" x2="5" y2="10" stroke="currentColor" stroke-width="1.4"/><line x1="0" y1="5" x2="2.2" y2="5" stroke="currentColor" stroke-width="1.4"/><line x1="7.8" y1="5" x2="10" y2="5" stroke="currentColor" stroke-width="1.4"/></svg> Hledám...`;
+  btn.innerHTML = `<svg width="10" height="10" viewBox="0 0 10 10" fill="none"><circle cx="5" cy="5" r="3" stroke="currentColor" stroke-width="1.4"/><line x1="5" y1="0" x2="5" y2="2.2" stroke="currentColor" stroke-width="1.4"/><line x1="5" y1="7.8" x2="5" y2="10" stroke="currentColor" stroke-width="1.4"/><line x1="0" y1="5" x2="2.2" y2="5" stroke="currentColor" stroke-width="1.4"/><line x1="7.8" y1="5" x2="10" y2="5" stroke="currentColor" stroke-width="1.4"/></svg> Locating...`;
   navigator.geolocation.getCurrentPosition(pos => {
     filters.lat = pos.coords.latitude;
     filters.lng = pos.coords.longitude;
-    filters.cityName = 'Poblíž mě';
+    filters.cityName = 'Near me';
     btn.classList.remove('locating');
-    btn.innerHTML = `<svg width="10" height="10" viewBox="0 0 10 10" fill="none"><circle cx="5" cy="5" r="3" stroke="currentColor" stroke-width="1.4"/><line x1="5" y1="0" x2="5" y2="2.2" stroke="currentColor" stroke-width="1.4"/><line x1="5" y1="7.8" x2="5" y2="10" stroke="currentColor" stroke-width="1.4"/><line x1="0" y1="5" x2="2.2" y2="5" stroke="currentColor" stroke-width="1.4"/><line x1="7.8" y1="5" x2="10" y2="5" stroke="currentColor" stroke-width="1.4"/></svg> Poblíž mě`;
+    btn.innerHTML = `<svg width="10" height="10" viewBox="0 0 10 10" fill="none"><circle cx="5" cy="5" r="3" stroke="currentColor" stroke-width="1.4"/><line x1="5" y1="0" x2="5" y2="2.2" stroke="currentColor" stroke-width="1.4"/><line x1="5" y1="7.8" x2="5" y2="10" stroke="currentColor" stroke-width="1.4"/><line x1="0" y1="5" x2="2.2" y2="5" stroke="currentColor" stroke-width="1.4"/><line x1="7.8" y1="5" x2="10" y2="5" stroke="currentColor" stroke-width="1.4"/></svg> Near me`;
     btn.classList.add('active');
     document.querySelectorAll('#cityChips .filter-chip:not(#nearMeBtn)').forEach(c => c.classList.remove('active'));
     updateActiveFilterBadge();
     loadFeed(document.getElementById('searchInput').value);
   }, () => {
     btn.classList.remove('locating');
-    btn.innerHTML = `<svg width="10" height="10" viewBox="0 0 10 10" fill="none"><circle cx="5" cy="5" r="3" stroke="currentColor" stroke-width="1.4"/><line x1="5" y1="0" x2="5" y2="2.2" stroke="currentColor" stroke-width="1.4"/><line x1="5" y1="7.8" x2="5" y2="10" stroke="currentColor" stroke-width="1.4"/><line x1="0" y1="5" x2="2.2" y2="5" stroke="currentColor" stroke-width="1.4"/><line x1="7.8" y1="5" x2="10" y2="5" stroke="currentColor" stroke-width="1.4"/></svg> Poblíž mě`;
-    showToast('GPS nedostupné nebo zamítnuto');
+    btn.innerHTML = `<svg width="10" height="10" viewBox="0 0 10 10" fill="none"><circle cx="5" cy="5" r="3" stroke="currentColor" stroke-width="1.4"/><line x1="5" y1="0" x2="5" y2="2.2" stroke="currentColor" stroke-width="1.4"/><line x1="5" y1="7.8" x2="5" y2="10" stroke="currentColor" stroke-width="1.4"/><line x1="0" y1="5" x2="2.2" y2="5" stroke="currentColor" stroke-width="1.4"/><line x1="7.8" y1="5" x2="10" y2="5" stroke="currentColor" stroke-width="1.4"/></svg> Near me`;
+    showToast('GPS unavailable or denied');
   });
 }
 
@@ -1292,10 +1336,10 @@ function clearFilters() {
   filters.cityText = null;
   document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
   document.querySelectorAll('.city-tag').forEach(t =>
-    t.classList.toggle('active', t.textContent === 'Vše'));
+    t.classList.toggle('active', t.textContent === 'All'));
   document.querySelectorAll('#sidebarGenres .sidebar-link').forEach(c => c.classList.remove('active'));
   document.getElementById('nearMeBtn').innerHTML =
-    `<svg width="10" height="10" viewBox="0 0 10 10" fill="none"><circle cx="5" cy="5" r="3" stroke="currentColor" stroke-width="1.4"/><line x1="5" y1="0" x2="5" y2="2.2" stroke="currentColor" stroke-width="1.4"/><line x1="5" y1="7.8" x2="5" y2="10" stroke="currentColor" stroke-width="1.4"/><line x1="0" y1="5" x2="2.2" y2="5" stroke="currentColor" stroke-width="1.4"/><line x1="7.8" y1="5" x2="10" y2="5" stroke="currentColor" stroke-width="1.4"/></svg> Poblíž mě`;
+    `<svg width="10" height="10" viewBox="0 0 10 10" fill="none"><circle cx="5" cy="5" r="3" stroke="currentColor" stroke-width="1.4"/><line x1="5" y1="0" x2="5" y2="2.2" stroke="currentColor" stroke-width="1.4"/><line x1="5" y1="7.8" x2="5" y2="10" stroke="currentColor" stroke-width="1.4"/><line x1="0" y1="5" x2="2.2" y2="5" stroke="currentColor" stroke-width="1.4"/><line x1="7.8" y1="5" x2="10" y2="5" stroke="currentColor" stroke-width="1.4"/></svg> Near me`;
   updateActiveFilterBadge();
   loadFeed(document.getElementById('searchInput').value);
 }
@@ -1304,7 +1348,7 @@ function updateActiveFilterBadge() {
   const parts = [];
   if (filters.genre) parts.push(filters.genre);
   if (filters.lat != null) {
-    parts.push(filters.cityName === 'Poblíž mě' ? 'Poblíž mě (50km)' : `Poblíž ${filters.cityName} (50km)`);
+    parts.push(filters.cityName === 'Near me' ? 'Near me (50km)' : `Near ${filters.cityName} (50km)`);
   } else if (filters.cityText) {
     parts.push(filters.cityText);
   }
@@ -1324,7 +1368,7 @@ function updateActiveFilterBadge() {
 async function loadFeed(query) {
   query = query || '';
   const el = document.getElementById('feedPosts');
-  el.innerHTML = '<div class="loading">Načítám feed...</div>';
+  el.innerHTML = '<div class="loading">Loading feed...</div>';
 
   let url = `/api/feed?q=${encodeURIComponent(query)}`;
   if (filters.genre) url += `&genre=${encodeURIComponent(filters.genre)}`;
@@ -1338,7 +1382,7 @@ async function loadFeed(query) {
     el.innerHTML = `
       <div class="empty-state">
         <div class="eicon">♪</div>
-        <p>Žádné tracky zatím.<br>Buď první — <a href="/upload">nahraj svou muziku</a>.</p>
+        <p>No tracks yet.<br>Be the first — <a href="/upload">upload your music</a>.</p>
       </div>`;
     return;
   }
@@ -1408,26 +1452,26 @@ function buildPost(t, i) {
         <span class="ic">↺</span><span id="repost-count-${t.id}">${t.repost_count||0}</span>
       </button>` : ''}
       <button class="action-btn save-btn" id="savebtn-${t.id}" data-trackid="${t.id}" data-filename="${fn}" data-title="${ti}" data-artist="${ar}" data-cover="${escAttr(t.cover||'')}" onclick="toggleSave(this)" style="position:relative">
-        <span class="ic">⬇</span><span>Uložit</span><div class="save-progress" id="saveprog-${t.id}"></div>
+        <span class="ic">⬇</span><span>Save</span><div class="save-progress" id="saveprog-${t.id}"></div>
       </button>
       <button class="action-btn share" data-title="${ti}" data-artist="${ar}" onclick="shareTrack(this)">
         <span class="ic">↗</span><span>Share</span>
       </button>
       ${t.user.username === currentUser ? `
       <button class="action-btn" style="margin-left:auto" onclick="openEditTrack(${t.id},'${ti}','${escAttr(t.genre||'')}','${escAttr(t.city||'')}','${escAttr(t.caption||'')}','${escAttr(t.cover||'')}')">
-        <span class="ic">✎</span><span>Upravit</span>
+        <span class="ic">✎</span><span>Edit</span>
       </button>` : ''}
     </div>
     <div class="post-comments">
       <button class="comments-toggle" onclick="toggleComments(${t.id}, this)">
-        ◎ <span id="cmt-count-${t.id}">${t.comment_count || 0} komentářů</span>
+        ◎ <span id="cmt-count-${t.id}">${t.comment_count || 0} comments</span>
       </button>
       <div class="comments-body" id="cmt-body-${t.id}">
         <div id="cmt-list-${t.id}"></div>
         <div class="comment-form">
-          <textarea class="comment-input" id="cmt-input-${t.id}" placeholder="Přidat komentář..." rows="1"
+          <textarea class="comment-input" id="cmt-input-${t.id}" placeholder="Add a comment..." rows="1"
             onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();submitComment(${t.id})}"></textarea>
-          <button class="comment-send" onclick="submitComment(${t.id})">Odeslat</button>
+          <button class="comment-send" onclick="submitComment(${t.id})">Send</button>
         </div>
       </div>
     </div>
@@ -1468,7 +1512,7 @@ async function pollNotifCount() {
 
 async function loadNotifications() {
   const list = document.getElementById('notifList');
-  list.innerHTML = '<div class="notif-empty">Načítám...</div>';
+  list.innerHTML = '<div class="notif-empty">Loading...</div>';
   const data = await fetch('/api/notifications').then(r => r.json()).catch(() => []);
   renderNotifications(data);
   document.getElementById('notifBadge').classList.remove('visible');
@@ -1478,7 +1522,7 @@ async function loadNotifications() {
 function renderNotifications(data) {
   const list = document.getElementById('notifList');
   if (!data.length) {
-    list.innerHTML = '<div class="notif-empty">Žádné notifikace</div>';
+    list.innerHTML = '<div class="notif-empty">No notifications</div>';
     return;
   }
   list.innerHTML = data.map(n => {
@@ -1498,7 +1542,7 @@ function renderNotifications(data) {
         <div class="notif-time">${esc(n.created_at)}</div>
       </div>
       ${!n.read ? '<div class="notif-dot"></div>' : ''}
-      <button class="notif-dismiss" onclick="dismissNotif(event,${n.id})" title="Smazat">✕</button>
+      <button class="notif-dismiss" onclick="dismissNotif(event,${n.id})" title="Dismiss">✕</button>
     </div>`;
   }).join('');
 }
@@ -1523,7 +1567,7 @@ async function dismissNotif(event, id) {
   if (el) el.remove();
   await fetch(`/api/notifications/${id}`, { method: 'DELETE' });
   if (!document.querySelector('.notif-item')) {
-    document.getElementById('notifList').innerHTML = '<div class="notif-empty">Žádné notifikace</div>';
+    document.getElementById('notifList').innerHTML = '<div class="notif-empty">No notifications</div>';
   }
 }
 
@@ -1546,7 +1590,7 @@ async function toggleComments(trackId, btn) {
 
 async function loadComments(trackId) {
   const list = document.getElementById('cmt-list-' + trackId);
-  list.innerHTML = '<div style="font-size:12px;color:var(--txt3);padding:6px 0">Načítám...</div>';
+  list.innerHTML = '<div style="font-size:12px;color:var(--txt3);padding:6px 0">Loading...</div>';
   const res  = await fetch(`/api/tracks/${trackId}/comments`);
   const data = res.ok ? await res.json() : [];
   cmtLoaded.add(trackId);
@@ -1556,7 +1600,7 @@ async function loadComments(trackId) {
 function renderComments(trackId, data) {
   const list = document.getElementById('cmt-list-' + trackId);
   if (!data.length) {
-    list.innerHTML = '<div style="font-size:12px;color:var(--txt3);padding:6px 0">Zatím žádné komentáře.</div>';
+    list.innerHTML = '<div style="font-size:12px;color:var(--txt3);padding:6px 0">No comments yet.</div>';
     return;
   }
   list.innerHTML = data.map(c => {
@@ -1572,13 +1616,13 @@ function renderComments(trackId, data) {
         </div>
         <div class="comment-text">${esc(c.text)}</div>
       </div>
-      ${c.is_own ? `<button class="comment-del" onclick="deleteComment(${c.id},${trackId})" title="Smazat">✕</button>` : ''}
+      ${c.is_own ? `<button class="comment-del" onclick="deleteComment(${c.id},${trackId})" title="Delete">✕</button>` : ''}
     </div>`;
   }).join('');
 }
 
 async function submitComment(trackId) {
-  if (!requireLogin('Pro komentování se přihlas')) return;
+  if (!requireLogin('Sign in to comment')) return;
   const input = document.getElementById('cmt-input-' + trackId);
   const text  = input.value.trim();
   if (!text) return;
@@ -1606,12 +1650,12 @@ async function submitComment(trackId) {
       </div>
       <div class="comment-text">${esc(c.text)}</div>
     </div>
-    <button class="comment-del" onclick="deleteComment(${c.id},${trackId})" title="Smazat">✕</button>`;
+    <button class="comment-del" onclick="deleteComment(${c.id},${trackId})" title="Delete">✕</button>`;
   list.appendChild(el);
   const countEl = document.getElementById('cmt-count-' + trackId);
   if (countEl) {
     const cur = parseInt(countEl.textContent) || 0;
-    countEl.textContent = (cur + 1) + ' komentářů';
+    countEl.textContent = (cur + 1) + ' comments';
   }
 }
 
@@ -1624,7 +1668,7 @@ async function deleteComment(commentId, trackId) {
   const countEl = document.getElementById('cmt-count-' + trackId);
   if (countEl) {
     const cur = parseInt(countEl.textContent) || 1;
-    countEl.textContent = Math.max(0, cur - 1) + ' komentářů';
+    countEl.textContent = Math.max(0, cur - 1) + ' comments';
   }
 }
 
@@ -1682,7 +1726,7 @@ async function togglePlay(trackId, filename, title, artist, initials, btn) {
   const saved = await idbGet(trackId);
   audio.src = saved ? URL.createObjectURL(saved.audioBlob) : '/uploads/' + filename;
   audio.load();
-  audio.play().catch(() => showToast('Chyba přehrávání'));
+  audio.play().catch(() => showToast('Playback error'));
   setPlayState(true);
 
   document.getElementById('pbTitle').textContent  = title;
@@ -1742,7 +1786,7 @@ audio.addEventListener('ended', () => {
 });
 
 audio.addEventListener('error', () => {
-  showToast('Chyba přehrávání');
+  showToast('Playback error');
   setPlayState(false);
 });
 
@@ -1802,7 +1846,7 @@ function renderFavTracks(tracks) {
   const el = document.getElementById('sidebarFavTracks');
   if (!el) return;
   if (!tracks || !tracks.length) {
-    el.innerHTML = '<div class="fav-tracks-empty">Zatím žádné — klikni ⬇ pro offline uložení</div>';
+    el.innerHTML = '<div class="fav-tracks-empty">None yet — tap ⬇ to save offline</div>';
     return;
   }
   el.innerHTML = tracks.map(t => {
@@ -1828,7 +1872,7 @@ async function playFavTrack(id) {
   currentPlayBtn = null;
   audio.src = URL.createObjectURL(t.audioBlob);
   audio.load();
-  audio.play().catch(() => showToast('Chyba přehrávání'));
+  audio.play().catch(() => showToast('Playback error'));
   setPlayState(true);
   document.getElementById('pbTitle').textContent  = t.title;
   document.getElementById('pbArtist').textContent = t.artist;
@@ -1863,10 +1907,10 @@ async function toggleSave(btn) {
     await idbPut({ id, title, artist, filename, cover, audioBlob, coverBlob,
       initials: (artist||'?').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase() });
     setSaveBtnSaved(btn, true);
-    showToast('Uloženo offline');
+    showToast('Saved offline');
     loadFavTracks();
   } catch {
-    showToast('Chyba ukládání');
+    showToast('Save error');
   } finally {
     btn.disabled = false;
     if (prog) prog.style.width = '0';
@@ -1877,14 +1921,14 @@ async function removeSaved(id) {
   await idbDelete(id);
   const btn = document.getElementById(`savebtn-${id}`);
   if (btn) setSaveBtnSaved(btn, false);
-  showToast('Odebráno');
+  showToast('Removed');
   loadFavTracks();
 }
 
 function setSaveBtnSaved(btn, saved) {
   btn.classList.toggle('saved', saved);
   btn.querySelector('.ic').textContent = saved ? '◼' : '⬇';
-  btn.querySelector('span:last-of-type').textContent = saved ? 'Uloženo' : 'Uložit';
+  btn.querySelector('span:last-of-type').textContent = saved ? 'Saved' : 'Save';
 }
 
 async function syncSaveButtons() {
@@ -1928,7 +1972,7 @@ function initSidebarState() {
 
 // ── Repost ────────────────────────────────────────────────────────────────────
 async function toggleRepost(trackId, btn) {
-  if (!requireLogin('Pro repost se přihlas')) return;
+  if (!requireLogin('Sign in to repost')) return;
   const res  = await fetch('/api/repost/' + trackId, {method:'POST'});
   const data = await res.json();
   if (data.error) { showToast(data.error); return; }
@@ -1936,14 +1980,14 @@ async function toggleRepost(trackId, btn) {
   document.getElementById('repost-count-' + trackId).textContent = data.count;
 }
 
-function requireLogin(msg = 'Pro tuto akci se musíš přihlásit') {
+function requireLogin(msg = 'Sign in to continue') {
   if (currentUser) return true;
-  showToast(`${msg} · <a href="/login" style="color:#fff;text-decoration:underline">Přihlásit</a>`);
+  showToast(`${msg} · <a href="/login" style="color:#fff;text-decoration:underline">Sign in</a>`);
   return false;
 }
 
 async function toggleLike(btn) {
-  if (!requireLogin('Pro lajkování se přihlas')) return;
+  if (!requireLogin('Sign in to like')) return;
   const trackId = parseInt(btn.dataset.trackid);
   const res  = await fetch('/api/like/' + trackId, {method:'POST'});
   const data = await res.json();
@@ -1954,7 +1998,7 @@ async function toggleLike(btn) {
 
 // ── Follow ────────────────────────────────────────────────────────────────────
 async function toggleFollow(btn, userId) {
-  if (!requireLogin('Pro sledování se přihlas')) return;
+  if (!requireLogin('Sign in to follow')) return;
   const res  = await fetch('/api/follow/' + userId, {method:'POST'});
   const data = await res.json();
   if (data.error) return;
@@ -1968,7 +2012,7 @@ function shareTrack(btn) {
   if (navigator.share) {
     navigator.share({title: text, url: window.location.href});
   } else {
-    navigator.clipboard.writeText(text).then(() => showToast('Zkopírováno do schránky'));
+    navigator.clipboard.writeText(text).then(() => showToast('Copied to clipboard'));
   }
 }
 
@@ -1991,7 +2035,7 @@ function renderNews() {
   const el = document.getElementById('newsList');
   if (!el) return;
   if (!newsItems.length) {
-    el.innerHTML = '<div style="font-size:13px;color:var(--txt3);padding:6px 0">Zatím žádné příspěvky.</div>';
+    el.innerHTML = '<div style="font-size:13px;color:var(--txt3);padding:6px 0">No posts yet.</div>';
     return;
   }
   el.innerHTML = newsItems.map(n => {
@@ -2047,7 +2091,7 @@ async function deleteNews(id) {
 
 function timeAgo(ts) {
   const diff = Math.floor((Date.now() - new Date(ts + 'Z').getTime()) / 1000);
-  if (diff < 60) return 'teď';
+  if (diff < 60) return 'just now';
   if (diff < 3600) return Math.floor(diff/60) + ' min';
   if (diff < 86400) return Math.floor(diff/3600) + ' h';
   return Math.floor(diff/86400) + ' d';
@@ -2058,7 +2102,7 @@ async function loadTrending() {
   const data = await fetch('/api/trending').then(r => r.json());
   const el   = document.getElementById('trendingList');
   if (!data.length) {
-    el.innerHTML = '<div style="font-size:12px;color:var(--txt3);padding:8px 0">Zatím žádné tracky</div>';
+    el.innerHTML = '<div style="font-size:12px;color:var(--txt3);padding:8px 0">No tracks yet</div>';
     return;
   }
   el.innerHTML = data.map((t, i) => `
@@ -2079,7 +2123,7 @@ async function loadSuggested() {
   const data = await fetch('/api/suggested').then(r => r.json());
   const el   = document.getElementById('suggestedList');
   if (!data.length) {
-    el.innerHTML = '<div style="font-size:12px;color:var(--txt3);padding:8px 0">Zatím nikdo</div>';
+    el.innerHTML = '<div style="font-size:12px;color:var(--txt3);padding:8px 0">No one yet</div>';
     return;
   }
   el.innerHTML = data.map(u => `
@@ -2108,7 +2152,7 @@ function toggleSavedPanel() {
   section.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-// ── Můj kalendář ──────────────────────────────────────────────────────────────
+// ── My calendar ───────────────────────────────────────────────────────────────
 async function loadMyCalendar() {
   let evs = [];
   try {
@@ -2127,7 +2171,7 @@ function renderMyCalendar(evs) {
   const el = document.getElementById('sidebarMyCal');
   if (!el) return;
   if (!evs.length) {
-    el.innerHTML = '<div class="cal-empty">Zatím žádné akce — přidej je v Kalendáři</div>';
+    el.innerHTML = '<div class="cal-empty">No events — add them in Calendar</div>';
     return;
   }
   el.innerHTML = evs.map(ev => {
@@ -2183,7 +2227,7 @@ async function loadFavCities() {
 function renderFavCities() {
   const el = document.getElementById('sidebarFavCities');
   if (!favCities.length) { el.innerHTML = ''; return; }
-  el.innerHTML = '<div class="fav-divider">Oblíbená</div>' +
+  el.innerHTML = '<div class="fav-divider">Favourites</div>' +
     favCities.map(c => `
       <div class="sidebar-link city-row" id="favcity-${CSS.escape(c.name)}">
         <span class="icon">★</span>
@@ -2257,7 +2301,7 @@ function filterCity(city) {
   filters.cityName = null;
   filters.cityText = city === 'All' ? null : city;
   document.querySelectorAll('.city-tag').forEach(t =>
-    t.classList.toggle('active', t.textContent === city || (city === 'All' && t.textContent === 'Vše')));
+    t.classList.toggle('active', t.textContent === city || (city === 'All' && t.textContent === 'All')));
   document.querySelectorAll('#cityChips .filter-chip').forEach(c => c.classList.remove('active'));
   document.querySelectorAll('#sidebarCities .sidebar-link').forEach(c => c.classList.remove('active'));
   updateActiveFilterBadge();
@@ -2265,6 +2309,19 @@ function filterCity(city) {
 }
 
 // ── Profile nav ───────────────────────────────────────────────────────────────
+function checkOnboarding() {
+  if (localStorage.getItem('hmo_new_user') !== '1') return;
+  document.getElementById('onboardingBanner').style.display = 'block';
+}
+
+function dismissOnboarding() {
+  localStorage.removeItem('hmo_new_user');
+  const el = document.getElementById('onboardingBanner');
+  el.style.opacity = '0';
+  el.style.transition = 'opacity 0.3s';
+  setTimeout(() => el.style.display = 'none', 300);
+}
+
 function goProfile() {
   fetch('/api/me').then(r => r.json()).then(me => {
     if (me) openProfilePanel(me.username);
@@ -2338,7 +2395,7 @@ async function runSearch(q) {
   }
 
   if (res.artists.length) {
-    html += `<div class="sr-section"><div class="sr-label">Umělci</div>`;
+    html += `<div class="sr-section"><div class="sr-label">Artists</div>`;
     res.artists.forEach(a => {
       const av = a.avatar ? `<img src="${esc(a.avatar)}">` : esc(a.display_name.slice(0,2).toUpperCase());
       html += `<div class="sr-item" onclick="closeSearch();openProfilePanel('${esc(a.username)}')">
@@ -2401,10 +2458,10 @@ function escAttr(s) { return esc(s); }
 init();
 
 // ── Bazar ─────────────────────────────────────────────────────────────────────
-const CATEGORIES = ['Kytary & Baskytary','Bicí & Perkuse','Klávesy & Syntezátory',
-  'DJ & Elektronika','Studiové vybavení','Zesilovače & Aparáty',
-  'Efekty & Pedály','Sluchátka & Mikrofony','Vinylové desky','Ostatní'];
-const COND_LABEL = {new:'Nové', like_new:'Jako nové', good:'Dobré', fair:'Přiměřené'};
+const CATEGORIES = ['Guitars & Bass','Drums & Percussion','Keys & Synthesizers',
+  'DJ & Electronics','Studio Equipment','Amps & Cabinets',
+  'Effects & Pedals','Headphones & Mics','Vinyl Records','Other'];
+const COND_LABEL = {new:'New', like_new:'Like new', good:'Good', fair:'Fair'};
 const COND_COLOR = {new:'#4caf50', like_new:'#2196f3', good:'#ff9800', fair:'#9e9e9e'};
 
 let mainView = 'feed';
@@ -2459,7 +2516,7 @@ async function loadArtists(more = false) {
   if (!more) grid.innerHTML = '';
 
   if (data.length === 0 && _artistOffset === 0) {
-    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:48px 0;font-size:13px;color:var(--txt3);letter-spacing:0.08em">Žádní umělci nenalezeni</div>';
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:48px 0;font-size:13px;color:var(--txt3);letter-spacing:0.08em">No artists found</div>';
     document.getElementById('artistsMore').style.display = 'none';
     return;
   }
@@ -2531,7 +2588,7 @@ function renderListingGrid(listings) {
   listings.forEach(l => { listingsCache[l.id] = l; });
   const el = document.getElementById('listingGrid');
   if (!listings.length) {
-    el.innerHTML = `<div style="grid-column:1/-1;padding:40px;text-align:center;color:var(--txt3);font-size:13px;letter-spacing:0.08em">Žádné inzeráty</div>`;
+    el.innerHTML = `<div style="grid-column:1/-1;padding:40px;text-align:center;color:var(--txt3);font-size:13px;letter-spacing:0.08em">No listings</div>`;
     return;
   }
   el.innerHTML = listings.map(l => {
@@ -2539,7 +2596,7 @@ function renderListingGrid(listings) {
     const condCol  = COND_COLOR[l.condition] || '#444';
     const condLbl  = COND_LABEL[l.condition] || l.condition;
     const price    = Number(l.price).toLocaleString('cs-CZ');
-    const sold     = l.status === 'sold' ? `<div class="listing-sold-overlay">PRODÁNO</div>` : '';
+    const sold     = l.status === 'sold' ? `<div class="listing-sold-overlay">SOLD</div>` : '';
     const boosted  = l.boosted ? `<div class="boosted-badge">⚡ TOP</div>` : '';
     return `<div class="listing-card${l.boosted ? ' boosted' : ''}" onclick="openListingDetail(${l.id})">
       <div class="listing-photo">
@@ -2577,7 +2634,7 @@ async function openListingDetail(id) {
     ? `<div class="event-photos" style="margin-bottom:16px">${l.photos.map(p => `<img src="${esc(p)}" loading="lazy">`).join('')}</div>`
     : '';
   const ownBtns = l.is_own ? `
-    <button class="detail-delete" style="margin-right:8px" onclick="markListingSold(${l.id})">Označit jako prodáno</button>
+    <button class="detail-delete" style="margin-right:8px" onclick="markListingSold(${l.id})">Mark as sold</button>
     <button class="detail-delete" onclick="deleteListing(${l.id})">Smazat</button>` : '';
 
   document.getElementById('ldCategory').textContent = l.category || '';
@@ -2601,7 +2658,7 @@ async function openListingDetail(id) {
     </div>
     ${!l.is_own ? `<button onclick="buyListing(${l.id})" style="display:block;width:100%;margin-top:12px;font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:0.15em;padding:13px;background:var(--red);color:white;border:none;cursor:pointer;transition:background 0.15s" onmouseover="this.style.background='var(--red2)'" onmouseout="this.style.background='var(--red)'">Koupit za ${Number(l.price).toLocaleString('cs-CZ')} ${esc(l.currency)}</button>` : ''}
     ${ownBtns}
-    <div class="bazar-protection">Platba je zpracována bezpečně přes Stripe · Hear Me Out Bazar</div>`;
+    <div class="bazar-protection">Payment processed securely via Stripe · Hear Me Out Marketplace</div>`;
   document.getElementById('listingDetailModal').classList.add('open');
 }
 
@@ -2618,7 +2675,7 @@ async function toggleListingLike(id, btn) {
 }
 
 async function buyListing(id) {
-  if (!requireLogin('Pro nákup se přihlas')) return;
+  if (!requireLogin('Sign in to buy')) return;
   const res = await fetch(`/api/listings/${id}/checkout`, {method:'POST'});
   const data = await res.json();
   if (data.error) { showToast(data.error); return; }
@@ -2626,18 +2683,18 @@ async function buyListing(id) {
 }
 
 async function markListingSold(id) {
-  if (!confirm('Označit jako prodáno?')) return;
+  if (!confirm('Mark as sold?')) return;
   await fetch(`/api/listings/${id}`, {method:'PATCH', headers:{'Content-Type':'application/json'}, body:JSON.stringify({status:'sold'})});
   closeListingDetail();
-  showToast('Označeno jako prodáno');
+  showToast('Marked as sold');
   loadListings();
 }
 
 async function deleteListing(id) {
-  if (!confirm('Smazat inzerát?')) return;
+  if (!confirm('Delete listing?')) return;
   await fetch(`/api/listings/${id}`, {method:'DELETE'});
   closeListingDetail();
-  showToast('Inzerát smazán');
+  showToast('Listing deleted');
   loadListings();
 }
 
@@ -2704,7 +2761,7 @@ function setCurrency(cur) {
 async function submitListing(e) {
   e.preventDefault();
   const btn = document.getElementById('lstSave');
-  btn.disabled = true; btn.textContent = 'UKLÁDÁM...';
+  btn.disabled = true; btn.textContent = 'SAVING...';
   const fd = new FormData();
   fd.append('title',       document.getElementById('lstTitle').value.trim());
   fd.append('category',    document.getElementById('lstCategory').value);
@@ -2723,13 +2780,13 @@ async function submitListing(e) {
   if (data.ok) {
     closeAddListing();
     loadListings();
-    showToast('Inzerát přidán');
+    showToast('Listing added');
   } else {
     const el = document.getElementById('listingError');
     el.textContent = data.error || 'Chyba';
     el.classList.add('visible');
   }
-  btn.disabled = false; btn.textContent = 'PŘIDAT INZERÁT';
+  btn.disabled = false; btn.textContent = 'ADD LISTING';
 }
 
 // ── Edit track ────────────────────────────────────────────────────────────────
@@ -2767,7 +2824,7 @@ function previewEtCover(input) {
 async function submitEditTrack(e) {
   e.preventDefault();
   const btn = document.getElementById('etSave');
-  btn.disabled = true; btn.textContent = 'UKLÁDÁM...';
+  btn.disabled = true; btn.textContent = 'SAVING...';
   const id = document.getElementById('etTrackId').value;
   const fd = new FormData();
   fd.append('title',   document.getElementById('etTitle').value.trim());
@@ -2781,13 +2838,13 @@ async function submitEditTrack(e) {
   if (data.ok) {
     closeEditTrack();
     loadFeed();
-    showToast('Track aktualizován');
+    showToast('Track updated');
   } else {
     const el = document.getElementById('etError');
     el.textContent = data.error || 'Chyba';
     el.classList.add('visible');
   }
-  btn.disabled = false; btn.textContent = 'ULOŽIT ZMĚNY';
+  btn.disabled = false; btn.textContent = 'SAVE CHANGES';
 }
 
 ['listingModal','listingDetailModal','skillModal','skillDetailModal','editTrackModal','trackDetailModal'].forEach(id => {
@@ -2857,13 +2914,13 @@ function openTrackDetail(id) {
   // stats
   document.getElementById('tdmStats').innerHTML =
     `<div class="tdm-stat">♥ ${t.like_count || 0}</div>
-     <div class="tdm-stat">▶ ${t.play_count || 0} přehrání</div>
+     <div class="tdm-stat">▶ ${t.play_count || 0} plays</div>
      <div class="tdm-stat">↺ ${t.repost_count || 0}</div>`;
 
   // fields
   const fields = [];
   if (t.caption) fields.push(`<div class="tdm-field"><div class="tdm-field-label">Popis</div><div class="tdm-field-value">${esc(t.caption)}</div></div>`);
-  if (t.duration) fields.push(`<div class="tdm-field"><div class="tdm-field-label">Délka</div><div class="tdm-field-value">${esc(t.duration)}</div></div>`);
+  if (t.duration) fields.push(`<div class="tdm-field"><div class="tdm-field-label">Duration</div><div class="tdm-field-value">${esc(t.duration)}</div></div>`);
   document.getElementById('tdmFields').innerHTML = fields.join('');
 
   // actions
@@ -2873,7 +2930,7 @@ function openTrackDetail(id) {
       <span class="ic">♥</span><span>${t.like_count || 0}</span>
     </button>
     <button class="action-btn save-btn" id="savebtn-tdm-${t.id}" data-trackid="${t.id}" data-filename="${fn}" data-title="${ti}" data-artist="${ar}" data-cover="${escAttr(t.cover||'')}" onclick="toggleSave(this)" style="position:relative">
-      <span class="ic">⬇</span><span>Uložit</span>
+      <span class="ic">⬇</span><span>Save</span>
     </button>
     <button class="action-btn share" data-title="${ti}" data-artist="${ar}" onclick="shareTrack(this)">
       <span class="ic">↗</span><span>Share</span>
@@ -2929,7 +2986,7 @@ async function initSkills() {
 
 function buildSkCatTabs() {
   const el = document.getElementById('skCatTabs');
-  el.innerHTML = '<button class="sk-cat-tab active" onclick="skSelectCat(null,this)">Vše</button>';
+  el.innerHTML = '<button class="sk-cat-tab active" onclick="skSelectCat(null,this)">All</button>';
   Object.keys(skCategories).forEach(cat => {
     const b = document.createElement('button');
     b.className = 'sk-cat-tab';
@@ -2973,7 +3030,7 @@ function debounceSkills() {
 
 async function loadSkills() {
   const grid = document.getElementById('skillGrid');
-  grid.innerHTML = '<div class="loading">Načítám...</div>';
+  grid.innerHTML = '<div class="loading">Loading...</div>';
   let url = '/api/skills?sort=' + document.getElementById('skSort').value;
   const q = document.getElementById('skSearch').value.trim();
   if (q) url += '&q=' + encodeURIComponent(q);
@@ -2988,7 +3045,7 @@ async function loadSkills() {
 
 function renderSkillGrid(skills) {
   const grid = document.getElementById('skillGrid');
-  if (!skills.length) { grid.innerHTML = '<div class="empty-state">Žádné nabídky</div>'; return; }
+  if (!skills.length) { grid.innerHTML = '<div class="empty-state">No listings</div>'; return; }
   grid.innerHTML = '';
   skills.forEach(s => {
     const card = document.createElement('div');
@@ -3047,10 +3104,10 @@ function openSkillDetail(id) {
     <div class="sk-detail-row">
       ${s.remote ? '<span class="sk-detail-chip" style="color:#4caf50;border-color:#4caf50">✓ Remote</span>' : ''}
       ${s.city ? `<span class="sk-detail-chip">📍 ${esc(s.city)}</span>` : ''}
-      <span class="sk-detail-chip">⏱ ${s.delivery_days} dní</span>
+      <span class="sk-detail-chip">⏱ ${s.delivery_days} days</span>
     </div>
     <div class="sk-detail-price">${esc(priceStr)}</div>
-    <a href="/messages.html?to=${esc(s.username)}" class="sk-contact-btn" style="display:block;text-align:center;text-decoration:none">NAPSAT ZPRÁVU</a>`;
+    <a href="/messages.html?to=${esc(s.username)}" class="sk-contact-btn" style="display:block;text-align:center;text-decoration:none">SEND MESSAGE</a>`;
   document.getElementById('skillDetailModal').classList.add('open');
 }
 
@@ -3106,7 +3163,7 @@ function closeAddSkill() {
 async function submitSkill(e) {
   e.preventDefault();
   const btn = document.getElementById('skSave');
-  btn.disabled = true; btn.textContent = 'UKLÁDÁM...';
+  btn.disabled = true; btn.textContent = 'SAVING...';
   const body = {
     title:         document.getElementById('skTitle').value.trim(),
     category:      document.getElementById('skCatSel').value,
@@ -3123,13 +3180,13 @@ async function submitSkill(e) {
   if (data.ok) {
     closeAddSkill();
     loadSkills();
-    showToast('Nabídka zveřejněna');
+    showToast('Listing published');
   } else {
     const el = document.getElementById('skillError');
     el.textContent = data.error || 'Chyba';
     el.classList.add('visible');
   }
-  btn.disabled = false; btn.textContent = 'ZVEŘEJNIT NABÍDKU';
+  btn.disabled = false; btn.textContent = 'PUBLISH LISTING';
 }
 </script>
 
@@ -3137,26 +3194,26 @@ async function submitSkill(e) {
 <div id="profilePanel">
   <div class="pp-nav">
     <button class="pp-back" onclick="closeProfilePanel()">←</button>
-    <div class="pp-title" id="ppTitle">Profil</div>
+    <div class="pp-title" id="ppTitle">Profile</div>
   </div>
   <div class="pp-body" id="ppBody">
-    <div style="padding:40px;text-align:center;color:var(--txt3)">Načítám...</div>
+    <div style="padding:40px;text-align:center;color:var(--txt3)">Loading...</div>
   </div>
 </div>
 
 <!-- NOTIFICATION PANEL -->
 <div id="notifPanel">
   <div class="notif-header">
-    <span class="notif-header-title">Notifikace</span>
-    <button class="notif-read-all" onclick="markAllNotifRead()">Označit vše jako přečtené</button>
+    <span class="notif-header-title">Notifications</span>
+    <button class="notif-read-all" onclick="markAllNotifRead()">Mark all as read</button>
   </div>
   <div class="notif-list" id="notifList">
-    <div class="notif-empty">Načítám...</div>
+    <div class="notif-empty">Loading...</div>
   </div>
 </div>
 
 <!-- MOBILE BOTTOM NAV -->
-<nav id="mobileBottomNav" aria-label="Mobilní navigace">
+<nav id="mobileBottomNav" aria-label="Mobile navigation">
   <div class="mbn-inner">
     <button class="mbn-item active" id="mbnFeed" onclick="switchToView('feed')">
       <span class="mbn-icon">⌂</span>Feed
@@ -3164,27 +3221,27 @@ async function submitSkill(e) {
     <button class="mbn-item" id="mbnBazar" onclick="switchToView('bazar')">
       <span class="mbn-icon"><svg width="16" height="16" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 1.5H12.5A0.5 0.5 0 0 1 13 2V6.5L7 12.5L1.5 7L7.5 1H8Z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><circle cx="10.5" cy="3.5" r="0.9" fill="currentColor"/></svg></span>Bazar
     </button>
-    <a class="mbn-item" href="/upload" title="Nahrát track">
+    <a class="mbn-item" href="/upload" title="Upload track">
       <div class="mbn-upload">↑</div>
     </a>
     <button class="mbn-item" id="mbnSkills" onclick="switchToView('skills')">
       <span class="mbn-icon"><svg width="16" height="16" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7 1.5l1.6 3.2 3.6.5-2.6 2.5.6 3.6L7 9.6l-3.2 1.7.6-3.6L1.8 5.2l3.6-.5L7 1.5z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg></span>Skills
     </button>
     <button class="mbn-item" id="mbnProfile" onclick="goProfile()">
-      <span class="mbn-icon" id="mbnAvatar">◉</span>Profil
+      <span class="mbn-icon" id="mbnAvatar">◉</span>Profile
     </button>
   </div>
 </nav>
 
 <script>
-// ── Profile Panel (SPA — přehrávač nepřeruší) ────────────────────────────────
+// ── Profile Panel (SPA — audio keeps playing) ───────────────────────────────────
 let ppUsername = null;
 
 async function openProfilePanel(username) {
   ppUsername = username;
   const panel = document.getElementById('profilePanel');
   document.getElementById('ppTitle').textContent = username;
-  document.getElementById('ppBody').innerHTML = '<div style="padding:40px;text-align:center;color:var(--txt3)">Načítám...</div>';
+  document.getElementById('ppBody').innerHTML = '<div style="padding:40px;text-align:center;color:var(--txt3)">Loading...</div>';
   panel.classList.add('open');
   history.pushState({profile: username}, '', '/profile/' + username);
 
@@ -3195,10 +3252,10 @@ async function openProfilePanel(username) {
     ]);
     const p = await pRes.json();
     const tracks = await tRes.json();
-    if (p.error) { document.getElementById('ppBody').innerHTML = '<div style="padding:40px;text-align:center;color:var(--txt3)">Uživatel nenalezen</div>'; return; }
+    if (p.error) { document.getElementById('ppBody').innerHTML = '<div style="padding:40px;text-align:center;color:var(--txt3)">User not found</div>'; return; }
     renderProfilePanel(p, tracks);
   } catch(e) {
-    document.getElementById('ppBody').innerHTML = '<div style="padding:40px;text-align:center;color:var(--txt3)">Chyba načítání</div>';
+    document.getElementById('ppBody').innerHTML = '<div style="padding:40px;text-align:center;color:var(--txt3)">Failed to load</div>';
   }
 }
 
@@ -3213,7 +3270,7 @@ function renderProfilePanel(p, tracks) {
 
   let tracksHtml = '';
   if (tracks.length === 0) {
-    tracksHtml = '<div style="padding:20px;text-align:center;color:var(--txt3);font-size:11px">Zatím žádné tracky</div>';
+    tracksHtml = '<div style="padding:20px;text-align:center;color:var(--txt3);font-size:11px">No tracks yet</div>';
   } else {
     tracksHtml = tracks.map(t => `
       <div class="pp-track" onclick="playFromPanel('${esc(t.filename)}','${esc(t.title)}','${esc(p.display_name)}','${t.cover?esc(t.cover):''}',${t.id})">
@@ -3324,11 +3381,11 @@ async function subscribePush() {
     const res = await fetch('/api/push/vapid-key');
     const { publicKey } = await res.json();
     console.log('[Push] publicKey:', publicKey ? publicKey.slice(0,20)+'…' : 'EMPTY');
-    if (!publicKey) { showToast('Push notifikace nejsou nakonfigurovány'); return; }
+    if (!publicKey) { showToast('Push notifications not configured'); return; }
 
     console.log('[Push] current permission:', Notification.permission);
     if (Notification.permission === 'denied') {
-      showToast('Notifikace jsou zakázány v nastavení prohlížeče');
+      showToast('Notifications are blocked in browser settings');
       return;
     }
 

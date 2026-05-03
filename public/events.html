@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="cs">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -11,7 +11,7 @@
 <meta name="apple-mobile-web-app-title" content="Hear Me Out">
 <link rel="apple-touch-icon" href="/icons/icon-192.png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hear Me Out — Kalendář akcí</title>
+<title>Hear Me Out — Events</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/theme.css">
@@ -226,15 +226,15 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(14,10,10,0.9
 <body>
 
 <nav>
-  <a class="nav-logo" href="/">HEAR ME OUT <span>Underground</span></a>
+  <a class="nav-logo" href="/">HEAR ME OUT <span>Network</span></a>
   <div class="nav-links">
     <a class="nav-link" href="/">Feed</a>
-    <a class="nav-link active" href="/events">Kalendář</a>
-    <a class="nav-link" href="/upload">Nahrát</a>
+    <a class="nav-link active" href="/events">Events</a>
+    <a class="nav-link" href="/upload">Upload</a>
   </div>
   <div class="nav-icons">
-    <button class="nav-icon" id="themeToggle" onclick="toggleTheme()" title="Přepnout motiv" style="background:none;border:none;cursor:pointer;font-size:16px">☀</button>
-    <a class="nav-icon" href="/messages" title="Zprávy" id="msgIcon" style="position:relative">
+    <button class="nav-icon" id="themeToggle" onclick="toggleTheme()" title="Toggle theme" style="background:none;border:none;cursor:pointer;font-size:16px">☀</button>
+    <a class="nav-icon" href="/messages" title="Messages" id="msgIcon" style="position:relative">
       <svg width="17" height="17" viewBox="0 0 17 17" fill="none"><path d="M2 4.5 L10.5 4.5 M8 2 L10.5 4.5 L8 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 12.5 L6.5 12.5 M9 10 L6.5 12.5 L9 15" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
       <div class="msg-badge" id="msgBadge"></div>
     </a>
@@ -252,21 +252,21 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(14,10,10,0.9
       <span class="arrow">▾</span>
     </button>
     <div id="activeFilterBadge" class="filter-active-badge" style="display:none"></div>
-    <button class="filter-clear-btn" id="filterClearBtn" onclick="clearFilters()" style="display:none">✕ zrušit</button>
+    <button class="filter-clear-btn" id="filterClearBtn" onclick="clearFilters()" style="display:none">✕ clear</button>
   </div>
 
   <!-- FILTER PANEL -->
   <div class="filter-panel" id="filterPanel">
     <div class="filter-section">
-      <div class="filter-section-label">Žánr</div>
+      <div class="filter-section-label">Genre</div>
       <div class="chips-wrap" id="genreChips"></div>
     </div>
     <div class="filter-section">
-      <div class="filter-section-label">Město</div>
+      <div class="filter-section-label">City</div>
       <div class="chips-wrap" id="cityChips">
         <button class="filter-chip gps-btn" id="nearMeBtn" onclick="useMyLocation()">
           <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><circle cx="5" cy="5" r="3" stroke="currentColor" stroke-width="1.4"/><line x1="5" y1="0" x2="5" y2="2.2" stroke="currentColor" stroke-width="1.4"/><line x1="5" y1="7.8" x2="5" y2="10" stroke="currentColor" stroke-width="1.4"/><line x1="0" y1="5" x2="2.2" y2="5" stroke="currentColor" stroke-width="1.4"/><line x1="7.8" y1="5" x2="10" y2="5" stroke="currentColor" stroke-width="1.4"/></svg>
-          Poblíž mě
+          Near me
         </button>
         <button class="filter-chip city-chip" onclick="filterByCity('Praha',50.0755,14.4378)">Praha</button>
         <button class="filter-chip city-chip" onclick="filterByCity('Brno',49.1951,16.6068)">Brno</button>
@@ -287,8 +287,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(14,10,10,0.9
 
   <!-- VIEW TABS -->
   <div class="view-tabs">
-    <button class="view-tab active" id="tabCal" onclick="switchView('cal')">◫ Kalendář</button>
-    <button class="view-tab" id="tabMap" onclick="switchView('map')">⊕ Mapa</button>
+    <button class="view-tab active" id="tabCal" onclick="switchView('cal')">◫ Calendar</button>
+    <button class="view-tab" id="tabMap" onclick="switchView('map')">⊕ Map</button>
   </div>
 
   <!-- CALENDAR VIEW -->
@@ -296,7 +296,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(14,10,10,0.9
     <div class="cal-header">
       <div class="cal-month" id="calMonthTitle">—</div>
       <div class="cal-nav">
-        <button class="cal-today-btn" onclick="goToday()">Dnes</button>
+        <button class="cal-today-btn" onclick="goToday()">Today</button>
         <button class="cal-nav-btn" onclick="prevMonth()">‹</button>
         <button class="cal-nav-btn" onclick="nextMonth()">›</button>
       </div>
@@ -309,79 +309,79 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(14,10,10,0.9
   <!-- MAP VIEW -->
   <div id="mapView">
     <div id="mainMap"></div>
-    <div class="no-map-events" id="noMapEvents" style="display:none">Žádné akce s polohou v tomto měsíci</div>
+    <div class="no-map-events" id="noMapEvents" style="display:none">No events with location this month</div>
   </div>
 
 </div>
 
 <!-- ADD BUTTON -->
 <div class="add-bar">
-  <button class="add-btn" onclick="openAdd()">+ Přidat akci</button>
+  <button class="add-btn" onclick="openAdd()">+ Add event</button>
 </div>
 
 <!-- ADD EVENT MODAL -->
 <div class="modal-overlay" id="addModal">
   <div class="modal">
     <div class="modal-title">
-      Nová akce
+      New event
       <button class="modal-close" onclick="closeAdd()">✕</button>
     </div>
     <form id="addForm" onsubmit="submitEvent(event)">
       <div class="merror" id="addError"></div>
       <div class="mfield">
-        <label>Název akce *</label>
-        <input type="text" id="aTitle" required placeholder="např. DJ set, koncert, showcase...">
+        <label>Event name *</label>
+        <input type="text" id="aTitle" required placeholder="e.g. DJ set, concert, showcase...">
       </div>
       <div class="mrow">
         <div class="mfield">
-          <label>Datum *</label>
+          <label>Date *</label>
           <input type="date" id="aDate" required>
         </div>
         <div class="mfield">
-          <label>Čas</label>
+          <label>Time</label>
           <input type="time" id="aTime">
         </div>
       </div>
       <div class="mrow">
         <div class="mfield">
-          <label>Venue / Klub</label>
-          <input type="text" id="aVenue" placeholder="název místa">
+          <label>Venue / Club</label>
+          <input type="text" id="aVenue" placeholder="venue name">
         </div>
         <div class="mfield">
-          <label>Město</label>
-          <input type="text" id="aCity" placeholder="Praha, Brno..." oninput="onCityInput(this.value)">
+          <label>City</label>
+          <input type="text" id="aCity" placeholder="Prague, Brno..." oninput="onCityInput(this.value)">
         </div>
       </div>
       <div class="mfield">
-        <label>Poloha na mapě</label>
+        <label>Location on map</label>
         <div class="picker-map-wrap">
           <div id="pickerMap"></div>
-          <div class="picker-hint">Klikni na mapu pro přesné umístění pinu — nebo vyber město výše</div>
+          <div class="picker-hint">Click the map to pin the exact location — or select a city above</div>
         </div>
         <input type="hidden" id="aLat">
         <input type="hidden" id="aLng">
       </div>
       <div class="mfield">
-        <label>Žánr</label>
+        <label>Genre</label>
         <input type="text" id="aGenre" placeholder="Techno, House, Punk...">
       </div>
       <div class="mfield">
-        <label>Popis</label>
-        <textarea id="aDesc" placeholder="Krátký popis akce..."></textarea>
+        <label>Description</label>
+        <textarea id="aDesc" placeholder="Short event description..."></textarea>
       </div>
       <div class="mfield">
-        <label>Odkaz (FB událost, tickety...)</label>
+        <label>Link (FB event, tickets...)</label>
         <input type="url" id="aLink" placeholder="https://...">
       </div>
       <div class="mfield">
-        <label>Fotky / Poster <span style="color:var(--txt3)">(max 5)</span></label>
+        <label>Photos / Poster <span style="color:var(--txt3)">(max 5)</span></label>
         <label class="photo-upload-area" id="photoUploadArea">
           <input type="file" id="aPhotos" accept="image/*" multiple onchange="previewPhotos(this)">
-          <span id="photoUploadHint">＋ Přidat fotky</span>
+          <span id="photoUploadHint">＋ Add photos</span>
         </label>
         <div class="photo-preview-strip" id="photoPreviewStrip"></div>
       </div>
-      <button class="msave" type="submit" id="aSave">PŘIDAT AKCI</button>
+      <button class="msave" type="submit" id="aSave">ADD EVENT</button>
     </form>
   </div>
 </div>
@@ -422,13 +422,13 @@ let events = [];
 
 const filters = { genre: null, cityName: null, lat: null, lng: null, radius: 50 };
 
-const MONTHS_CS = ['Leden','Únor','Březen','Duben','Květen','Červen','Červenec','Srpen','Září','Říjen','Listopad','Prosinec'];
-const DAYS_CS   = ['Po','Út','St','Čt','Pá','So','Ne'];
+const MONTHS_CS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const DAYS_CS   = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
 
 const PRESET_GENRES = [
   'Pop','Hip Hop / Rap','Rock','EDM','R&B','Reggaeton / Latin Pop','K-Pop',
   'Country','Indie Rock / Indie Pop','Metal','Alternative','Soul',
-  'Klasická hudba','Jazz','Reggae','Folk','Blues','Punk','Funk','Lo-Fi / Ambient'
+  'Classical','Jazz','Reggae','Folk','Blues','Punk','Funk','Lo-Fi / Ambient'
 ];
 
 // ── Init ──────────────────────────────────────────────────────────────────────
@@ -514,30 +514,30 @@ function filterByCity(name, lat, lng) {
 
 function useMyLocation() {
   const btn = document.getElementById('nearMeBtn');
-  if (!navigator.geolocation) { showToast('GPS není dostupné'); return; }
+  if (!navigator.geolocation) { showToast('GPS not available'); return; }
   btn.classList.add('locating');
-  btn.innerHTML = `<svg width="10" height="10" viewBox="0 0 10 10" fill="none"><circle cx="5" cy="5" r="3" stroke="currentColor" stroke-width="1.4"/><line x1="5" y1="0" x2="5" y2="2.2" stroke="currentColor" stroke-width="1.4"/><line x1="5" y1="7.8" x2="5" y2="10" stroke="currentColor" stroke-width="1.4"/><line x1="0" y1="5" x2="2.2" y2="5" stroke="currentColor" stroke-width="1.4"/><line x1="7.8" y1="5" x2="10" y2="5" stroke="currentColor" stroke-width="1.4"/></svg> Hledám...`;
+  btn.innerHTML = `<svg width="10" height="10" viewBox="0 0 10 10" fill="none"><circle cx="5" cy="5" r="3" stroke="currentColor" stroke-width="1.4"/><line x1="5" y1="0" x2="5" y2="2.2" stroke="currentColor" stroke-width="1.4"/><line x1="5" y1="7.8" x2="5" y2="10" stroke="currentColor" stroke-width="1.4"/><line x1="0" y1="5" x2="2.2" y2="5" stroke="currentColor" stroke-width="1.4"/><line x1="7.8" y1="5" x2="10" y2="5" stroke="currentColor" stroke-width="1.4"/></svg> Locating...`;
   navigator.geolocation.getCurrentPosition(pos => {
     filters.lat = pos.coords.latitude;
     filters.lng = pos.coords.longitude;
-    filters.cityName = 'Poblíž mě';
+    filters.cityName = 'Near me';
     btn.classList.remove('locating');
-    btn.innerHTML = `<svg width="10" height="10" viewBox="0 0 10 10" fill="none"><circle cx="5" cy="5" r="3" stroke="currentColor" stroke-width="1.4"/><line x1="5" y1="0" x2="5" y2="2.2" stroke="currentColor" stroke-width="1.4"/><line x1="5" y1="7.8" x2="5" y2="10" stroke="currentColor" stroke-width="1.4"/><line x1="0" y1="5" x2="2.2" y2="5" stroke="currentColor" stroke-width="1.4"/><line x1="7.8" y1="5" x2="10" y2="5" stroke="currentColor" stroke-width="1.4"/></svg> Poblíž mě`;
+    btn.innerHTML = `<svg width="10" height="10" viewBox="0 0 10 10" fill="none"><circle cx="5" cy="5" r="3" stroke="currentColor" stroke-width="1.4"/><line x1="5" y1="0" x2="5" y2="2.2" stroke="currentColor" stroke-width="1.4"/><line x1="5" y1="7.8" x2="5" y2="10" stroke="currentColor" stroke-width="1.4"/><line x1="0" y1="5" x2="2.2" y2="5" stroke="currentColor" stroke-width="1.4"/><line x1="7.8" y1="5" x2="10" y2="5" stroke="currentColor" stroke-width="1.4"/></svg> Near me`;
     btn.classList.add('active');
     document.querySelectorAll('#cityChips .filter-chip:not(#nearMeBtn)').forEach(c => c.classList.remove('active'));
     updateBadge();
     loadEvents();
   }, () => {
     btn.classList.remove('locating');
-    btn.innerHTML = `<svg width="10" height="10" viewBox="0 0 10 10" fill="none"><circle cx="5" cy="5" r="3" stroke="currentColor" stroke-width="1.4"/><line x1="5" y1="0" x2="5" y2="2.2" stroke="currentColor" stroke-width="1.4"/><line x1="5" y1="7.8" x2="5" y2="10" stroke="currentColor" stroke-width="1.4"/><line x1="0" y1="5" x2="2.2" y2="5" stroke="currentColor" stroke-width="1.4"/><line x1="7.8" y1="5" x2="10" y2="5" stroke="currentColor" stroke-width="1.4"/></svg> Poblíž mě`;
-    showToast('GPS zamítnuto nebo nedostupné');
+    btn.innerHTML = `<svg width="10" height="10" viewBox="0 0 10 10" fill="none"><circle cx="5" cy="5" r="3" stroke="currentColor" stroke-width="1.4"/><line x1="5" y1="0" x2="5" y2="2.2" stroke="currentColor" stroke-width="1.4"/><line x1="5" y1="7.8" x2="5" y2="10" stroke="currentColor" stroke-width="1.4"/><line x1="0" y1="5" x2="2.2" y2="5" stroke="currentColor" stroke-width="1.4"/><line x1="7.8" y1="5" x2="10" y2="5" stroke="currentColor" stroke-width="1.4"/></svg> Near me`;
+    showToast('GPS denied or unavailable');
   });
 }
 
 function clearFilters() {
   filters.genre = null; filters.lat = null; filters.lng = null; filters.cityName = null;
   document.querySelectorAll('.filter-chip').forEach(c => { c.classList.remove('active'); c.style.background = ''; });
-  document.getElementById('nearMeBtn').innerHTML = `<svg width="10" height="10" viewBox="0 0 10 10" fill="none"><circle cx="5" cy="5" r="3" stroke="currentColor" stroke-width="1.4"/><line x1="5" y1="0" x2="5" y2="2.2" stroke="currentColor" stroke-width="1.4"/><line x1="5" y1="7.8" x2="5" y2="10" stroke="currentColor" stroke-width="1.4"/><line x1="0" y1="5" x2="2.2" y2="5" stroke="currentColor" stroke-width="1.4"/><line x1="7.8" y1="5" x2="10" y2="5" stroke="currentColor" stroke-width="1.4"/></svg> Poblíž mě`;
+  document.getElementById('nearMeBtn').innerHTML = `<svg width="10" height="10" viewBox="0 0 10 10" fill="none"><circle cx="5" cy="5" r="3" stroke="currentColor" stroke-width="1.4"/><line x1="5" y1="0" x2="5" y2="2.2" stroke="currentColor" stroke-width="1.4"/><line x1="5" y1="7.8" x2="5" y2="10" stroke="currentColor" stroke-width="1.4"/><line x1="0" y1="5" x2="2.2" y2="5" stroke="currentColor" stroke-width="1.4"/><line x1="7.8" y1="5" x2="10" y2="5" stroke="currentColor" stroke-width="1.4"/></svg> Near me`;
   updateBadge();
   loadEvents();
 }
@@ -545,7 +545,7 @@ function clearFilters() {
 function updateBadge() {
   const parts = [];
   if (filters.genre) parts.push(filters.genre);
-  if (filters.cityName) parts.push(filters.cityName === 'Poblíž mě' ? 'Poblíž mě (50km)' : `Poblíž ${filters.cityName} (50km)`);
+  if (filters.cityName) parts.push(filters.cityName === 'Near me' ? 'Near me (50km)' : `Near ${filters.cityName} (50km)`);
   const badge = document.getElementById('activeFilterBadge');
   const clearBtn = document.getElementById('filterClearBtn');
   if (parts.length) {
@@ -570,7 +570,7 @@ async function loadEvents() {
   let url = `/api/events?year=${year}&month=${month}`;
   if (filters.genre) url += `&genre=${encodeURIComponent(filters.genre)}`;
   if (filters.lat != null) url += `&lat=${filters.lat}&lng=${filters.lng}&radius=${filters.radius}`;
-  else if (filters.cityName && filters.cityName !== 'Poblíž mě') url += `&city=${encodeURIComponent(filters.cityName)}`;
+  else if (filters.cityName && filters.cityName !== 'Near me') url += `&city=${encodeURIComponent(filters.cityName)}`;
   try { events = await fetch(url).then(r => r.json()); } catch { events = []; }
   renderLegend();
   renderCalendar();
@@ -658,7 +658,7 @@ function renderCalendar() {
     if (dayEvents.length > maxShow) {
       const more = document.createElement('div');
       more.className = 'cal-more';
-      more.textContent = `+${dayEvents.length - maxShow} více`;
+      more.textContent = `+${dayEvents.length - maxShow} more`;
       more.onclick = () => showDayEvents(dateStr, dayEvents);
       cell.appendChild(more);
     }
@@ -731,7 +731,7 @@ function renderMap() {
         <div class="popup-title">${esc(ev.title)}</div>
         <div class="popup-meta">${[ev.date, ev.time, ev.venue, ev.city].filter(Boolean).join(' · ')}</div>
         ${ev.genre ? `<div class="popup-meta" style="color:${color}">${esc(ev.genre)}</div>` : ''}
-        <button class="popup-open" onclick="openDetail(window.__popupEv_${ev.id})">Otevřít detail →</button>
+        <button class="popup-open" onclick="openDetail(window.__popupEv_${ev.id})">Open detail →</button>
       `, {className: 'map-pin-popup'});
     window[`__popupEv_${ev.id}`] = ev;
     mapMarkers.push(marker);
@@ -831,16 +831,16 @@ function openDetail(ev) {
   if (ev.link)  rows.push(`<div class="detail-row"><span class="icon">↗</span><a class="detail-link" href="${esc(ev.link)}" target="_blank" rel="noopener">${esc(ev.link)}</a></div>`);
 
   const deleteBtn = ev.is_own
-    ? `<button class="detail-delete" onclick="deleteEvent(${ev.id})">Smazat akci</button>`
+    ? `<button class="detail-delete" onclick="deleteEvent(${ev.id})">Delete event</button>`
     : '';
   const saveBtn = !ev.is_own
     ? `<button class="detail-save-btn ${ev.is_saved ? 'saved' : ''}" id="evSaveBtn-${ev.id}" onclick="toggleEventSave(${ev.id},this)">
-        ${ev.is_saved ? '◷ Uloženo v kalendáři' : '◷ Uložit do kalendáře'}
+        ${ev.is_saved ? '◷ Saved to calendar' : '◷ Save to calendar'}
        </button>`
     : '';
   const ticketBtn = ev.is_own
     ? `<a href="/scan" class="detail-save-btn" style="margin-top:8px;display:block;text-align:center;color:var(--txt2)">
-        ◈ Skenovat vstupenky
+        ◈ Scan tickets
        </a>`
     : '';
 
@@ -861,7 +861,7 @@ function openDetail(ev) {
       <div class="detail-avatar">${esc(ev.user.initials)}</div>
       <div>
         <a href="/profile/${esc(ev.user.username)}" class="detail-user-name" style="color:var(--txt);text-decoration:none">${esc(ev.user.display_name)}</a>
-        <div class="detail-user-sub">přidal/a tuto akci</div>
+        <div class="detail-user-sub">added this event</div>
       </div>
     </div>
     ${saveBtn}
@@ -898,30 +898,30 @@ function renderTicketTypes(types, isOwn) {
     const soldOut = tt.capacity > 0 && tt.sold >= tt.capacity;
     const capLabel = tt.capacity > 0 ? `${tt.sold}/${tt.capacity}` : '';
     const buyBtn = isOwn
-      ? `<button class="ticket-del-btn" onclick="deleteTicketType(${tt.id})" title="Smazat">✕</button>`
-      : `<button class="ticket-buy-btn" ${soldOut ? 'disabled' : ''} onclick="buyTicket(${tt.id})">${soldOut ? 'Vyprodáno' : 'Koupit'}</button>`;
+      ? `<button class="ticket-del-btn" onclick="deleteTicketType(${tt.id})" title="Delete">✕</button>`
+      : `<button class="ticket-buy-btn" ${soldOut ? 'disabled' : ''} onclick="buyTicket(${tt.id})">${soldOut ? 'Sold out' : 'Buy'}</button>`;
     return `<div class="ticket-row">
       <span class="ticket-name">${esc(tt.name)}</span>
       ${capLabel ? `<span class="ticket-cap">${capLabel}</span>` : ''}
-      <span class="ticket-price">${tt.price > 0 ? Number(tt.price).toLocaleString('cs-CZ') + ' ' + tt.currency : 'Zdarma'}</span>
+      <span class="ticket-price">${tt.price > 0 ? Number(tt.price).toLocaleString('cs-CZ') + ' ' + tt.currency : 'Free'}</span>
       ${buyBtn}
     </div>`;
   }).join('');
 
   const addForm = isOwn ? `
-    <button class="ticket-toggle" id="ticketToggleBtn" onclick="toggleTicketForm()">+ Přidat vstupenku</button>
+    <button class="ticket-toggle" id="ticketToggleBtn" onclick="toggleTicketForm()">+ Add ticket</button>
     <div class="ticket-add-form" id="ticketAddForm" style="display:none">
-      <input id="ttName" placeholder="Název (např. Standardní, VIP…)" maxlength="60">
+      <input id="ttName" placeholder="Name (e.g. Standard, VIP…)" maxlength="60">
       <div class="ticket-add-row">
-        <input id="ttPrice" type="number" min="0" placeholder="Cena v CZK">
-        <input id="ttCapacity" type="number" min="0" placeholder="Kapacita (0 = neomezeno)">
+        <input id="ttPrice" type="number" min="0" placeholder="Price in CZK">
+        <input id="ttCapacity" type="number" min="0" placeholder="Capacity (0 = unlimited)">
       </div>
-      <button class="ticket-add-submit" onclick="submitTicketType()">Přidat</button>
+      <button class="ticket-add-submit" onclick="submitTicketType()">Add</button>
     </div>` : '';
 
   sec.innerHTML = `
-    <div class="tickets-title">Vstupenky</div>
-    ${rows || `<div style="font-size:13px;color:var(--txt3);padding:4px 0">${isOwn ? 'Zatím žádné vstupenky.' : 'Pro tuto akci nejsou vstupenky.'}</div>`}
+    <div class="tickets-title">Tickets</div>
+    ${rows || `<div style="font-size:13px;color:var(--txt3);padding:4px 0">${isOwn ? 'No tickets yet.' : 'No tickets for this event.'}</div>`}
     ${addForm}`;
 }
 
@@ -930,27 +930,27 @@ function toggleTicketForm() {
   const btn  = document.getElementById('ticketToggleBtn');
   const open = form.style.display === 'none';
   form.style.display = open ? 'flex' : 'none';
-  btn.textContent = open ? '✕ Zavřít' : '+ Přidat vstupenku';
+  btn.textContent = open ? '✕ Close' : '+ Add ticket';
 }
 
 async function submitTicketType() {
   const name     = document.getElementById('ttName').value.trim();
   const price    = parseInt(document.getElementById('ttPrice').value) || 0;
   const capacity = parseInt(document.getElementById('ttCapacity').value) || 0;
-  if (!name) { showToast('Zadej název vstupenky'); return; }
+  if (!name) { showToast('Enter a ticket name'); return; }
   const res = await fetch(`/api/events/${_ticketEventId}/ticket-types`, {
     method: 'POST',
     headers: {'Content-Type':'application/json'},
     body: JSON.stringify({name, price, capacity, currency: 'CZK'})
   });
-  if (!res.ok) { showToast((await res.json()).error || 'Chyba'); return; }
+  if (!res.ok) { showToast((await res.json()).error || 'Error'); return; }
   loadTicketTypes(_ticketEventId, _ticketIsOwn);
 }
 
 async function deleteTicketType(id) {
-  if (!confirm('Smazat tento typ vstupenky?')) return;
+  if (!confirm('Delete this ticket type?')) return;
   const res = await fetch(`/api/ticket-types/${id}`, {method:'DELETE'});
-  if (!res.ok) { showToast('Chyba při mazání'); return; }
+  if (!res.ok) { showToast('Error deleting ticket'); return; }
   loadTicketTypes(_ticketEventId, _ticketIsOwn);
 }
 
@@ -966,21 +966,21 @@ async function toggleEventSave(id, btn) {
   const data = await res.json();
   if (data.saved !== undefined) {
     btn.classList.toggle('saved', data.saved);
-    btn.textContent = data.saved ? '◷ Uloženo v kalendáři' : '◷ Uložit do kalendáře';
-    showToast(data.saved ? 'Uloženo do kalendáře' : 'Odebráno z kalendáře');
+    btn.textContent = data.saved ? '◷ Saved to calendar' : '◷ Save to calendar';
+    showToast(data.saved ? 'Saved to calendar' : 'Removed from calendar');
   }
 }
 
 async function deleteEvent(id) {
-  if (!confirm('Smazat tuto akci?')) return;
+  if (!confirm('Delete this event?')) return;
   const res = await fetch(`/api/events/${id}`, {method:'DELETE'});
   const data = await res.json();
   if (data.ok) {
     closeDetail();
     await loadEvents();
-    showToast('Akce smazána');
+    showToast('Event deleted');
   } else {
-    showToast(data.error || 'Chyba');
+    showToast(data.error || 'Error');
   }
 }
 
@@ -1038,10 +1038,10 @@ function renderPhotoPreviews() {
     strip.appendChild(div);
   });
   hint.textContent = selectedPhotos.length === 0
-    ? '＋ Přidat fotky'
+    ? '＋ Add photos'
     : selectedPhotos.length < 5
-      ? `＋ Přidat fotky (${selectedPhotos.length}/5)`
-      : '5/5 fotek';
+      ? `＋ Add photos (${selectedPhotos.length}/5)`
+      : '5/5 photos';
   document.getElementById('photoUploadArea').style.display =
     selectedPhotos.length >= 5 ? 'none' : 'block';
 }
@@ -1049,7 +1049,7 @@ function renderPhotoPreviews() {
 async function submitEvent(e) {
   e.preventDefault();
   const btn = document.getElementById('aSave');
-  btn.disabled = true; btn.textContent = 'UKLÁDÁM...';
+  btn.disabled = true; btn.textContent = 'SAVING...';
   document.getElementById('addError').classList.remove('visible');
 
   const lat = parseFloat(document.getElementById('aLat').value);
@@ -1074,14 +1074,14 @@ async function submitEvent(e) {
     document.getElementById('addForm').reset();
     closeAdd();
     await loadEvents();
-    showToast('Akce přidána');
+    showToast('Event added');
     if (currentView === 'map') renderMap();
   } else {
     const el = document.getElementById('addError');
-    el.textContent = data.error || 'Chyba';
+    el.textContent = data.error || 'Error';
     el.classList.add('visible');
   }
-  btn.disabled = false; btn.textContent = 'PŘIDAT AKCI';
+  btn.disabled = false; btn.textContent = 'ADD EVENT';
 }
 
 // ── Modals close on backdrop click ────────────────────────────────────────────
