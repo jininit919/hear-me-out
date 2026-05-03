@@ -2271,6 +2271,34 @@ def get_calendar():
     } for r in rows])
 
 
+@app.route('/api/profile/<username>/tracks')
+def get_profile_tracks(username):
+    uid   = session.get('user_id', 0)
+    limit = min(int(request.args.get('limit', 50)), 100)
+    conn  = get_db()
+    user  = conn.execute('SELECT id FROM users WHERE username = ?', (username,)).fetchone()
+    if not user:
+        conn.close()
+        return jsonify([])
+    rows = conn.execute(
+        'SELECT * FROM tracks WHERE user_id = ? ORDER BY created_at DESC LIMIT ?',
+        (user['id'], limit)
+    ).fetchall()
+    conn.close()
+    return jsonify([{
+        'id':         r['id'],
+        'title':      r['title'],
+        'genre':      r['genre'],
+        'city':       r['city'],
+        'filename':   r['filename'],
+        'cover':      r['cover'],
+        'duration':   r['duration'],
+        'like_count': r['like_count'],
+        'play_count': r['play_count'],
+        'created_at': time_ago(r['created_at']),
+    } for r in rows])
+
+
 @app.route('/api/profile/<username>/events')
 def get_profile_events(username):
     if 'user_id' not in session:
@@ -2647,11 +2675,11 @@ def toggle_listing_like(lid):
 
 
 SKILL_CATEGORIES = {
-    'Zvuk a Produkce': ['Mixáž', 'Mastering', 'Beatmaking', 'Hudební produkce', 'Audio editing & Čištění', 'Sound design'],
-    'Skládání a Psaní': ['Ghostwriting', 'Toplining', 'Aranžování', 'Tvorba znělek a samplů'],
-    'Session muzikanti': ['Zpěv (Lead / Backing)', 'Nahrávání nástrojů', 'Voiceover / Mluvené slovo', 'DJing'],
-    'Vizuál a Promo': ['Cover Art', 'Tvorba hudebních klipů', 'Hudební fotografie', 'Merch design', 'Animace & Visualizers'],
-    'Management a Live': ['Live Zvukař', 'Booking', 'PR a Social Media', 'Light design'],
+    'Sound & Production': ['Mixing', 'Mastering', 'Beatmaking', 'Music production', 'Audio editing & Cleanup', 'Sound design'],
+    'Composition & Writing': ['Ghostwriting', 'Toplining', 'Arranging', 'Jingle & sample creation'],
+    'Session musicians': ['Vocals (Lead / Backing)', 'Instrument recording', 'Voiceover / Spoken word', 'DJing'],
+    'Visual & Promo': ['Cover Art', 'Music video production', 'Music photography', 'Merch design', 'Animation & Visualizers'],
+    'Management & Live': ['Live Sound Engineer', 'Booking', 'PR & Social Media', 'Lighting design'],
 }
 
 
