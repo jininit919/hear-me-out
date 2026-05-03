@@ -500,6 +500,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(14,10,10,0.9
 /* Profile panel */
 #profilePanel{position:fixed;inset:0;bottom:72px;background:var(--bg);z-index:200;display:flex;flex-direction:column;transform:translateX(100%);transition:transform 0.28s cubic-bezier(0.4,0,0.2,1);overflow:hidden}
 #profilePanel.open{transform:translateX(0)}
+.pp-photos{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:12px 16px;border-bottom:1px solid var(--border)}
+.pp-photo-slot{aspect-ratio:1;background:var(--bg3);border:1px solid var(--border2);overflow:hidden}
+.pp-photo-slot img{width:100%;height:100%;object-fit:cover;display:block}
+@media(min-width:769px){#profilePanel{bottom:0}}
 .pp-nav{display:flex;align-items:center;gap:12px;padding:10px 16px;border-bottom:1px solid var(--border);background:rgba(0,0,0,0.85);backdrop-filter:blur(12px);flex-shrink:0;height:54px}
 .pp-back{background:none;border:none;color:var(--txt3);cursor:pointer;font-size:18px;padding:4px 8px;transition:color 0.15s}
 .pp-back:hover{color:var(--txt)}
@@ -528,6 +532,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(14,10,10,0.9
 .pp-track-title{font-size:12px;letter-spacing:0.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .pp-track-meta{font-size:10px;color:var(--txt3);margin-top:2px}
 .pp-track-likes{font-size:10px;color:var(--txt3);flex-shrink:0}
+.pp-play-btn{width:28px;height:28px;border-radius:50%;background:var(--red2);border:none;color:#fff;cursor:pointer;font-size:11px;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:background 0.15s}
+.pp-play-btn:hover{background:var(--red3)}
 #notifPanel{position:fixed;top:54px;right:0;width:360px;max-width:100vw;height:calc(100vh - 54px);background:var(--bg2);border-left:1px solid var(--border2);z-index:98;display:flex;flex-direction:column;transform:translateX(100%);transition:transform 0.25s cubic-bezier(0.4,0,0.2,1)}
 #notifPanel.open{transform:translateX(0)}
 .notif-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border);flex-shrink:0}
@@ -3265,8 +3271,16 @@ function renderProfilePanel(p, tracks) {
     ? `<img src="/uploads/${esc(p.avatar)}" alt="">`
     : (p.emoji || (p.display_name||'?')[0].toUpperCase());
 
-  const followBtn = p.is_mine ? '' :
-    `<button class="pp-follow-btn ${p.is_following?'following':''}" id="ppFollowBtn" onclick="ppToggleFollow(${p.id})">${p.is_following?'Following':'Follow'}</button>`;
+  const actionBtn = p.is_own
+    ? `<a class="pp-follow-btn" href="/profile/${esc(p.username)}" style="text-decoration:none;display:inline-block;text-align:center">Edit profile</a>`
+    : `<button class="pp-follow-btn ${p.is_following?'following':''}" id="ppFollowBtn" onclick="ppToggleFollow(${p.id})">${p.is_following?'Following':'Follow'}</button>`;
+
+  const photosHtml = p.photos && p.photos.some(ph => ph)
+    ? `<div class="pp-photos">${p.photos.map(ph => ph
+        ? `<div class="pp-photo-slot"><img src="/uploads/${esc(ph)}" alt=""></div>`
+        : `<div class="pp-photo-slot"></div>`
+      ).join('')}</div>`
+    : '';
 
   let tracksHtml = '';
   if (tracks.length === 0) {
@@ -3279,6 +3293,7 @@ function renderProfilePanel(p, tracks) {
           <div class="pp-track-title">${esc(t.title)}</div>
           <div class="pp-track-meta">${esc(t.genre||'')}${t.city?' · '+esc(t.city):''}</div>
         </div>
+        <button class="pp-play-btn" onclick="event.stopPropagation();playFromPanel('${esc(t.filename)}','${esc(t.title)}','${esc(p.display_name)}','${t.cover?esc(t.cover):''}',${t.id})">▶</button>
         <div class="pp-track-likes">♥ ${t.like_count||0}</div>
       </div>`).join('');
   }
@@ -3291,15 +3306,16 @@ function renderProfilePanel(p, tracks) {
         <div class="pp-username">@${esc(p.username)}${p.city?' · '+esc(p.city):''}</div>
         ${p.bio?`<div class="pp-bio">${esc(p.bio)}</div>`:''}
         ${p.genres?`<div class="pp-genres">${esc(p.genres)}</div>`:''}
-        ${followBtn}
+        ${actionBtn}
       </div>
     </div>
+    ${photosHtml}
     <div class="pp-stats">
-      <div class="pp-stat"><div class="pp-stat-val">${p.track_count||0}</div><div class="pp-stat-lbl">Tracky</div></div>
+      <div class="pp-stat"><div class="pp-stat-val">${p.track_count||0}</div><div class="pp-stat-lbl">Tracks</div></div>
       <div class="pp-stat"><div class="pp-stat-val">${p.followers||0}</div><div class="pp-stat-lbl">Followers</div></div>
-      <div class="pp-stat"><div class="pp-stat-val">${p.following_count||0}</div><div class="pp-stat-lbl">Sleduje</div></div>
+      <div class="pp-stat"><div class="pp-stat-val">${p.following_count||0}</div><div class="pp-stat-lbl">Following</div></div>
     </div>
-    <div class="pp-section-title">Tracky</div>
+    <div class="pp-section-title">Tracks</div>
     ${tracksHtml}`;
 }
 
