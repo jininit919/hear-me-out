@@ -2660,7 +2660,7 @@ async function openListingDetail(id) {
         <a href="/profile/${esc(l.user.username)}" class="detail-user-name" style="color:var(--txt);text-decoration:none">${esc(l.user.display_name)}</a>
         <div class="detail-user-sub">prodejce</div>
       </div>
-      ${!l.is_own ? `<a href="/messages?user=${esc(l.user.username)}" class="msave" style="margin-left:auto;font-size:13px;padding:7px 14px;background:var(--red2);color:white;text-decoration:none;display:inline-block">Napsat</a>` : ''}
+      ${!l.is_own ? `<a href="/messages?user=${esc(l.user.username)}" class="msave" style="margin-left:auto;font-size:13px;padding:7px 14px;background:var(--red2);color:white;text-decoration:none;display:inline-block">Message</a>` : ''}
     </div>
     ${!l.is_own ? `<button onclick="buyListing(${l.id})" style="display:block;width:100%;margin-top:12px;font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:0.15em;padding:13px;background:var(--red);color:white;border:none;cursor:pointer;transition:background 0.15s" onmouseover="this.style.background='var(--red2)'" onmouseout="this.style.background='var(--red)'">Koupit za ${Number(l.price).toLocaleString('cs-CZ')} ${esc(l.currency)}</button>` : ''}
     ${ownBtns}
@@ -3272,8 +3272,11 @@ function renderProfilePanel(p, tracks) {
     : (p.emoji || (p.display_name||'?')[0].toUpperCase());
 
   const actionBtn = p.is_own
-    ? `<a class="pp-follow-btn" href="/profile/${esc(p.username)}" style="text-decoration:none;display:inline-block;text-align:center">Edit profile</a>`
-    : `<button class="pp-follow-btn ${p.is_following?'following':''}" id="ppFollowBtn" onclick="ppToggleFollow(${p.id})">${p.is_following?'Following':'Follow'}</button>`;
+    ? `<a class="pp-follow-btn" href="/profile/${esc(p.username)}" onclick="event.stopPropagation();window.location.href='/profile/${esc(p.username)}';return false;" style="text-decoration:none;display:inline-block;text-align:center">Edit profile</a>`
+    : `<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px">
+        <button class="pp-follow-btn ${p.is_following?'following':''}" id="ppFollowBtn" onclick="ppToggleFollow(${p.id})">${p.is_following?'Following':'Follow'}</button>
+        <a href="/messages?user=${esc(p.username)}" onclick="window.location.href='/messages?user=${esc(p.username)}';return false;" class="pp-follow-btn" style="text-decoration:none;display:inline-flex;align-items:center;gap:4px">◻ Message</a>
+      </div>`;
 
   const photosHtml = p.photos && p.photos.some(ph => ph)
     ? `<div class="pp-photos">${p.photos.map(ph => ph
@@ -3287,13 +3290,13 @@ function renderProfilePanel(p, tracks) {
     tracksHtml = '<div style="padding:20px;text-align:center;color:var(--txt3);font-size:11px">No tracks yet</div>';
   } else {
     tracksHtml = tracks.map(t => `
-      <div class="pp-track" onclick="playFromPanel('${esc(t.filename)}','${esc(t.title)}','${esc(p.display_name)}','${t.cover?esc(t.cover):''}',${t.id})">
+      <div class="pp-track" onclick="playFromPanel(null,${t.id},'${esc(t.filename)}','${esc(t.title)}','${esc(p.display_name)}')">
         <div class="pp-track-cover">${t.cover ? `<img src="/uploads/${esc(t.cover)}" alt="">` : '♪'}</div>
         <div class="pp-track-info">
           <div class="pp-track-title">${esc(t.title)}</div>
           <div class="pp-track-meta">${esc(t.genre||'')}${t.city?' · '+esc(t.city):''}</div>
         </div>
-        <button class="pp-play-btn" onclick="event.stopPropagation();playFromPanel('${esc(t.filename)}','${esc(t.title)}','${esc(p.display_name)}','${t.cover?esc(t.cover):''}',${t.id})">▶</button>
+        <button class="pp-play-btn" onclick="event.stopPropagation();playFromPanel(this,${t.id},'${esc(t.filename)}','${esc(t.title)}','${esc(p.display_name)}')">▶</button>
         <div class="pp-track-likes">♥ ${t.like_count||0}</div>
       </div>`).join('');
   }
@@ -3328,10 +3331,9 @@ async function ppToggleFollow(userId) {
   btn.textContent = data.following ? 'Following' : 'Follow';
 }
 
-function playFromPanel(filename, title, artist, cover, trackId) {
-  if (typeof playTrack === 'function') {
-    playTrack({id: trackId, filename, title, user:{display_name: artist}, cover});
-  }
+function playFromPanel(btn, trackId, filename, title, artist) {
+  const initials = artist.split(' ').filter(Boolean).map(w => w[0]).join('').slice(0,2).toUpperCase() || '?';
+  togglePlay(trackId, filename, title, artist, initials, btn);
 }
 
 function closeProfilePanel() {
