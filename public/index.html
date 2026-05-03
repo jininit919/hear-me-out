@@ -1344,8 +1344,15 @@ async function loadFeed(query) {
   if (filters.lat != null) url += `&lat=${filters.lat}&lng=${filters.lng}&radius=${filters.radius}`;
   else if (filters.cityText) url += `&city=${encodeURIComponent(filters.cityText)}`;
 
-  const res  = await fetch(url);
-  const data = await res.json();
+  let data;
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    data = await res.json();
+  } catch(err) {
+    el.innerHTML = `<div class="loading" style="color:var(--red2)">Error loading feed: ${err.message}</div>`;
+    return;
+  }
 
   if (!data.length) {
     el.innerHTML = `
