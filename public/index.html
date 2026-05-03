@@ -2452,7 +2452,7 @@ function switchToView(view) {
   document.getElementById('bazarView').style.display   = isBazar   ? '' : 'none';
   document.getElementById('skillsView').style.display  = isSkills  ? '' : 'none';
   document.getElementById('artistsView').style.display = isArtists ? '' : 'none';
-  document.getElementById('storiesBar').style.display  = isFeed    ? '' : 'none';
+  const storiesBar = document.getElementById('storiesBar'); if (storiesBar) storiesBar.style.display = isFeed ? '' : 'none';
   document.getElementById('feedPosts').style.display   = isFeed    ? '' : 'none';
   document.querySelector('.filter-topbar').style.display = isFeed  ? '' : 'none';
   document.querySelector('.filter-panel').style.display  = isFeed  ? '' : 'none';
