@@ -11,9 +11,11 @@
 <meta name="apple-mobile-web-app-title" content="Hear Me Out">
 <link rel="apple-touch-icon" href="/icons/icon-192.png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hear Me Out — Knihovna</title>
+<title>Hear Me Out — Library</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/theme.css">
+<script src="/theme.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -113,7 +115,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(0,0,0,0.95);
   <div class="tabs">
     <div class="tab active" id="tabLiked" onclick="switchTab('liked')">
       <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M8 13.5S2 9.5 2 5.5A3.5 3.5 0 0 1 8 3.2 3.5 3.5 0 0 1 14 5.5c0 4-6 8-6 8z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
-      Lajknuté
+      Liked
     </div>
     <div class="tab" id="tabOffline" onclick="switchTab('offline')">
       <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M8 3v7M5 8l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 13h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
@@ -138,12 +140,12 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(0,0,0,0.95);
 <!-- Playlist modal -->
 <div class="modal-bg" id="plModal">
   <div class="modal">
-    <div class="modal-title" id="plModalTitle">Nový playlist</div>
-    <input class="modal-input" id="plModalName" placeholder="Název playlistu">
-    <div class="modal-row"><input type="checkbox" id="plModalPublic" checked><label for="plModalPublic">Veřejný playlist</label></div>
+    <div class="modal-title" id="plModalTitle">New playlist</div>
+    <input class="modal-input" id="plModalName" placeholder="Playlist name">
+    <div class="modal-row"><input type="checkbox" id="plModalPublic" checked><label for="plModalPublic">Public playlist</label></div>
     <div class="modal-btns">
-      <button class="modal-btn cancel" onclick="closePlModal()">Zrušit</button>
-      <button class="modal-btn primary" onclick="savePl()">Uložit</button>
+      <button class="modal-btn cancel" onclick="closePlModal()">Cancel</button>
+      <button class="modal-btn primary" onclick="savePl()">Save</button>
     </div>
   </div>
 </div>
@@ -201,12 +203,12 @@ function switchTab(tab) {
 // ── Liked tracks ──────────────────────────────────────────────────────────────
 async function loadLiked() {
   const el = document.getElementById('viewLiked');
-  el.innerHTML = '<div class="loading">Načítám...</div>';
+  el.innerHTML = '<div class="loading">Loading...</div>';
   const res = await fetch('/api/favorites/tracks');
   if (res.status === 401) { window.location.href = '/login'; return; }
   const data = res.ok ? await res.json() : [];
   if (!data.length) {
-    el.innerHTML = '<div class="empty">Zatím žádné lajknuté tracky.<br>Přidej ♥ na <a href="/">feedu</a>.</div>';
+    el.innerHTML = '<div class="empty">No liked tracks yet.<br>Add ♥ from the <a href="/">feed</a>.</div>';
     return;
   }
   el.innerHTML = data.map(t => {
@@ -232,10 +234,10 @@ function playLiked(id, filename, title, artist) {
 // ── Offline tracks ────────────────────────────────────────────────────────────
 async function loadOffline() {
   const el = document.getElementById('viewOffline');
-  el.innerHTML = '<div class="loading">Načítám...</div>';
+  el.innerHTML = '<div class="loading">Loading...</div>';
   const tracks = await idbGetAll();
   if (!tracks.length) {
-    el.innerHTML = '<div class="empty">Žádné offline uložené tracky.<br>Na feedu klikni ⬇ u tracku pro stažení.</div>';
+    el.innerHTML = '<div class="empty">No offline tracks.<br>Tap ⬇ on a track in the feed to save it.</div>';
     return;
   }
   el.innerHTML = tracks.map(t => {
@@ -278,7 +280,7 @@ async function removeOffline(id) {
 async function loadPlaylists() {
   const el = document.getElementById('viewPlaylists');
   if (activePl) { renderPlDetail(); return; }
-  el.innerHTML = '<div class="loading">Načítám...</div>';
+  el.innerHTML = '<div class="loading">Loading...</div>';
   const res = await fetch('/api/playlists');
   if (res.status === 401) { window.location.href = '/login'; return; }
   playlists = res.ok ? await res.json() : [];
@@ -294,12 +296,12 @@ function renderPlGrid() {
           <div class="pl-cover">${pl.cover ? `<img src="/uploads/${esc(pl.cover)}">` : '♫'}</div>
           <div class="pl-body">
             <div class="pl-name">${esc(pl.name)}</div>
-            <div class="pl-meta">${pl.track_count} tracků · ${pl.is_public ? 'Veřejný' : 'Soukromý'}</div>
+            <div class="pl-meta">${pl.track_count} tracks · ${pl.is_public ? 'Public' : 'Private'}</div>
           </div>
         </div>`).join('')}
       <div class="pl-add-card" onclick="openPlModal()">
         <span style="font-size:24px">+</span>
-        <span>Nový playlist</span>
+        <span>New playlist</span>
       </div>
     </div>`;
 }
@@ -307,20 +309,20 @@ function renderPlGrid() {
 async function openPlDetail(id) {
   activePl = id;
   const el = document.getElementById('viewPlaylists');
-  el.innerHTML = '<div class="loading">Načítám...</div>';
+  el.innerHTML = '<div class="loading">Loading...</div>';
   const res = await fetch(`/api/playlists/${id}`);
   if (!res.ok) { activePl = null; renderPlGrid(); return; }
   const pl = await res.json();
   const cover = pl.cover ? `<img src="/uploads/${esc(pl.cover)}">` : '♫';
   const tracks = pl.tracks || [];
   el.innerHTML = `
-    <div class="pl-detail-back" onclick="closePlDetail()">← Zpět na playlisty</div>
+    <div class="pl-detail-back" onclick="closePlDetail()">← Back to playlists</div>
     <div class="pl-detail-header">
       <div class="pl-detail-cover">${cover}</div>
       <div>
         <div class="pl-detail-name">${esc(pl.name)}</div>
-        <div class="pl-detail-meta">${tracks.length} tracků · ${pl.is_public ? 'Veřejný' : 'Soukromý'}</div>
-        ${tracks.length ? `<button class="pl-play-btn" onclick="playAllPl(${id})">▶ Přehrát vše</button>` : ''}
+        <div class="pl-detail-meta">${tracks.length} tracks · ${pl.is_public ? 'Public' : 'Private'}</div>
+        ${tracks.length ? `<button class="pl-play-btn" onclick="playAllPl(${id})">▶ Play all</button>` : ''}
       </div>
     </div>
     <div id="plTrackList">
@@ -332,7 +334,7 @@ async function openPlDetail(id) {
             <div class="track-sub">${esc(t.display_name||'')}${t.genre?' · '+esc(t.genre):''}</div>
           </div>
           <button onclick="event.stopPropagation();removeFromPl(${id},${t.id})" style="background:none;border:none;color:var(--txt3);cursor:pointer;font-size:13px;padding:4px 6px;flex-shrink:0">✕</button>
-        </div>`).join('') : '<div class="empty">Playlist je prázdný.<br>Přidej tracky z feedu přes menu u tracku.</div>'}
+        </div>`).join('') : '<div class="empty">Playlist is empty.<br>Add tracks from the feed via the track menu.</div>'}
     </div>`;
 }
 
@@ -360,7 +362,7 @@ async function removeFromPl(plId, trackId) {
 // Playlist modal
 function openPlModal(id) {
   editingPlId = id || null;
-  document.getElementById('plModalTitle').textContent = id ? 'Upravit playlist' : 'Nový playlist';
+  document.getElementById('plModalTitle').textContent = id ? 'Edit playlist' : 'New playlist';
   if (id) {
     const pl = playlists.find(p => p.id === id);
     document.getElementById('plModalName').value = pl ? pl.name : '';
@@ -403,18 +405,18 @@ document.getElementById('plModalName').addEventListener('keydown', e => {
 // ── Tickets ───────────────────────────────────────────────────────────────────
 async function loadTickets() {
   const el = document.getElementById('viewTickets');
-  el.innerHTML = '<div class="loading">Načítám...</div>';
+  el.innerHTML = '<div class="loading">Loading...</div>';
   const res = await fetch('/api/my-orders');
   if (res.status === 401) { window.location.href = '/login'; return; }
   const orders = res.ok ? await res.json() : [];
   const tickets = orders.filter(o => o.item_type === 'ticket' && (o.status === 'paid' || o.status === 'valid' || o.status === 'used'));
   if (!tickets.length) {
-    el.innerHTML = '<div class="empty">Zatím žádné vstupenky.<br>Kup vstupenku na <a href="/events">akci</a>.</div>';
+    el.innerHTML = '<div class="empty">No tickets yet.<br>Buy a ticket at an <a href="/events">event</a>.</div>';
     return;
   }
   el.innerHTML = tickets.map(t => {
     const statusColor = t.status === 'used' ? 'var(--txt3)' : '#4ade80';
-    const statusLabel = t.status === 'used' ? 'POUŽITÁ' : 'PLATNÁ';
+    const statusLabel = t.status === 'used' ? 'USED' : 'VALID';
     const date = t.created_at ? new Date(t.created_at).toLocaleDateString('cs-CZ', {day:'numeric', month:'short', year:'numeric'}) : '';
     return `<div class="track-row" onclick="window.location.href='/ticket/${esc(t.ticket_code)}'">
       <div class="track-cover" style="background:var(--bg3);font-size:18px;color:var(--txt3)">▣</div>

@@ -11,7 +11,7 @@
 <meta name="apple-mobile-web-app-title" content="Hear Me Out">
 <link rel="apple-touch-icon" href="/icons/icon-192.png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Platba úspěšná — Hear Me Out</title>
+<title>Payment successful — Hear Me Out</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/theme.css">
@@ -37,10 +37,10 @@ h1{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:0.12em;colo
 <body>
 <div class="card">
   <div class="icon">✓</div>
-  <h1>Platba proběhla</h1>
-  <p class="sub">Děkujeme za nákup</p>
-  <div id="orderInfo"><p class="loading">Načítám detail objednávky…</p></div>
-  <a href="/" class="btn">Zpět na Hear Me Out</a>
+  <h1>Payment successful</h1>
+  <p class="sub">Thank you for your purchase</p>
+  <div id="orderInfo"><p class="loading">Loading order details…</p></div>
+  <a href="/" class="btn">Back to Hear Me Out</a>
 </div>
 <script>
 (async () => {
@@ -51,24 +51,24 @@ h1{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:0.12em;colo
   if (!sid) { el.innerHTML = ''; return; }
 
   const res = await fetch(`/api/orders/verify?session_id=${encodeURIComponent(sid)}`);
-  if (!res.ok) { el.innerHTML = '<p style="color:#555;font-size:14px">Detail objednávky není dostupný.</p>'; return; }
+  if (!res.ok) { el.innerHTML = '<p style="color:#555;font-size:14px">Order details not available.</p>'; return; }
   const order = await res.json();
 
-  const statusLabel = order.status === 'paid' ? '✓ Zaplaceno' : '⏳ Čeká na potvrzení';
+  const statusLabel = order.status === 'paid' ? '✓ Paid' : '⏳ Awaiting confirmation';
   const statusColor = order.status === 'paid' ? '#2e7d32' : '#e65100';
 
   let codeHtml = '';
   if (type === 'ticket' && order.ticket_code) {
     codeHtml = `
       <div class="code-box">
-        <div class="code-label">Kód vstupenky</div>
+        <div class="code-label">Ticket code</div>
         <div class="code-val">${order.ticket_code}</div>
       </div>
-      <p style="font-size:12px;color:#444;letter-spacing:0.06em;margin-top:8px">Uchovej tento kód — bude potřeba u vstupu na akci.</p>`;
+      <p style="font-size:12px;color:#444;letter-spacing:0.06em;margin-top:8px">Keep this code — you will need it at the event entrance.</p>`;
   } else if (type === 'listing' && order.ticket_code) {
     codeHtml = `
       <div class="code-box">
-        <div class="code-label">Číslo objednávky</div>
+        <div class="code-label">Order number</div>
         <div class="code-val">${order.ticket_code}</div>
       </div>`;
   }
@@ -76,8 +76,8 @@ h1{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:0.12em;colo
   el.innerHTML = `
     <div style="margin-bottom:16px">
       <div class="detail-row"><span>Stav</span><span class="detail-val" style="color:${statusColor}">${statusLabel}</span></div>
-      <div class="detail-row"><span>Částka</span><span class="detail-val">${Number(order.amount).toLocaleString('cs-CZ')} ${order.currency}</span></div>
-      <div class="detail-row"><span>Typ</span><span class="detail-val">${type === 'ticket' ? 'Vstupenka' : 'Inzerát — Bazar'}</span></div>
+      <div class="detail-row"><span>Amount</span><span class="detail-val">${Number(order.amount).toLocaleString('en-US')} ${order.currency}</span></div>
+      <div class="detail-row"><span>Type</span><span class="detail-val">${type === 'ticket' ? 'Ticket' : 'Marketplace listing'}</span></div>
     </div>
     ${codeHtml}`;
 })();

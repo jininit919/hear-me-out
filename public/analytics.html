@@ -11,9 +11,11 @@
 <meta name="apple-mobile-web-app-title" content="Hear Me Out">
 <link rel="apple-touch-icon" href="/icons/icon-192.png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hear Me Out — Analytika</title>
+<title>Hear Me Out — Analytics</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/theme.css">
+<script src="/theme.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -111,7 +113,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(0,0,0,0.95);
 </nav>
 
 <div class="page" id="page">
-  <div style="text-align:center;padding:60px 0;color:var(--txt3);font-size:12px">Načítám data...</div>
+  <div style="text-align:center;padding:60px 0;color:var(--txt3);font-size:12px">Loading data...</div>
 </div>
 
 <script>
@@ -128,8 +130,8 @@ async function init() {
     page.innerHTML = `
       <div class="pro-lock">
         <div class="pro-lock-title">★ Analytika je PRO funkce</div>
-        <div class="pro-lock-sub">Zjisti z jakých měst jsou tví posluchači, kdo si přehrál tvoje tracky<br>a kdo tě sdílí dál. Dostupné s předplatným Hear Me Out PRO.</div>
-        <a href="/pro" class="pro-lock-btn">Přejít na PRO</a>
+        <div class="pro-lock-sub">See which cities your listeners come from, who played your tracks<br>and who shares them. Available with Hear Me Out PRO.</div>
+        <a href="/pro" class="pro-lock-btn">Go PRO</a>
       </div>`;
     return;
   }
@@ -145,21 +147,21 @@ function buildPage(d) {
   return `
     <!-- OVERVIEW -->
     <div class="overview">
-      <div class="ov-card gold"><div class="ov-val">${ov.total_plays.toLocaleString()}</div><div class="ov-lbl">Přehrání celkem</div></div>
-      <div class="ov-card"><div class="ov-val">${ov.total_likes.toLocaleString()}</div><div class="ov-lbl">Liků celkem</div></div>
-      <div class="ov-card"><div class="ov-val">${ov.total_reposts.toLocaleString()}</div><div class="ov-lbl">Repostů</div></div>
-      <div class="ov-card"><div class="ov-val">${ov.total_followers.toLocaleString()}</div><div class="ov-lbl">Followerů</div></div>
-      <div class="ov-card"><div class="ov-val">${ov.track_count}</div><div class="ov-lbl">Tracků</div></div>
+      <div class="ov-card gold"><div class="ov-val">${ov.total_plays.toLocaleString()}</div><div class="ov-lbl">Total plays</div></div>
+      <div class="ov-card"><div class="ov-val">${ov.total_likes.toLocaleString()}</div><div class="ov-lbl">Total likes</div></div>
+      <div class="ov-card"><div class="ov-val">${ov.total_reposts.toLocaleString()}</div><div class="ov-lbl">Reposts</div></div>
+      <div class="ov-card"><div class="ov-val">${ov.total_followers.toLocaleString()}</div><div class="ov-lbl">Followers</div></div>
+      <div class="ov-card"><div class="ov-val">${ov.track_count}</div><div class="ov-lbl">Tracks</div></div>
     </div>
 
     <!-- CHART + CITIES -->
     <div class="grid3">
       <div class="panel">
-        <div class="panel-title">Přehrání — posledních 30 dní <span>${d.plays_by_day.reduce((a,x)=>a+x.count,0)} přehrání</span></div>
+        <div class="panel-title">Plays — last 30 days <span>${d.plays_by_day.reduce((a,x)=>a+x.count,0)} plays</span></div>
         ${buildChart(d.plays_by_day)}
       </div>
       <div class="panel">
-        <div class="panel-title">Top města posluchačů</div>
+        <div class="panel-title">Top listener cities</div>
         ${buildCities(d.top_cities)}
       </div>
     </div>
@@ -171,7 +173,7 @@ function buildPage(d) {
         ${buildTracks(d.tracks)}
       </div>
       <div class="panel">
-        <div class="panel-title">Nedávní fanoušci</div>
+        <div class="panel-title">Recent fans</div>
         ${buildFans(d.recent_fans)}
       </div>
     </div>
@@ -179,7 +181,7 @@ function buildPage(d) {
 }
 
 function buildChart(days) {
-  if (!days.length) return '<div class="chart-empty">Zatím žádná data</div>';
+  if (!days.length) return '<div class="chart-empty">No data yet</div>';
   // fill missing days
   const map = {};
   days.forEach(d => map[d.date] = d.count);
@@ -193,7 +195,7 @@ function buildChart(days) {
   const bars = all.map(d => {
     const h = Math.max(2, Math.round((d.count / max) * 76));
     const lbl = d.date.slice(5); // MM-DD
-    return `<div class="chart-bar-wrap" title="${d.date}: ${d.count} přehrání">
+    return `<div class="chart-bar-wrap" title="${d.date}: ${d.count} plays">
       <div class="chart-bar" style="height:${h}px"></div>
       ${d.date.endsWith('-01') || d.date.slice(8)==='01' ? `<div class="chart-label">${lbl}</div>` : '<div class="chart-label"></div>'}
     </div>`;
@@ -202,7 +204,7 @@ function buildChart(days) {
 }
 
 function buildCities(cities) {
-  if (!cities.length) return '<div class="empty">Zatím žádná data</div>';
+  if (!cities.length) return '<div class="empty">No data yet</div>';
   const max = cities[0].count;
   return cities.map(c => `
     <div class="city-row">
@@ -213,7 +215,7 @@ function buildCities(cities) {
 }
 
 function buildTracks(tracks) {
-  if (!tracks.length) return '<div class="empty">Žádné tracky</div>';
+  if (!tracks.length) return '<div class="empty">No tracks</div>';
   return tracks.map(t => `
     <div class="track-row">
       <div class="track-cover">${t.cover ? `<img src="/uploads/${esc(t.cover)}">` : '♪'}</div>
@@ -227,7 +229,7 @@ function buildTracks(tracks) {
 }
 
 function buildFans(fans) {
-  if (!fans.length) return '<div class="empty">Zatím žádní fanoušci</div>';
+  if (!fans.length) return '<div class="empty">No fans yet</div>';
   return fans.map(f => {
     const ini = (f.display_name || '?').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
     const av  = f.avatar ? `<img src="${esc(f.avatar)}">` : ini;

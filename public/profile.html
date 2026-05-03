@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="cs">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
@@ -11,7 +11,7 @@
 <meta name="apple-mobile-web-app-title" content="Hear Me Out">
 <link rel="apple-touch-icon" href="/icons/icon-192.png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hear Me Out — Profil</title>
+<title>Hear Me Out — Profile</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/theme.css">
@@ -224,34 +224,34 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(14,10,10,0.9
 
 <nav>
   <a class="nav-logo" href="/">HEAR ME OUT <span>Network</span></a>
-  <button id="themeToggle" onclick="toggleTheme()" title="Přepnout motiv" style="margin-left:auto;background:none;border:none;cursor:pointer;font-size:16px;color:var(--txt3);width:34px;height:34px;display:flex;align-items:center;justify-content:center">☀</button>
-  <a href="/messages" title="Zprávy" style="position:relative;width:34px;height:34px;display:flex;align-items:center;justify-content:center;color:var(--txt3);font-size:17px;text-decoration:none;transition:color 0.15s" onmouseover="this.style.color='var(--red2)'" onmouseout="this.style.color='var(--txt3)'"><svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 4.5 L10.5 4.5 M8 2 L10.5 4.5 L8 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 12.5 L6.5 12.5 M9 10 L6.5 12.5 L9 15" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><div id="msgBadge" style="display:none;position:absolute;top:4px;right:4px;min-width:14px;height:14px;border-radius:7px;background:var(--red2);border:1.5px solid var(--bg);font-size:9px;color:white;align-items:center;justify-content:center;padding:0 3px"></div></a>
+  <button id="themeToggle" onclick="toggleTheme()" title="Switch theme" style="margin-left:auto;background:none;border:none;cursor:pointer;font-size:16px;color:var(--txt3);width:34px;height:34px;display:flex;align-items:center;justify-content:center">☀</button>
+  <a href="/messages" title="Messages" style="position:relative;width:34px;height:34px;display:flex;align-items:center;justify-content:center;color:var(--txt3);font-size:17px;text-decoration:none;transition:color 0.15s" onmouseover="this.style.color='var(--red2)'" onmouseout="this.style.color='var(--txt3)'"><svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 4.5 L10.5 4.5 M8 2 L10.5 4.5 L8 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 12.5 L6.5 12.5 M9 10 L6.5 12.5 L9 15" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg><div id="msgBadge" style="display:none;position:absolute;top:4px;right:4px;min-width:14px;height:14px;border-radius:7px;background:var(--red2);border:1.5px solid var(--bg);font-size:9px;color:white;align-items:center;justify-content:center;padding:0 3px"></div></a>
   <a class="nav-back" href="/" style="margin-left:0">← Feed</a>
 </nav>
 
 <div class="page" id="page">
-  <div class="loading">Načítám profil...</div>
+  <div class="loading">Loading profile...</div>
 </div>
 
 <!-- EDIT MODAL -->
 <div class="modal-overlay" id="editModal">
   <div class="modal">
     <div class="modal-title">
-      Upravit profil
+      Edit profile
       <button class="modal-close" onclick="closeEdit()">✕</button>
     </div>
     <form class="mform" id="editForm" onsubmit="saveProfile(event)">
       <div class="merror" id="editError"></div>
       <div class="mfield">
-        <label>Umělecké jméno *</label>
+        <label>Artist name *</label>
         <input type="text" id="eName" required>
       </div>
       <div class="mrow">
         <div class="mfield">
-          <label>Město</label>
+          <label>City</label>
           <div style="display:flex;gap:6px;align-items:center">
             <select id="eCity" style="flex:1;background:var(--bg3);border:1px solid var(--border2);color:var(--txt);font-family:'DM Mono',monospace;font-size:15px;padding:8px 10px;letter-spacing:0.05em;outline:none;cursor:pointer" onchange="onCitySelect(this.value)">
-              <option value="">— nevybráno —</option>
+              <option value="">— not selected —</option>
               <option value="Praha"     data-lat="50.0755" data-lng="14.4378">Praha</option>
               <option value="Brno"      data-lat="49.1951" data-lng="16.6068">Brno</option>
               <option value="Ostrava"   data-lat="49.8209" data-lng="18.2625">Ostrava</option>
@@ -263,7 +263,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(14,10,10,0.9
               <option value="Žilina"    data-lat="49.2231" data-lng="18.7394">Žilina</option>
               <option value="Prešov"    data-lat="49.0014" data-lng="21.2394">Prešov</option>
             </select>
-            <button type="button" id="gpsProfileBtn" title="Použít mou polohu" onclick="useGpsForProfile()"
+            <button type="button" id="gpsProfileBtn" title="Use my location" onclick="useGpsForProfile()"
               style="background:none;border:1px solid var(--border2);color:var(--txt3);padding:7px 9px;cursor:pointer;transition:all 0.15s;flex-shrink:0"
               onmouseover="this.style.borderColor='var(--red2)';this.style.color='var(--red2)'"
               onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--txt3)'">
@@ -274,18 +274,18 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(14,10,10,0.9
           <input type="hidden" id="eLng">
         </div>
         <div class="mfield">
-          <label>Žánry</label>
+          <label>Genres</label>
           <input type="text" id="eGenres">
         </div>
       </div>
       <div class="mfield">
         <label>Bio</label>
-        <textarea id="eBio" placeholder="Pár slov o tobě, tvé hudbě, tvém zvuku..."></textarea>
+        <textarea id="eBio" placeholder="A few words about you, your music, your sound..."></textarea>
       </div>
       <div class="mfield">
-        <label>Emoji badge na profilovce</label>
+        <label>Profile emoji badge</label>
         <div class="emoji-picker">
-          <div class="emoji-opt none active" data-val="" onclick="pickEmoji(this)">žádný</div>
+          <div class="emoji-opt none active" data-val="" onclick="pickEmoji(this)">none</div>
           <div class="emoji-opt" data-val="🎙️" onclick="pickEmoji(this)">🎙️</div>
           <div class="emoji-opt" data-val="🎛️" onclick="pickEmoji(this)">🎛️</div>
           <div class="emoji-opt" data-val="🎹" onclick="pickEmoji(this)">🎹</div>
@@ -294,7 +294,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(14,10,10,0.9
         </div>
         <input type="hidden" id="eEmoji">
       </div>
-      <button class="msave" type="submit" id="eSave">ULOŽIT</button>
+      <button class="msave" type="submit" id="eSave">SAVE</button>
     </form>
   </div>
 </div>
@@ -303,29 +303,29 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(14,10,10,0.9
 <div class="modal-overlay" id="plModal">
   <div class="modal">
     <div class="modal-title">
-      <span id="plModalTitle">Nový playlist</span>
+      <span id="plModalTitle">New playlist</span>
       <button class="modal-close" onclick="closePlModal()">✕</button>
     </div>
     <div class="mform">
       <div class="merror" id="plError"></div>
       <div class="mfield">
-        <label>Název *</label>
-        <input type="text" id="plName" placeholder="název playlistu...">
+        <label>Name *</label>
+        <input type="text" id="plName" placeholder="playlist name...">
       </div>
       <div class="mfield">
-        <label>Viditelnost</label>
+        <label>Visibility</label>
         <div style="display:flex;gap:8px;margin-top:6px">
           <button type="button" id="plPublic" onclick="setPlVis(true)"
             style="flex:1;padding:9px;font-family:'DM Mono',monospace;font-size:15px;letter-spacing:0.06em;cursor:pointer;border:1px solid var(--red2);background:var(--red2);color:white;transition:all 0.15s">
-            🌐 Veřejný
+            🌐 Public
           </button>
           <button type="button" id="plPrivate" onclick="setPlVis(false)"
             style="flex:1;padding:9px;font-family:'DM Mono',monospace;font-size:15px;letter-spacing:0.06em;cursor:pointer;border:1px solid var(--border2);background:transparent;color:var(--txt3);transition:all 0.15s">
-            🔒 Soukromý
+            🔒 Private
           </button>
         </div>
       </div>
-      <button class="msave" id="plSaveBtn" onclick="savePlModal()">VYTVOŘIT</button>
+      <button class="msave" id="plSaveBtn" onclick="savePlModal()">CREATE</button>
     </div>
   </div>
 </div>
@@ -361,7 +361,7 @@ let currentId  = null;
 async function load() {
   const res = await fetch('/api/profile/' + username);
   if (res.status === 401) { window.location.href = '/login'; return; }
-  if (!res.ok) { document.getElementById('page').innerHTML = '<div class="loading">Profil nenalezen.</div>'; return; }
+  if (!res.ok) { document.getElementById('page').innerHTML = '<div class="loading">Profile not found.</div>'; return; }
   profile = await res.json();
   render();
 }
@@ -374,36 +374,36 @@ function render() {
     : `<div class="avatar-placeholder">${esc(p.initials)}</div>`;
 
   const editBtn = p.is_own
-    ? `<button class="btn-secondary" onclick="openEdit()">Upravit profil</button>`
+    ? `<button class="btn-secondary" onclick="openEdit()">Edit profile</button>`
     : `<button class="btn-follow ${p.is_following ? 'following' : ''}" id="followBtn" onclick="toggleFollow()">${p.is_following ? 'Following' : 'Follow'}</button>
-       <a class="btn-msg" href="/messages?user=${esc(p.username)}">◻ Zpráva</a>`;
+       <a class="btn-msg" href="/messages?user=${esc(p.username)}">◻ Message</a>`;
 
   const tags = [p.city, ...(p.genres ? p.genres.split(',').map(g=>g.trim()) : [])]
     .filter(Boolean).map(t => `<div class="profile-tag">${esc(t)}</div>`).join('');
 
   const bioHTML = p.bio
     ? `<div class="profile-bio">${esc(p.bio)}</div>`
-    : (p.is_own ? `<div class="profile-bio empty">Zatím žádné bio — klikni na "Upravit profil".</div>` : '');
+    : (p.is_own ? `<div class="profile-bio empty">No bio yet — click "Edit profile".</div>` : '');
 
   const photosHTML = p.photos.map((ph, i) => {
     if (ph) {
       return `<div class="photo-slot">
         <img src="/uploads/${esc(ph)}" alt="foto">
         ${p.is_own ? `<div class="photo-slot-edit">
-          <label class="photo-edit-btn">Změnit<input type="file" accept="image/*" style="display:none" onchange="uploadPhoto(this,${i+1})"></label>
-          <button class="photo-remove-btn" onclick="removePhoto(${i+1})">Smazat</button>
+          <label class="photo-edit-btn">Change<input type="file" accept="image/*" style="display:none" onchange="uploadPhoto(this,${i+1})"></label>
+          <button class="photo-remove-btn" onclick="removePhoto(${i+1})">Delete</button>
         </div>` : ''}
       </div>`;
     } else {
       return `<div class="photo-slot">
-        <div class="photo-slot-placeholder"><span>▣</span><span>${p.is_own ? 'Přidat' : ''}</span></div>
+        <div class="photo-slot-placeholder"><span>▣</span><span>${p.is_own ? 'Add' : ''}</span></div>
         ${p.is_own ? `<input type="file" class="photo-slot-input" accept="image/*" onchange="uploadPhoto(this,${i+1})">` : ''}
       </div>`;
     }
   }).join('');
 
   const tracksHTML = p.tracks.length === 0
-    ? `<div style="font-size:15px;color:var(--txt3);padding:20px 0">${p.is_own ? 'Zatím žádné tracky — <a href="/upload" style="color:var(--red2);text-decoration:none">nahraj první</a>.' : 'Zatím žádné tracky.'}</div>`
+    ? `<div style="font-size:15px;color:var(--txt3);padding:20px 0">${p.is_own ? 'No tracks yet — <a href="/upload" style="color:var(--red2);text-decoration:none">upload your first</a>.' : 'No tracks yet.'}</div>`
     : p.tracks.map(t => {
         const coverHTML = t.cover
           ? `<div class="tr-cover"><img src="/uploads/${esc(t.cover)}" alt="cover"></div>`
@@ -420,9 +420,9 @@ function render() {
           <div class="tr-likes">♥ ${t.like_count}</div>
           <div class="tr-dur">${esc(t.duration) || '—'}</div>
           <div class="atp-wrap">
-            <button class="tr-play" style="background:var(--bg3);border:1px solid var(--border2);color:var(--txt3);font-size:16px" title="Přidat do playlistu" onclick="openAtpMenu(event,${t.id})">+</button>
+            <button class="tr-play" style="background:var(--bg3);border:1px solid var(--border2);color:var(--txt3);font-size:16px" title="Add to playlist" onclick="openAtpMenu(event,${t.id})">+</button>
             <div class="atp-menu" id="atp-${t.id}">
-              <div class="atp-item loading-atp">Načítám...</div>
+              <div class="atp-item loading-atp">Loading...</div>
             </div>
           </div>
         </div>`;
@@ -433,7 +433,7 @@ function render() {
       <div class="avatar-wrap">
         ${avatarHTML}
         ${emojiBadge}
-        ${p.is_own ? `<label class="avatar-edit-btn" title="Změnit profilovku">✎<input type="file" class="avatar-edit-input" accept="image/*" onchange="uploadAvatar(this)"></label>` : ''}
+        ${p.is_own ? `<label class="avatar-edit-btn" title="Change avatar">✎<input type="file" class="avatar-edit-input" accept="image/*" onchange="uploadAvatar(this)"></label>` : ''}
       </div>
       <div class="profile-info">
         <div class="profile-name">${esc(p.display_name)}${p.pro ? '<span class="pro-badge">★ PRO</span>' : ''}</div>
@@ -441,47 +441,47 @@ function render() {
         <div class="profile-tags">${tags}</div>
         ${bioHTML}
         <div class="profile-stats">
-          <div class="stat"><div class="stat-val">${p.track_count}</div><div class="stat-lbl">Tracků</div></div>
-          <div class="stat"><div class="stat-val">${p.followers}</div><div class="stat-lbl">Followerů</div></div>
-          <div class="stat"><div class="stat-val">${p.following_count}</div><div class="stat-lbl">Sleduje</div></div>
+          <div class="stat"><div class="stat-val">${p.track_count}</div><div class="stat-lbl">Tracks</div></div>
+          <div class="stat"><div class="stat-val">${p.followers}</div><div class="stat-lbl">Followers</div></div>
+          <div class="stat"><div class="stat-val">${p.following_count}</div><div class="stat-lbl">Following</div></div>
         </div>
         <div class="profile-actions">${editBtn}</div>
       </div>
     </div>
 
-    <div class="section-title">Fotky</div>
+    <div class="section-title">Photos</div>
     <div class="photos-grid">${photosHTML}</div>
 
     <div class="profile-tabs">
-      <div class="profile-tab active" id="tabTracks"    onclick="switchTab('tracks')">Tracky (${p.track_count})</div>
-      <div class="profile-tab"        id="tabPlaylists" onclick="switchTab('playlists')">Playlisty</div>
-      <div class="profile-tab"        id="tabReposts"   onclick="switchTab('reposts')">Reposty</div>
+      <div class="profile-tab active" id="tabTracks"    onclick="switchTab('tracks')">Tracks (${p.track_count})</div>
+      <div class="profile-tab"        id="tabPlaylists" onclick="switchTab('playlists')">Playlists</div>
+      <div class="profile-tab"        id="tabReposts"   onclick="switchTab('reposts')">Reposts</div>
       <div class="profile-tab"        id="tabEvents"    onclick="switchTab('events')">Events</div>
-      ${p.is_own ? `<div class="profile-tab" id="tabFavorites"   onclick="switchTab('favorites')">Oblíbené</div>
-      <div class="profile-tab" id="tabSavedEvents" onclick="switchTab('savedEvents')">Uložené akce</div>
-      <div class="profile-tab" id="tabTickets"     onclick="switchTab('tickets')">Vstupenky</div>` : ''}
+      ${p.is_own ? `<div class="profile-tab" id="tabFavorites"   onclick="switchTab('favorites')">Favourites</div>
+      <div class="profile-tab" id="tabSavedEvents" onclick="switchTab('savedEvents')">Saved events</div>
+      <div class="profile-tab" id="tabTickets"     onclick="switchTab('tickets')">Tickets</div>` : ''}
     </div>
 
     <div id="tabContentTracks">
       <div id="trackList">${tracksHTML}</div>
     </div>
     <div id="tabContentReposts" style="display:none">
-      <div id="repostsView"><div class="loading">Načítám...</div></div>
+      <div id="repostsView"><div class="loading">Loading...</div></div>
     </div>
     <div id="tabContentPlaylists" style="display:none">
-      <div id="playlistsView"><div class="loading">Načítám...</div></div>
+      <div id="playlistsView"><div class="loading">Loading...</div></div>
     </div>
     <div id="tabContentEvents" style="display:none">
-      <div id="eventsView"><div class="loading">Načítám akce...</div></div>
+      <div id="eventsView"><div class="loading">Loading events...</div></div>
     </div>
     ${p.is_own ? `<div id="tabContentFavorites" style="display:none">
-      <div id="favoritesView"><div class="loading">Načítám...</div></div>
+      <div id="favoritesView"><div class="loading">Loading...</div></div>
     </div>
     <div id="tabContentSavedEvents" style="display:none">
-      <div id="savedEventsView"><div class="loading">Načítám...</div></div>
+      <div id="savedEventsView"><div class="loading">Loading...</div></div>
     </div>
     <div id="tabContentTickets" style="display:none">
-      <div id="ticketsView"><div class="loading">Načítám...</div></div>
+      <div id="ticketsView"><div class="loading">Loading...</div></div>
     </div>` : ''}
   `;
 
@@ -509,7 +509,7 @@ async function uploadAvatar(input) {
   form.append('display_name', profile.display_name);
   await fetch('/api/profile/update', {method:'POST', body:form});
   await load();
-  showToast('Profilovka uložena');
+  showToast('Avatar saved');
 }
 
 // ── Photos ────────────────────────────────────────────────────────────────────
@@ -520,7 +520,7 @@ async function uploadPhoto(input, slot) {
   form.append('display_name', profile.display_name);
   await fetch('/api/profile/update', {method:'POST', body:form});
   await load();
-  showToast('Foto uloženo');
+  showToast('Photo saved');
 }
 
 async function removePhoto(slot) {
@@ -529,7 +529,7 @@ async function removePhoto(slot) {
   form.append(`remove_photo${slot}`, '1');
   await fetch('/api/profile/update', {method:'POST', body:form});
   await load();
-  showToast('Foto odstraněno');
+  showToast('Photo removed');
 }
 
 // ── Emoji picker ──────────────────────────────────────────────────────────────
@@ -552,17 +552,17 @@ function onCitySelect(val) {
 }
 
 function useGpsForProfile() {
-  if (!navigator.geolocation) { showToast('GPS není dostupné'); return; }
+  if (!navigator.geolocation) { showToast('GPS not available'); return; }
   const btn = document.getElementById('gpsProfileBtn');
   btn.style.opacity = '0.5';
   navigator.geolocation.getCurrentPosition(pos => {
     document.getElementById('eLat').value = pos.coords.latitude;
     document.getElementById('eLng').value = pos.coords.longitude;
     btn.style.opacity = '1';
-    showToast('Poloha získána ✓');
+    showToast('Location obtained ✓');
   }, () => {
     btn.style.opacity = '1';
-    showToast('GPS zamítnuto nebo nedostupné');
+    showToast('GPS denied or unavailable');
   });
 }
 
@@ -580,7 +580,7 @@ document.getElementById('editModal').addEventListener('click', e => {
 async function saveProfile(e) {
   e.preventDefault();
   const btn = document.getElementById('eSave');
-  btn.disabled = true; btn.textContent = 'UKLÁDÁM...';
+  btn.disabled = true; btn.textContent = 'SAVING...';
   document.getElementById('editError').classList.remove('visible');
 
   const form = new FormData();
@@ -599,13 +599,13 @@ async function saveProfile(e) {
   if (data.ok) {
     await load();
     closeEdit();
-    showToast('Profil uložen');
+    showToast('Profile saved');
   } else {
     const el = document.getElementById('editError');
-    el.textContent = data.error || 'Chyba';
+    el.textContent = data.error || 'Error';
     el.classList.add('visible');
   }
-  btn.disabled = false; btn.textContent = 'ULOŽIT';
+  btn.disabled = false; btn.textContent = 'SAVE';
 }
 
 // ── Follow ────────────────────────────────────────────────────────────────────
@@ -704,11 +704,11 @@ function switchTab(tab) {
 // ── Reposts ───────────────────────────────────────────────────────────────────
 async function loadReposts() {
   const el = document.getElementById('repostsView');
-  el.innerHTML = '<div class="loading">Načítám...</div>';
+  el.innerHTML = '<div class="loading">Loading...</div>';
   const res = await fetch(`/api/profile/${username}/reposts`);
   const tracks = res.ok ? await res.json() : [];
   if (!tracks.length) {
-    el.innerHTML = '<div style="font-size:13px;color:var(--txt3);padding:20px 0">Žádné reposty.</div>';
+    el.innerHTML = '<div style="font-size:13px;color:var(--txt3);padding:20px 0">No reposts.</div>';
     return;
   }
   el.innerHTML = tracks.map(t => {
@@ -729,22 +729,22 @@ async function loadReposts() {
 // ── Profile events ────────────────────────────────────────────────────────────
 async function loadProfileEvents() {
   const el = document.getElementById('eventsView');
-  el.innerHTML = '<div class="loading">Načítám...</div>';
+  el.innerHTML = '<div class="loading">Loading...</div>';
   const res = await fetch(`/api/profile/${username}/events`);
   const evs = res.ok ? await res.json() : [];
   if (!evs.length) {
-    el.innerHTML = '<div style="font-size:15px;color:var(--txt3);padding:20px 0">Žádné akce.</div>';
+    el.innerHTML = '<div style="font-size:15px;color:var(--txt3);padding:20px 0">No events.</div>';
     return;
   }
   const upcoming = evs.filter(e => !e.past);
   const past     = evs.filter(e => e.past);
   let html = '';
   if (upcoming.length) {
-    html += `<div style="font-size:15px;letter-spacing:0.12em;color:var(--txt3);text-transform:uppercase;margin-bottom:10px">Nadcházející</div>`;
+    html += `<div style="font-size:15px;letter-spacing:0.12em;color:var(--txt3);text-transform:uppercase;margin-bottom:10px">Upcoming</div>`;
     html += upcoming.map(renderEventRow).join('');
   }
   if (past.length) {
-    html += `<div style="font-size:15px;letter-spacing:0.12em;color:var(--txt3);text-transform:uppercase;margin:18px 0 10px">Proběhlé</div>`;
+    html += `<div style="font-size:15px;letter-spacing:0.12em;color:var(--txt3);text-transform:uppercase;margin:18px 0 10px">Past</div>`;
     html += past.map(renderEventRow).join('');
   }
   el.innerHTML = html;
@@ -752,10 +752,10 @@ async function loadProfileEvents() {
 
 function renderEventRow(e) {
   const d = e.date ? new Date(e.date) : null;
-  const dateStr = d ? d.toLocaleDateString('cs-CZ', {day:'numeric', month:'short', year:'numeric'}) : '';
+  const dateStr = d ? d.toLocaleDateString('en-GB', {day:'numeric', month:'short', year:'numeric'}) : '';
   const photo = e.photo ? `<img src="${e.photo}" style="width:48px;height:48px;object-fit:cover;border-radius:3px;flex-shrink:0">` : `<div style="width:48px;height:48px;background:var(--bg3);border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">◷</div>`;
   const tags = [e.genre, e.city].filter(Boolean).map(t => `<span style="font-size:15px;letter-spacing:0.06em;padding:2px 6px;border:1px solid var(--border2);color:var(--txt3)">${esc(t)}</span>`).join('');
-  const linkBtn = e.link ? `<a href="${esc(e.link)}" target="_blank" style="font-size:15px;letter-spacing:0.08em;color:var(--red2);text-decoration:none">Více →</a>` : '';
+  const linkBtn = e.link ? `<a href="${esc(e.link)}" target="_blank" style="font-size:15px;letter-spacing:0.08em;color:var(--red2);text-decoration:none">More →</a>` : '';
   return `<div style="display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--border);opacity:${e.past ? '0.55' : '1'}">
     ${photo}
     <div style="flex:1;min-width:0">
@@ -770,11 +770,11 @@ function renderEventRow(e) {
 async function loadFavoriteTracks() {
   const el = document.getElementById('favoritesView');
   if (!el) return;
-  el.innerHTML = '<div class="loading">Načítám...</div>';
+  el.innerHTML = '<div class="loading">Loading...</div>';
   const res  = await fetch('/api/favorites/tracks');
   const data = res.ok ? await res.json() : [];
   if (!data.length) {
-    el.innerHTML = '<div style="font-size:15px;color:var(--txt3);padding:20px 0">Zatím žádné oblíbené tracky.</div>';
+    el.innerHTML = '<div style="font-size:15px;color:var(--txt3);padding:20px 0">No favourite tracks yet.</div>';
     return;
   }
   el.innerHTML = data.map(t => {
@@ -787,7 +787,7 @@ async function loadFavoriteTracks() {
         <div style="font-size:14px;color:var(--txt1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(t.title)}</div>
         <div style="font-size:14px;color:var(--txt3);margin-top:2px">${esc(t.display_name)}${t.genre ? ' · ' + esc(t.genre) : ''}</div>
       </div>
-      <a href="/profile/${esc(t.username)}" style="font-size:15px;letter-spacing:0.08em;color:var(--red2);text-decoration:none">Profil →</a>
+      <a href="/profile/${esc(t.username)}" style="font-size:15px;letter-spacing:0.08em;color:var(--red2);text-decoration:none">Profile →</a>
     </div>`;
   }).join('');
 }
@@ -796,22 +796,22 @@ async function loadFavoriteTracks() {
 async function loadTickets() {
   const el = document.getElementById('ticketsView');
   if (!el) return;
-  el.innerHTML = '<div class="loading">Načítám...</div>';
+  el.innerHTML = '<div class="loading">Loading...</div>';
   const res = await fetch('/api/my-orders');
   const orders = res.ok ? await res.json() : [];
   const tickets = orders.filter(o => o.item_type === 'ticket' && (o.status === 'paid' || o.status === 'valid' || o.status === 'used'));
   if (!tickets.length) {
-    el.innerHTML = '<div style="font-size:15px;color:var(--txt3);padding:20px 0">Zatím žádné vstupenky. <a href="/events" style="color:var(--red2);text-decoration:none">Procházet akce →</a></div>';
+    el.innerHTML = '<div style="font-size:15px;color:var(--txt3);padding:20px 0">No tickets yet. <a href="/events" style="color:var(--red2);text-decoration:none">Browse events →</a></div>';
     return;
   }
   el.innerHTML = tickets.map(t => {
     const statusColor = t.status === 'used' ? 'var(--txt3)' : '#4ade80';
-    const statusLabel = t.status === 'used' ? 'POUŽITÁ' : 'PLATNÁ';
-    const date = t.created_at ? new Date(t.created_at).toLocaleDateString('cs-CZ', {day:'numeric', month:'short', year:'numeric'}) : '';
+    const statusLabel = t.status === 'used' ? 'USED' : 'VALID';
+    const date = t.created_at ? new Date(t.created_at).toLocaleDateString('en-GB', {day:'numeric', month:'short', year:'numeric'}) : '';
     return `<div style="display:flex;align-items:center;gap:14px;padding:10px 0;border-bottom:1px solid var(--border);cursor:pointer" onclick="window.location.href='/ticket/${esc(t.ticket_code)}'">
       <div style="width:44px;height:44px;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:20px;color:var(--txt3);flex-shrink:0">▣</div>
       <div style="flex:1;min-width:0">
-        <div style="font-size:14px;color:var(--txt1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Vstupenka #${esc(t.ticket_code)}</div>
+        <div style="font-size:14px;color:var(--txt1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Ticket #${esc(t.ticket_code)}</div>
         <div style="font-size:14px;color:var(--txt3);margin-top:2px">${t.amount > 0 ? t.amount+' '+esc(t.currency) : ''}${date ? ' · '+date : ''}</div>
       </div>
       <span style="font-size:9px;letter-spacing:0.1em;padding:2px 7px;background:rgba(74,222,128,0.08);color:${statusColor};flex-shrink:0">${statusLabel}</span>
@@ -822,22 +822,22 @@ async function loadTickets() {
 async function loadSavedEvents() {
   const el = document.getElementById('savedEventsView');
   if (!el) return;
-  el.innerHTML = '<div class="loading">Načítám...</div>';
+  el.innerHTML = '<div class="loading">Loading...</div>';
   const res  = await fetch('/api/calendar');
   const data = res.ok ? await res.json() : [];
   if (!data.length) {
-    el.innerHTML = '<div style="font-size:15px;color:var(--txt3);padding:20px 0">Zatím žádné uložené akce. <a href="/events" style="color:var(--red2);text-decoration:none">Procházet akce →</a></div>';
+    el.innerHTML = '<div style="font-size:15px;color:var(--txt3);padding:20px 0">No saved events yet. <a href="/events" style="color:var(--red2);text-decoration:none">Browse events →</a></div>';
     return;
   }
   const upcoming = data.filter(e => !e.past);
   const past     = data.filter(e => e.past);
   let html = '';
   if (upcoming.length) {
-    html += `<div style="font-size:15px;letter-spacing:0.12em;color:var(--txt3);text-transform:uppercase;margin-bottom:10px">Nadcházející</div>`;
+    html += `<div style="font-size:15px;letter-spacing:0.12em;color:var(--txt3);text-transform:uppercase;margin-bottom:10px">Upcoming</div>`;
     html += upcoming.map(renderSavedEvent).join('');
   }
   if (past.length) {
-    html += `<div style="font-size:15px;letter-spacing:0.12em;color:var(--txt3);text-transform:uppercase;margin:18px 0 10px">Proběhlé</div>`;
+    html += `<div style="font-size:15px;letter-spacing:0.12em;color:var(--txt3);text-transform:uppercase;margin:18px 0 10px">Past</div>`;
     html += past.map(renderSavedEvent).join('');
   }
   el.innerHTML = html;
@@ -845,7 +845,7 @@ async function loadSavedEvents() {
 
 function renderSavedEvent(e) {
   const d = e.date ? new Date(e.date) : null;
-  const dateStr = d ? d.toLocaleDateString('cs-CZ', {day:'numeric', month:'short', year:'numeric'}) : '';
+  const dateStr = d ? d.toLocaleDateString('en-GB', {day:'numeric', month:'short', year:'numeric'}) : '';
   return `<div style="display:flex;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);opacity:${e.past ? '0.55' : '1'}">
     <div style="width:44px;height:44px;background:var(--bg3);border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">◷</div>
     <div style="flex:1;min-width:0">
@@ -872,10 +872,10 @@ function renderPlaylistGrid() {
   const el = document.getElementById('playlistsView');
   if (!el) return;
   const addCard = profile.is_own
-    ? `<div class="pl-add-card" onclick="openPlModal()"><span style="font-size:24px">+</span><span>Nový playlist</span></div>`
+    ? `<div class="pl-add-card" onclick="openPlModal()"><span style="font-size:24px">+</span><span>New playlist</span></div>`
     : '';
   if (!playlists.length && !profile.is_own) {
-    el.innerHTML = '<div style="font-size:15px;color:var(--txt3);padding:20px 0">Žádné veřejné playlisty.</div>';
+    el.innerHTML = '<div style="font-size:15px;color:var(--txt3);padding:20px 0">No public playlists.</div>';
     return;
   }
   el.innerHTML = `<div class="pl-grid">
@@ -887,7 +887,7 @@ function renderPlaylistGrid() {
         <div class="pl-card-body">
           <div class="pl-card-name">${esc(pl.name)}</div>
           <div class="pl-card-meta">
-            <span>${pl.track_count} tracků</span>
+            <span>${pl.track_count} tracks</span>
             <span class="pl-visibility">${pl.is_public ? '🌐' : '🔒'}</span>
           </div>
         </div>
@@ -909,30 +909,30 @@ function renderPlDetail() {
   const cover = pl.tracks.find(t => t.cover)?.cover;
   const coverHTML = cover ? `<img src="/uploads/${esc(cover)}">` : '♫';
   const ownActions = pl.is_own ? `
-    <button class="pl-btn-sm" onclick="openPlModal(${pl.id})">✎ Přejmenovat</button>
-    <button class="pl-btn-sm" onclick="togglePlPublic(${pl.id})">${pl.is_public ? '🔒 Soukromý' : '🌐 Veřejný'}</button>
-    <button class="pl-btn-sm danger" onclick="deletePl(${pl.id})">Smazat</button>` : '';
+    <button class="pl-btn-sm" onclick="openPlModal(${pl.id})">✎ Rename</button>
+    <button class="pl-btn-sm" onclick="togglePlPublic(${pl.id})">${pl.is_public ? '🔒 Private' : '🌐 Public'}</button>
+    <button class="pl-btn-sm danger" onclick="deletePl(${pl.id})">Delete</button>` : '';
 
   el.innerHTML = `
-    <div class="pl-back" onclick="backToGrid()">← Zpět na playlisty</div>
+    <div class="pl-back" onclick="backToGrid()">← Back to playlists</div>
     <div class="pl-detail" data-own="${pl.is_own}">
       <div class="pl-detail-header">
         <div class="pl-detail-cover">${coverHTML}</div>
         <div class="pl-detail-info">
           <div class="pl-detail-name">${esc(pl.name)}</div>
           <div class="pl-detail-meta">
-            <span>${pl.tracks.length} tracků</span>
-            <span>${pl.is_public ? '🌐 Veřejný' : '🔒 Soukromý'}</span>
+            <span>${pl.tracks.length} tracks</span>
+            <span>${pl.is_public ? '🌐 Public' : '🔒 Private'}</span>
           </div>
           <div class="pl-detail-actions">
-            ${pl.tracks.length ? `<button class="pl-play-btn" onclick="playPlaylist()">▶ Přehrát vše</button>` : ''}
+            ${pl.tracks.length ? `<button class="pl-play-btn" onclick="playPlaylist()">▶ Play all</button>` : ''}
             ${ownActions}
           </div>
         </div>
       </div>
       <div id="plTrackList">
         ${pl.tracks.length === 0
-          ? `<div style="font-size:15px;color:var(--txt3);padding:16px 0">Playlist je prázdný. Přidej tracky pomocí + na záložce Tracky.</div>`
+          ? `<div style="font-size:15px;color:var(--txt3);padding:16px 0">Playlist is empty. Add tracks using + on the Tracks tab.</div>`
           : pl.tracks.map((t, i) => `
             <div class="pl-track-row">
               <div class="pl-track-num">${i + 1}</div>
@@ -946,7 +946,7 @@ function renderPlDetail() {
                 data-trackid="${t.id}" data-filename="${escA(t.filename)}"
                 data-title="${escA(t.title)}" data-initials="${escA((t.display_name||'?').split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase())}"
                 data-plindex="${i}" onclick="handlePlPlay(this)">▶</button>
-              <button class="pl-track-rm" onclick="removeFromPl(${pl.id},${t.id})" title="Odebrat">✕</button>
+              <button class="pl-track-rm" onclick="removeFromPl(${pl.id},${t.id})" title="Remove">✕</button>
             </div>`).join('')}
       </div>
     </div>`;
@@ -1009,15 +1009,15 @@ async function togglePlPublic(id) {
   await fetch(`/api/playlists/${id}`, {method:'PATCH', headers:{'Content-Type':'application/json'}, body:JSON.stringify({is_public: newVal})});
   await loadPlaylists();
   if (activePl && activePl.id === id) { activePl.is_public = newVal; renderPlDetail(); }
-  showToast(newVal ? 'Playlist je nyní veřejný' : 'Playlist je nyní soukromý');
+  showToast(newVal ? 'Playlist is now public' : 'Playlist is now private');
 }
 
 async function deletePl(id) {
-  if (!confirm('Smazat playlist?')) return;
+  if (!confirm('Delete playlist?')) return;
   await fetch(`/api/playlists/${id}`, {method:'DELETE'});
   activePl = null;
   await loadPlaylists();
-  showToast('Playlist smazán');
+  showToast('Playlist deleted');
 }
 
 // ── Create / edit playlist modal ──────────────────────────────────────────────
@@ -1039,8 +1039,8 @@ function setPlVis(pub) {
 
 function openPlModal(id) {
   editingPlId = id || null;
-  document.getElementById('plModalTitle').textContent = id ? 'Upravit playlist' : 'Nový playlist';
-  document.getElementById('plSaveBtn').textContent    = id ? 'ULOŽIT' : 'VYTVOŘIT';
+  document.getElementById('plModalTitle').textContent = id ? 'Edit playlist' : 'New playlist';
+  document.getElementById('plSaveBtn').textContent    = id ? 'SAVE' : 'CREATE';
   if (id) {
     const pl = playlists.find(p => p.id === id) || activePl;
     if (pl) {
@@ -1064,16 +1064,16 @@ async function savePlModal() {
   const name      = document.getElementById('plName').value.trim();
   const is_public = plIsPublic;
   if (!name) {
-    document.getElementById('plError').textContent = 'Název je povinný';
+    document.getElementById('plError').textContent = 'Name is required';
     document.getElementById('plError').classList.add('visible');
     return;
   }
   if (editingPlId) {
     await fetch(`/api/playlists/${editingPlId}`, {method:'PATCH', headers:{'Content-Type':'application/json'}, body:JSON.stringify({name, is_public})});
-    showToast('Playlist upraven');
+    showToast('Playlist updated');
   } else {
     await fetch('/api/playlists', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({name, is_public})});
-    showToast('Playlist vytvořen');
+    showToast('Playlist created');
   }
   closePlModal();
   await loadPlaylists();
@@ -1100,33 +1100,33 @@ async function openAtpMenu(e, trackId) {
   const pls = res.ok ? await res.json() : [];
   menu.innerHTML = pls.map(pl =>
     `<div class="atp-item" onclick="atpAdd(${pl.id},${trackId})">${esc(pl.name)} <span style="color:var(--txt3)">(${pl.track_count})</span></div>`
-  ).join('') + `<div class="atp-item new" onclick="atpNew(${trackId})">+ Nový playlist</div>`;
+  ).join('') + `<div class="atp-item new" onclick="atpNew(${trackId})">+ New playlist</div>`;
 }
 
 async function atpAdd(plId, trackId) {
   document.querySelectorAll('.atp-menu.open').forEach(m => m.classList.remove('open'));
   const res  = await fetch(`/api/playlists/${plId}/tracks`, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({track_id: trackId})});
   const data = await res.json();
-  showToast(data.error ? data.error : 'Přidáno do playlistu');
+  showToast(data.error ? data.error : 'Added to playlist');
   loadPlaylists();
 }
 
 async function atpNew(trackId) {
   document.querySelectorAll('.atp-menu.open').forEach(m => m.classList.remove('open'));
-  const name = prompt('Název nového playlistu:');
+  const name = prompt('New playlist name:');
   if (!name?.trim()) return;
   const res  = await fetch('/api/playlists', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({name: name.trim(), is_public: true})});
   const data = await res.json();
   if (data.ok) {
     await fetch(`/api/playlists/${data.id}/tracks`, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({track_id: trackId})});
-    showToast('Playlist vytvořen a track přidán');
+    showToast('Playlist created and track added');
     loadPlaylists();
   }
 }
 
 async function removeFromPl(plId, trackId) {
   await fetch(`/api/playlists/${plId}/tracks/${trackId}`, {method:'DELETE'});
-  showToast('Odebráno z playlistu');
+  showToast('Removed from playlist');
   await openPlDetail(plId);
 }
 

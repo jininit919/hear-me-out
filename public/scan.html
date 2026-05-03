@@ -14,6 +14,8 @@
 <title>Hear Me Out — Scanner</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/theme.css">
+<script src="/theme.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -101,7 +103,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(0,0,0,0.95);
       </div>
     </div>
   </div>
-  <div class="cam-hint">Namiř kameru na QR kód vstupenky</div>
+  <div class="cam-hint">Point the camera at the ticket QR code</div>
 
   <canvas id="camCanvas" style="display:none"></canvas>
 
@@ -109,15 +111,15 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(0,0,0,0.95);
     <div class="result-status" id="resultStatus"></div>
     <div id="resultBody"></div>
     <div class="result-code" id="resultCode"></div>
-    <button class="use-btn" id="useBtn" style="display:none" onclick="markUsed()">✓ Označit jako použitou</button>
-    <button class="rescan-btn" onclick="rescan()">↺ Skenovat další</button>
+    <button class="use-btn" id="useBtn" style="display:none" onclick="markUsed()">✓ Mark as used</button>
+    <button class="rescan-btn" onclick="rescan()">↺ Scan next</button>
   </div>
 
   <div class="manual">
-    <div class="manual-label">Nebo zadej kód ručně</div>
+    <div class="manual-label">Or enter code manually</div>
     <div class="manual-row">
-      <input class="manual-input" id="manualInput" placeholder="např. A1B2C3D4E5F6G7H8" maxlength="32">
-      <button class="manual-btn" onclick="verifyCode(document.getElementById('manualInput').value.trim())">Ověřit</button>
+      <input class="manual-input" id="manualInput" placeholder="e.g. A1B2C3D4E5F6G7H8" maxlength="32">
+      <button class="manual-btn" onclick="verifyCode(document.getElementById('manualInput').value.trim())">Verify</button>
     </div>
   </div>
 
@@ -142,7 +144,7 @@ async function startCamera() {
     requestAnimationFrame(tick);
   } catch (e) {
     document.getElementById('camWrap').innerHTML =
-      '<div class="no-cam">Kamera není dostupná.<br>Použij ruční zadání kódu níže.</div>';
+      '<div class="no-cam">Camera not available.<br>Use manual entry below.</div>';
   }
 }
 
@@ -178,16 +180,16 @@ async function verifyCode(code) {
   if (res.status === 401) { window.location.href = '/login'; return; }
 
   if (!res.ok) {
-    showResult('error', '✕ Neplatná vstupenka', null, code);
+    showResult('error', '✕ Invalid ticket', null, code);
     return;
   }
 
   ticketData = await res.json();
 
   if (ticketData.status === 'used') {
-    showResult('used', '✕ Použito', ticketData, code);
+    showResult('used', '✕ Used', ticketData, code);
   } else if (ticketData.status === 'valid' || ticketData.status === 'paid') {
-    showResult('valid', '✓ Platná', ticketData, code);
+    showResult('valid', '✓ Valid', ticketData, code);
     if (ticketData.is_owner) {
       document.getElementById('useBtn').style.display = 'block';
     }
@@ -204,7 +206,7 @@ function showResult(type, label, t, code) {
 
   if (!t) {
     document.getElementById('resultBody').innerHTML =
-      '<div class="result-row"><span class="lbl">Chyba</span> Vstupenka nenalezena v systému.</div>';
+      '<div class="result-row"><span class="lbl">Chyba</span> Ticket not found in the system.</div>';
     return;
   }
 
@@ -215,10 +217,10 @@ function showResult(type, label, t, code) {
   document.getElementById('resultBody').innerHTML = `
     <div class="result-row"><span class="lbl">Akce</span>${esc(t.event_title)}</div>
     ${dateStr ? `<div class="result-row"><span class="lbl">Datum</span>${dateStr}${t.event_time ? ' · '+esc(t.event_time) : ''}</div>` : ''}
-    ${t.event_venue||t.event_city ? `<div class="result-row"><span class="lbl">Místo</span>${esc(t.event_venue||'')}${t.event_venue && t.event_city ? ', ' : ''}${esc(t.event_city||'')}</div>` : ''}
-    <div class="result-row"><span class="lbl">Držitel</span>${esc(t.holder)} <span style="color:var(--txt3)">@${esc(t.holder_user)}</span></div>
-    ${t.status === 'used' ? '<div class="result-row" style="color:var(--txt3);margin-top:6px">Tato vstupenka již byla použita.</div>' : ''}
-    ${!t.is_owner && type === 'valid' ? '<div class="result-row" style="color:var(--txt3);margin-top:6px">Nejsi organizátor — označení není dostupné.</div>' : ''}
+    ${t.event_venue||t.event_city ? `<div class="result-row"><span class="lbl">Venue</span>${esc(t.event_venue||'')}${t.event_venue && t.event_city ? ', ' : ''}${esc(t.event_city||'')}</div>` : ''}
+    <div class="result-row"><span class="lbl">Holder</span>${esc(t.holder)} <span style="color:var(--txt3)">@${esc(t.holder_user)}</span></div>
+    ${t.status === 'used' ? '<div class="result-row" style="color:var(--txt3);margin-top:6px">This ticket has already been used.</div>' : ''}
+    ${!t.is_owner && type === 'valid' ? '<div class="result-row" style="color:var(--txt3);margin-top:6px">You are not the organizer — marking unavailable.</div>' : ''}
   `;
 }
 
@@ -226,20 +228,20 @@ async function markUsed() {
   if (!lastCode) return;
   const btn = document.getElementById('useBtn');
   btn.disabled = true;
-  btn.textContent = 'Označuji...';
+  btn.textContent = 'Marking...';
   const res = await fetch(`/api/ticket/${encodeURIComponent(lastCode)}/use`, { method: 'POST' });
   if (res.status === 409) {
-    showResult('used', '✕ Použito', ticketData, lastCode);
+    showResult('used', '✕ Used', ticketData, lastCode);
     return;
   }
   if (res.ok) {
     document.getElementById('resultStatus').className = 'result-status valid';
-    document.getElementById('resultStatus').textContent = '✓ Označeno jako použité';
+    document.getElementById('resultStatus').textContent = '✓ Marked as used';
     btn.style.display = 'none';
   } else {
     const d = await res.json();
     btn.disabled = false;
-    btn.textContent = '✓ Označit jako použitou';
+    btn.textContent = '✓ Mark as used';
     alert(d.error || 'Chyba');
   }
 }

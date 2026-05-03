@@ -11,9 +11,11 @@
 <meta name="apple-mobile-web-app-title" content="Hear Me Out">
 <link rel="apple-touch-icon" href="/icons/icon-192.png">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hear Me Out — Vstupenka</title>
+<title>Hear Me Out — Ticket</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/theme.css">
+<script src="/theme.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -70,7 +72,7 @@ a{color:inherit;text-decoration:none}
 </head>
 <body>
 
-<div id="root"><div class="loading">Načítám vstupenku...</div></div>
+<div id="root"><div class="loading">Loading ticket...</div></div>
 
 <script>
 function esc(s){ const d=document.createElement('div');d.textContent=s||'';return d.innerHTML; }
@@ -87,7 +89,7 @@ async function init() {
   }
   const t = await res.json();
 
-  const statusLabel = t.status === 'used' ? 'POUŽITÁ' : 'PLATNÁ';
+  const statusLabel = t.status === 'used' ? 'USED' : 'VALID';
   const statusClass = t.status === 'used' ? 'used' : (t.status === 'paid' ? 'paid' : 'valid');
 
   const dateStr = t.event_date
@@ -129,7 +131,7 @@ async function init() {
         </div>
       </div>
     </div>
-    <a href="/events" class="back-link">← Zpět na akce</a>
+    <a href="/events" class="back-link">← Back to events</a>
   `;
 
   // generate QR
