@@ -1840,6 +1840,21 @@ def get_profile(username):
     })
 
 
+@app.route('/api/profile/emoji', methods=['POST'])
+def update_profile_emoji():
+    err = require_login()
+    if err: return err
+    emoji = request.json.get('emoji', '').strip() if request.is_json else request.form.get('emoji', '').strip()
+    allowed = ('🎙️', '🎛️', '🎹', '📹', '📸', '')
+    if emoji not in allowed:
+        return jsonify({'error': 'invalid emoji'}), 400
+    conn = get_db()
+    conn.execute('UPDATE users SET emoji=? WHERE id=?', (emoji, session['user_id']))
+    conn.commit()
+    conn.close()
+    return jsonify({'ok': True, 'emoji': emoji})
+
+
 @app.route('/api/profile/update', methods=['POST'])
 def update_profile():
     err = require_login()

@@ -1,4 +1,4 @@
-const CACHE = 'hmo-v1';
+const CACHE = 'hmo-v2';
 const PRECACHE = [
   '/',
   '/manifest.json',

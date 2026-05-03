@@ -497,43 +497,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(14,10,10,0.9
 .sr-sub{font-size:12px;color:var(--txt3);letter-spacing:0.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .sr-empty{font-size:13px;color:var(--txt3);text-align:center;padding:40px 0;letter-spacing:0.08em}
 .sr-results{max-height:calc(100vh - 220px);overflow-y:auto}
-/* Profile panel */
-#profilePanel{position:fixed;inset:0;bottom:72px;background:var(--bg);z-index:200;display:flex;flex-direction:column;transform:translateX(100%);transition:transform 0.28s cubic-bezier(0.4,0,0.2,1);overflow:hidden}
-#profilePanel.open{transform:translateX(0)}
-.pp-photos{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:12px 16px;border-bottom:1px solid var(--border)}
-.pp-photo-slot{aspect-ratio:1;background:var(--bg3);border:1px solid var(--border2);overflow:hidden}
-.pp-photo-slot img{width:100%;height:100%;object-fit:cover;display:block}
-@media(min-width:769px){#profilePanel{bottom:0}}
-.pp-nav{display:flex;align-items:center;gap:12px;padding:10px 16px;border-bottom:1px solid var(--border);background:rgba(0,0,0,0.85);backdrop-filter:blur(12px);flex-shrink:0;height:54px}
-.pp-back{background:none;border:none;color:var(--txt3);cursor:pointer;font-size:18px;padding:4px 8px;transition:color 0.15s}
-.pp-back:hover{color:var(--txt)}
-.pp-title{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:0.12em;color:var(--txt);flex:1}
-.pp-body{flex:1;overflow-y:auto;padding-bottom:16px}
-.pp-header{padding:24px 20px 16px;display:flex;gap:16px;align-items:flex-start;border-bottom:1px solid var(--border)}
-.pp-av{width:72px;height:72px;border-radius:50%;background:var(--bg4);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--red2);flex-shrink:0;overflow:hidden}
-.pp-av img{width:100%;height:100%;object-fit:cover;border-radius:50%}
-.pp-info{flex:1;min-width:0}
-.pp-name{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:0.1em;margin-bottom:2px}
-.pp-username{font-size:10px;color:var(--txt3);letter-spacing:0.08em;margin-bottom:6px}
-.pp-bio{font-size:11px;color:var(--txt2);line-height:1.6;margin-bottom:8px}
-.pp-genres{font-size:9px;color:var(--red2);letter-spacing:0.08em}
-.pp-stats{display:flex;gap:20px;padding:12px 20px;border-bottom:1px solid var(--border)}
-.pp-stat{text-align:center}
-.pp-stat-val{font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--txt)}
-.pp-stat-lbl{font-size:8px;color:var(--txt3);letter-spacing:0.1em;text-transform:uppercase}
-.pp-follow-btn{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;padding:5px 14px;border:1px solid var(--red);color:var(--red);background:transparent;cursor:pointer;transition:all 0.15s;border-radius:1px;margin-top:6px}
-.pp-follow-btn:hover,.pp-follow-btn.following{background:var(--red);color:white}
-.pp-section-title{font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--txt3);padding:14px 20px 6px;border-top:1px solid var(--border)}
-.pp-track{display:flex;align-items:center;gap:12px;padding:10px 20px;cursor:pointer;transition:background 0.12s;border-bottom:1px solid var(--border)}
-.pp-track:hover{background:var(--bg2)}
-.pp-track-cover{width:44px;height:44px;background:var(--bg4);border:1px solid var(--border2);flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center;color:var(--txt3);font-size:16px}
-.pp-track-cover img{width:100%;height:100%;object-fit:cover}
-.pp-track-info{flex:1;min-width:0}
-.pp-track-title{font-size:12px;letter-spacing:0.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.pp-track-meta{font-size:10px;color:var(--txt3);margin-top:2px}
-.pp-track-likes{font-size:10px;color:var(--txt3);flex-shrink:0}
-.pp-play-btn{width:28px;height:28px;border-radius:50%;background:var(--red2);border:none;color:#fff;cursor:pointer;font-size:11px;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:background 0.15s}
-.pp-play-btn:hover{background:var(--red3)}
 #notifPanel{position:fixed;top:54px;right:0;width:360px;max-width:100vw;height:calc(100vh - 54px);background:var(--bg2);border-left:1px solid var(--border2);z-index:98;display:flex;flex-direction:column;transform:translateX(100%);transition:transform 0.25s cubic-bezier(0.4,0,0.2,1)}
 #notifPanel.open{transform:translateX(0)}
 .notif-header{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--border);flex-shrink:0}
@@ -1556,7 +1519,7 @@ function renderNotifications(data) {
 function notifClick(event, id, refType, refId, actorUsername) {
   if (event.target.closest('.notif-dismiss')) return;
   if (refType === 'user' && actorUsername) {
-    openProfilePanel(actorUsername);
+    window.location.href = '/profile/' + actorUsername;
   } else if (refType === 'track' && refId) {
     toggleNotifPanel();
   } else if (refType === 'event' && refId) {
@@ -2133,7 +2096,7 @@ async function loadSuggested() {
     return;
   }
   el.innerHTML = data.map(u => `
-    <div class="suggest-item">
+    <div class="suggest-item" style="cursor:pointer" onclick="window.location.href='/profile/${esc(u.username)}'">
       <div class="suggest-avatar" style="overflow:hidden">
         ${u.avatar ? `<img src="${esc(u.avatar)}" style="width:100%;height:100%;object-fit:cover;display:block">` : esc(u.initials)}
       </div>
@@ -2141,7 +2104,7 @@ async function loadSuggested() {
         <div class="suggest-name">${esc(u.display_name)}</div>
         <div class="suggest-genre">${esc([u.genres, u.city].filter(Boolean).join(' · '))}</div>
       </div>
-      <button class="follow-btn ${u.following ? 'following' : ''}" onclick="toggleFollow(this, ${u.id})">
+      <button class="follow-btn ${u.following ? 'following' : ''}" onclick="event.stopPropagation();toggleFollow(this, ${u.id})">
         ${u.following ? 'Following' : 'Follow'}
       </button>
     </div>`).join('');
@@ -2330,7 +2293,7 @@ function dismissOnboarding() {
 
 function goProfile() {
   fetch('/api/me').then(r => r.json()).then(me => {
-    if (me) openProfilePanel(me.username);
+    if (me) window.location.href = '/profile/' + me.username;
   });
 }
 
@@ -2404,7 +2367,7 @@ async function runSearch(q) {
     html += `<div class="sr-section"><div class="sr-label">Artists</div>`;
     res.artists.forEach(a => {
       const av = a.avatar ? `<img src="${esc(a.avatar)}">` : esc(a.display_name.slice(0,2).toUpperCase());
-      html += `<div class="sr-item" onclick="closeSearch();openProfilePanel('${esc(a.username)}')">
+      html += `<div class="sr-item" onclick="closeSearch();window.location.href='/profile/${esc(a.username)}'">
         <div class="sr-av">${av}</div>
         <div><div class="sr-name">${esc(a.display_name)}</div><div class="sr-sub">@${esc(a.username)}${a.city ? ' · ' + esc(a.city) : ''}</div></div>
       </div>`;
@@ -3196,16 +3159,6 @@ async function submitSkill(e) {
 }
 </script>
 
-<!-- PROFILE PANEL -->
-<div id="profilePanel">
-  <div class="pp-nav">
-    <button class="pp-back" onclick="closeProfilePanel()">←</button>
-    <div class="pp-title" id="ppTitle">Profile</div>
-  </div>
-  <div class="pp-body" id="ppBody">
-    <div style="padding:40px;text-align:center;color:var(--txt3)">Loading...</div>
-  </div>
-</div>
 
 <!-- NOTIFICATION PANEL -->
 <div id="notifPanel">
@@ -3239,194 +3192,5 @@ async function submitSkill(e) {
   </div>
 </nav>
 
-<script>
-// ── Profile Panel (SPA — audio keeps playing) ───────────────────────────────────
-let ppUsername = null;
-
-async function openProfilePanel(username) {
-  ppUsername = username;
-  const panel = document.getElementById('profilePanel');
-  document.getElementById('ppTitle').textContent = username;
-  document.getElementById('ppBody').innerHTML = '<div style="padding:40px;text-align:center;color:var(--txt3)">Loading...</div>';
-  panel.classList.add('open');
-  history.pushState({profile: username}, '', '/profile/' + username);
-
-  try {
-    const [pRes, tRes] = await Promise.all([
-      fetch('/api/profile/' + username),
-      fetch('/api/profile/' + username + '/tracks?limit=30'),
-    ]);
-    const p = await pRes.json();
-    const tracks = await tRes.json();
-    if (p.error) { document.getElementById('ppBody').innerHTML = '<div style="padding:40px;text-align:center;color:var(--txt3)">User not found</div>'; return; }
-    renderProfilePanel(p, tracks);
-  } catch(e) {
-    document.getElementById('ppBody').innerHTML = '<div style="padding:40px;text-align:center;color:var(--txt3)">Failed to load</div>';
-  }
-}
-
-function renderProfilePanel(p, tracks) {
-  document.getElementById('ppTitle').textContent = p.display_name || p.username;
-  const avHtml = p.avatar
-    ? `<img src="/uploads/${esc(p.avatar)}" alt="">`
-    : (p.emoji || (p.display_name||'?')[0].toUpperCase());
-
-  const actionBtn = p.is_own
-    ? `<a class="pp-follow-btn" href="/profile/${esc(p.username)}" onclick="event.stopPropagation();window.location.href='/profile/${esc(p.username)}';return false;" style="text-decoration:none;display:inline-block;text-align:center">Edit profile</a>`
-    : `<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px">
-        <button class="pp-follow-btn ${p.is_following?'following':''}" id="ppFollowBtn" onclick="ppToggleFollow(${p.id})">${p.is_following?'Following':'Follow'}</button>
-        <a href="/messages?user=${esc(p.username)}" onclick="window.location.href='/messages?user=${esc(p.username)}';return false;" class="pp-follow-btn" style="text-decoration:none;display:inline-flex;align-items:center;gap:4px">◻ Message</a>
-      </div>`;
-
-  const photosHtml = p.photos && p.photos.some(ph => ph)
-    ? `<div class="pp-photos">${p.photos.map(ph => ph
-        ? `<div class="pp-photo-slot"><img src="/uploads/${esc(ph)}" alt=""></div>`
-        : `<div class="pp-photo-slot"></div>`
-      ).join('')}</div>`
-    : '';
-
-  let tracksHtml = '';
-  if (tracks.length === 0) {
-    tracksHtml = '<div style="padding:20px;text-align:center;color:var(--txt3);font-size:11px">No tracks yet</div>';
-  } else {
-    tracksHtml = tracks.map(t => `
-      <div class="pp-track" onclick="playFromPanel(null,${t.id},'${esc(t.filename)}','${esc(t.title)}','${esc(p.display_name)}')">
-        <div class="pp-track-cover">${t.cover ? `<img src="/uploads/${esc(t.cover)}" alt="">` : '♪'}</div>
-        <div class="pp-track-info">
-          <div class="pp-track-title">${esc(t.title)}</div>
-          <div class="pp-track-meta">${esc(t.genre||'')}${t.city?' · '+esc(t.city):''}</div>
-        </div>
-        <button class="pp-play-btn" onclick="event.stopPropagation();playFromPanel(this,${t.id},'${esc(t.filename)}','${esc(t.title)}','${esc(p.display_name)}')">▶</button>
-        <div class="pp-track-likes">♥ ${t.like_count||0}</div>
-      </div>`).join('');
-  }
-
-  document.getElementById('ppBody').innerHTML = `
-    <div class="pp-header">
-      <div class="pp-av">${avHtml}</div>
-      <div class="pp-info">
-        <div class="pp-name">${esc(p.display_name)}${p.pro?'<span class="pro-badge" style="font-size:7px;margin-left:6px">PRO</span>':''}</div>
-        <div class="pp-username">@${esc(p.username)}${p.city?' · '+esc(p.city):''}</div>
-        ${p.bio?`<div class="pp-bio">${esc(p.bio)}</div>`:''}
-        ${p.genres?`<div class="pp-genres">${esc(p.genres)}</div>`:''}
-        ${actionBtn}
-      </div>
-    </div>
-    ${photosHtml}
-    <div class="pp-stats">
-      <div class="pp-stat"><div class="pp-stat-val">${p.track_count||0}</div><div class="pp-stat-lbl">Tracks</div></div>
-      <div class="pp-stat"><div class="pp-stat-val">${p.followers||0}</div><div class="pp-stat-lbl">Followers</div></div>
-      <div class="pp-stat"><div class="pp-stat-val">${p.following_count||0}</div><div class="pp-stat-lbl">Following</div></div>
-    </div>
-    <div class="pp-section-title">Tracks</div>
-    ${tracksHtml}`;
-}
-
-async function ppToggleFollow(userId) {
-  const btn = document.getElementById('ppFollowBtn');
-  if (!btn) return;
-  const res  = await fetch('/api/follow/' + userId, {method:'POST'});
-  const data = await res.json();
-  btn.classList.toggle('following', data.following);
-  btn.textContent = data.following ? 'Following' : 'Follow';
-}
-
-function playFromPanel(btn, trackId, filename, title, artist) {
-  const initials = artist.split(' ').filter(Boolean).map(w => w[0]).join('').slice(0,2).toUpperCase() || '?';
-  togglePlay(trackId, filename, title, artist, initials, btn);
-}
-
-function closeProfilePanel() {
-  document.getElementById('profilePanel').classList.remove('open');
-  ppUsername = null;
-  if (history.state && history.state.profile) {
-    history.back();
-  }
-}
-
-// Intercept all profile link clicks globally
-document.addEventListener('click', e => {
-  const a = e.target.closest('a[href^="/profile/"]');
-  if (a) {
-    e.preventDefault();
-    const username = a.getAttribute('href').replace('/profile/', '');
-    openProfilePanel(username);
-  }
-});
-
-// Handle browser back/forward
-window.addEventListener('popstate', e => {
-  if (e.state && e.state.profile) {
-    openProfilePanel(e.state.profile);
-  } else {
-    document.getElementById('profilePanel').classList.remove('open');
-    ppUsername = null;
-  }
-});
-
-// On page load — if URL is /profile/username, open panel
-(function() {
-  const m = location.pathname.match(/^\/profile\/(.+)$/);
-  if (m) openProfilePanel(decodeURIComponent(m[1]));
-})();
-
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/sw.js');
-}
-
-function urlB64ToUint8(b64) {
-  const pad = '='.repeat((4 - b64.length % 4) % 4);
-  const raw = atob((b64 + pad).replace(/-/g,'+').replace(/_/g,'/'));
-  return Uint8Array.from([...raw].map(c => c.charCodeAt(0)));
-}
-
-async function subscribePush() {
-  if (!('serviceWorker' in navigator)) { console.log('[Push] no SW'); return; }
-  if (!('PushManager' in window))      { console.log('[Push] no PushManager'); return; }
-  if (!('Notification' in window))     { console.log('[Push] no Notification'); return; }
-  try {
-    // Safari needs the SW registered via getRegistration, not .ready
-    let reg = await navigator.serviceWorker.getRegistration('/');
-    if (!reg) {
-      reg = await navigator.serviceWorker.register('/sw.js');
-      await new Promise(r => setTimeout(r, 500));
-    }
-    console.log('[Push] SW ready', reg);
-
-    const existing = await reg.pushManager.getSubscription();
-    if (existing) { console.log('[Push] already subscribed'); return; }
-
-    const res = await fetch('/api/push/vapid-key');
-    const { publicKey } = await res.json();
-    console.log('[Push] publicKey:', publicKey ? publicKey.slice(0,20)+'…' : 'EMPTY');
-    if (!publicKey) { showToast('Push notifications not configured'); return; }
-
-    console.log('[Push] current permission:', Notification.permission);
-    if (Notification.permission === 'denied') {
-      showToast('Notifications are blocked in browser settings');
-      return;
-    }
-
-    const permission = await Notification.requestPermission();
-    console.log('[Push] permission result:', permission);
-    if (permission !== 'granted') return;
-
-    const sub = await reg.pushManager.subscribe({
-      userVisibleOnly: true,
-      applicationServerKey: urlB64ToUint8(publicKey),
-    });
-    console.log('[Push] subscribed:', sub.endpoint.slice(0,40)+'…');
-
-    const r = await fetch('/api/push/subscribe', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(sub.toJSON()),
-    });
-    if (r.ok) showToast('Notifikace zapnuty ✓');
-  } catch (e) {
-    console.error('[Push] error:', e);
-  }
-}
-</script>
 </body>
 </html>
