@@ -2431,6 +2431,29 @@ function esc(s) {
 }
 function escAttr(s) { return esc(s); }
 
+// ── Push notifications ────────────────────────────────────────────────────────
+async function subscribePush() {
+  try {
+    if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
+    const reg = await navigator.serviceWorker.ready;
+    const existing = await reg.pushManager.getSubscription();
+    if (existing) return; // already subscribed
+    const { publicKey } = await fetch('/api/push/vapid-key').then(r => r.json());
+    if (!publicKey) return;
+    const sub = await reg.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: publicKey,
+    });
+    await fetch('/api/push/subscribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(sub.toJSON()),
+    });
+  } catch (e) {
+    // Push not available or denied — non-fatal
+  }
+}
+
 // ── Boot ──────────────────────────────────────────────────────────────────────
 init();
 
