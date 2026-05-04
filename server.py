@@ -1572,6 +1572,11 @@ def delete_notification(nid):
 @app.route('/api/news')
 def get_news():
     conn = get_db()
+    if conn._pg:
+        conn.execute("DELETE FROM news WHERE created_at < NOW() - INTERVAL '48 hours'")
+    else:
+        conn.execute("DELETE FROM news WHERE created_at < datetime('now', '-48 hours')")
+    conn._conn.commit()
     rows = conn.execute('''
         SELECT n.id, n.text, n.created_at, n.user_id,
                u.username, u.display_name, u.avatar
