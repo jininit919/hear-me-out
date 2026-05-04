@@ -731,9 +731,8 @@ function renderMap() {
         <div class="popup-title">${esc(ev.title)}</div>
         <div class="popup-meta">${[ev.date, ev.time, ev.venue, ev.city].filter(Boolean).join(' · ')}</div>
         ${ev.genre ? `<div class="popup-meta" style="color:${color}">${esc(ev.genre)}</div>` : ''}
-        <button class="popup-open" onclick="openDetail(window.__popupEv_${ev.id})">Open detail →</button>
+        <a class="popup-open" href="/events/${ev.id}">Open event →</a>
       `, {className: 'map-pin-popup'});
-    window[`__popupEv_${ev.id}`] = ev;
     mapMarkers.push(marker);
   });
 

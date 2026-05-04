@@ -1787,6 +1787,12 @@ def events_page():
         return redirect('/login')
     return send_from_directory('public', 'events.html')
 
+@app.route('/events/<int:event_id>')
+def event_detail_page(event_id):
+    if 'user_id' not in session:
+        return redirect('/login')
+    return send_from_directory('public', 'event_detail.html')
+
 
 @app.route('/messages')
 def messages_page():
@@ -2378,6 +2384,33 @@ def get_profile_events(username):
         'past': r['date'] < today,
     } for r in rows])
 
+
+@app.route('/api/events/<int:event_id>', methods=['GET'])
+def get_event(event_id):
+    uid = session.get('user_id', 0)
+    conn = get_db()
+    r = conn.execute('''
+        SELECT e.*, u.username, u.display_name, u.avatar, u.emoji
+        FROM events e JOIN users u ON e.user_id = u.id
+        WHERE e.id = ?
+    ''', (event_id,)).fetchone()
+    conn.close()
+    if not r:
+        return jsonify({'error': 'Not found'}), 404
+    return jsonify({
+        'id': r['id'], 'title': r['title'], 'date': r['date'],
+        'time': r['time'], 'venue': r['venue'], 'city': r['city'],
+        'genre': r['genre'], 'description': r['description'], 'link': r['link'],
+        'lat': r['lat'], 'lng': r['lng'],
+        'photos': [photo_url(r[f'photo{i}']) for i in range(1, 6) if r[f'photo{i}']],
+        'is_own': uid != 0 and r['user_id'] == uid,
+        'user': {
+            'username': r['username'],
+            'display_name': r['display_name'] or r['username'],
+            'avatar': f'/uploads/{r["avatar"]}' if r['avatar'] else None,
+            'emoji': r['emoji'] or '',
+        }
+    })
 
 @app.route('/api/events/<int:event_id>', methods=['DELETE'])
 def delete_event(event_id):
