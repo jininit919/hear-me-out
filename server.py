@@ -1956,7 +1956,7 @@ def conversations():
         'user_id':      r['other_id'],
         'username':     r['username'],
         'display_name': r['display_name'],
-        'avatar':       r['avatar'],
+        'avatar':       f'/uploads/{r["avatar"]}' if r['avatar'] else None,
         'initials':     initials(r['display_name']),
         'last_msg':     r['last_msg'] if r['last_msg'] else '📷 Fotka',
         'last_at':      time_ago(r['last_at']),
