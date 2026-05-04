@@ -2164,13 +2164,18 @@ def get_events():
         gps_filter = False
 
     month_str = f'{year}-{month:02d}'
+    now = datetime.now()
+    from datetime import timedelta
+    # Pin disappears the day after the event at 14:00
+    min_date = now.date().strftime('%Y-%m-%d') if now.hour >= 14 else (now.date() - timedelta(days=1)).strftime('%Y-%m-%d')
     conn   = get_db()
-    params = [f'{month_str}%']
+    params = [f'{month_str}%', min_date]
     query  = '''
         SELECT e.*, u.username, u.display_name, u.emoji, u.lat AS user_lat, u.lng AS user_lng
         FROM events e
         JOIN users u ON e.user_id = u.id
         WHERE e.date LIKE ?
+        AND e.date >= ?
     '''
     if genre:
         query += ' AND e.genre LIKE ?'
