@@ -1937,19 +1937,30 @@ def conversations():
     if err: return err
 
     conn = get_db()
+    uid = session['user_id']
     rows = conn.execute('''
         SELECT
-            CASE WHEN m.sender_id = ? THEN m.receiver_id ELSE m.sender_id END AS other_id,
+            t.other_id,
             u.username, u.display_name, u.avatar,
-            m.content AS last_msg,
-            m.created_at AS last_at,
-            SUM(CASE WHEN m.read=0 AND m.receiver_id=? THEN 1 ELSE 0 END) AS unread
-        FROM messages m
-        JOIN users u ON u.id = CASE WHEN m.sender_id=? THEN m.receiver_id ELSE m.sender_id END
-        WHERE m.sender_id=? OR m.receiver_id=?
-        GROUP BY other_id
+            (SELECT content FROM messages
+             WHERE (sender_id = ? AND receiver_id = t.other_id)
+                OR (sender_id = t.other_id AND receiver_id = ?)
+             ORDER BY created_at DESC LIMIT 1) AS last_msg,
+            (SELECT created_at FROM messages
+             WHERE (sender_id = ? AND receiver_id = t.other_id)
+                OR (sender_id = t.other_id AND receiver_id = ?)
+             ORDER BY created_at DESC LIMIT 1) AS last_at,
+            (SELECT COUNT(*) FROM messages
+             WHERE sender_id = t.other_id AND receiver_id = ? AND read = 0) AS unread
+        FROM (
+            SELECT DISTINCT
+                CASE WHEN sender_id = ? THEN receiver_id ELSE sender_id END AS other_id
+            FROM messages
+            WHERE sender_id = ? OR receiver_id = ?
+        ) t
+        JOIN users u ON u.id = t.other_id
         ORDER BY last_at DESC
-    ''', (session['user_id'], session['user_id'], session['user_id'], session['user_id'], session['user_id'])).fetchall()
+    ''', (uid, uid, uid, uid, uid, uid, uid, uid)).fetchall()
     conn.close()
 
     return jsonify([{
