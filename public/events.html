@@ -138,19 +138,47 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(14,10,10,0.9
 .ticket-name{flex:1;font-size:14px;letter-spacing:0.04em;color:var(--txt)}
 .ticket-price{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:0.06em;color:var(--txt2);white-space:nowrap}
 .ticket-cap{font-size:12px;color:var(--txt3);letter-spacing:0.04em;white-space:nowrap}
-.ticket-buy-btn{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:0.1em;padding:5px 12px;background:var(--red);color:white;border:none;cursor:pointer;transition:background 0.15s;white-space:nowrap}
-.ticket-buy-btn:hover{background:var(--red2)}
+.ticket-buy-btn{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:0.1em;padding:5px 12px;background:#7c3aed;color:white;border:none;cursor:pointer;transition:background 0.15s;white-space:nowrap}
+.ticket-buy-btn:hover{background:#8b5cf6}
 .ticket-buy-btn:disabled{background:var(--bg3);color:var(--txt3);cursor:default}
 .ticket-del-btn{background:none;border:none;color:var(--txt3);font-size:14px;cursor:pointer;padding:2px 4px;transition:color 0.15s}
 .ticket-del-btn:hover{color:#c62828}
 .ticket-add-form{display:flex;flex-direction:column;gap:8px;margin-top:12px;padding:12px;background:var(--bg3);border:1px solid var(--border2)}
 .ticket-add-form input{background:var(--bg);border:1px solid var(--border2);color:var(--txt);font-family:'DM Mono',monospace;font-size:13px;padding:7px 10px;letter-spacing:0.04em;outline:none;transition:border-color 0.2s;width:100%}
-.ticket-add-form input:focus{border-color:var(--red)}
+.ticket-add-form input:focus{border-color:#7c3aed}
 .ticket-add-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.ticket-add-submit{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:0.12em;padding:7px 16px;background:var(--red);color:white;border:none;cursor:pointer;align-self:flex-end;transition:background 0.15s}
-.ticket-add-submit:hover{background:var(--red2)}
+.ticket-add-submit{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:0.12em;padding:7px 16px;background:#7c3aed;color:white;border:none;cursor:pointer;align-self:flex-end;transition:background 0.15s}
+.ticket-add-submit:hover{background:#8b5cf6}
 .ticket-toggle{font-size:12px;color:var(--txt3);letter-spacing:0.08em;text-transform:uppercase;background:none;border:none;cursor:pointer;padding:0;margin-top:8px;transition:color 0.15s}
-.ticket-toggle:hover{color:var(--red2)}
+.ticket-toggle:hover{color:#7c3aed}
+
+/* pending tickets in add-event form */
+.pending-tickets-list{margin-bottom:6px}
+.pending-ticket-row{display:flex;align-items:center;gap:8px;font-size:13px;padding:6px 0;border-bottom:1px solid var(--border);color:var(--txt2)}
+.pending-ticket-row .pt-name{flex:1;letter-spacing:0.04em}
+.pending-ticket-row .pt-meta{font-size:11px;color:var(--txt3);letter-spacing:0.04em}
+.pending-ticket-rm{background:none;border:none;color:var(--txt3);cursor:pointer;font-size:13px;padding:0 2px;line-height:1;transition:color 0.15s}
+.pending-ticket-rm:hover{color:#c62828}
+
+/* buy confirmation modal */
+.buy-modal{position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:1200;display:none;align-items:center;justify-content:center;padding:20px}
+.buy-modal.open{display:flex}
+.buy-card{background:var(--bg2);border:1px solid var(--border2);width:100%;max-width:400px;padding:28px}
+.buy-card-title{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:0.12em;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center}
+.buy-card-close{background:none;border:none;color:var(--txt3);font-size:16px;cursor:pointer}
+.buy-event-name{font-size:14px;letter-spacing:0.06em;color:var(--txt);margin-bottom:4px}
+.buy-ticket-name{font-size:12px;color:var(--txt3);letter-spacing:0.04em;margin-bottom:20px}
+.buy-price-table{width:100%;border-collapse:collapse;margin-bottom:16px}
+.buy-price-table td{font-size:13px;padding:5px 0;letter-spacing:0.04em;color:var(--txt2)}
+.buy-price-table td:last-child{text-align:right}
+.buy-price-table .total-row td{color:var(--txt);font-size:15px;border-top:1px solid var(--border2);padding-top:10px;margin-top:4px}
+.buy-terms{font-size:12px;color:var(--txt3);letter-spacing:0.04em;margin-bottom:18px;display:flex;align-items:flex-start;gap:8px;line-height:1.5}
+.buy-terms input{margin-top:2px;flex-shrink:0;accent-color:#7c3aed}
+.buy-terms a{color:#7c3aed;text-decoration:none}
+.buy-terms a:hover{text-decoration:underline}
+.buy-pay-btn{width:100%;font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:0.15em;padding:13px;background:#7c3aed;color:#fff;border:none;cursor:pointer;transition:background 0.15s}
+.buy-pay-btn:hover{background:#8b5cf6}
+.buy-pay-btn:disabled{background:var(--bg4);color:var(--txt3);cursor:default}
 
 /* TOAST */
 .toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--bg3);border:1px solid var(--border2);color:var(--txt2);font-size:14px;letter-spacing:0.08em;padding:10px 20px;z-index:300;opacity:0;transition:all 0.2s;pointer-events:none;white-space:nowrap}
@@ -381,6 +409,19 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(14,10,10,0.9
         </label>
         <div class="photo-preview-strip" id="photoPreviewStrip"></div>
       </div>
+      <div class="mfield">
+        <label>Tickets <span style="color:var(--txt3);font-size:11px">(optional — add types with price &amp; capacity)</span></label>
+        <div class="pending-tickets-list" id="pendingTicketList"></div>
+        <div class="ticket-add-form" id="newTicketForm" style="display:none">
+          <input id="ntName" placeholder="Name — e.g. Standard, VIP, Early bird…" maxlength="60">
+          <div class="ticket-add-row">
+            <input id="ntPrice" type="number" min="0" step="1" placeholder="Price CZK (0 = free)">
+            <input id="ntCapacity" type="number" min="0" step="1" placeholder="Capacity (0 = ∞)">
+          </div>
+          <button type="button" class="ticket-add-submit" onclick="addPendingTicket()">+ Add</button>
+        </div>
+        <button type="button" class="ticket-toggle" id="ntToggleBtn" onclick="toggleNewTicketForm()">+ Add ticket type</button>
+      </div>
       <button class="msave" type="submit" id="aSave">ADD EVENT</button>
     </form>
   </div>
@@ -394,6 +435,26 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(14,10,10,0.9
       <button class="modal-close" onclick="closeDetail()">✕</button>
     </div>
     <div id="dContent"></div>
+  </div>
+</div>
+
+<!-- BUY CONFIRMATION MODAL -->
+<div class="buy-modal" id="buyModal">
+  <div class="buy-card">
+    <div class="buy-card-title">
+      Confirm purchase
+      <button class="buy-card-close" onclick="closeBuyModal()">✕</button>
+    </div>
+    <div class="buy-event-name" id="buyEventName"></div>
+    <div class="buy-ticket-name" id="buyTicketName"></div>
+    <table class="buy-price-table">
+      <tbody id="buyPriceRows"></tbody>
+    </table>
+    <label class="buy-terms">
+      <input type="checkbox" id="buyTermsCheck" onchange="document.getElementById('buyPayBtn').disabled=!this.checked">
+      I agree with the <a href="/terms" target="_blank">Terms and Conditions</a> and acknowledge the no-refund policy for digital tickets.
+    </label>
+    <button class="buy-pay-btn" id="buyPayBtn" disabled onclick="confirmBuy()">Pay with card →</button>
   </div>
 </div>
 
@@ -821,6 +882,7 @@ function showDayEvents(dateStr, evs) {
 
 // ── Event detail ──────────────────────────────────────────────────────────────
 function openDetail(ev) {
+  _currentEv = ev;
   const color = genreColor(ev.genre);
   const rows = [];
   if (ev.time)  rows.push(`<div class="detail-row"><span class="icon">⏱</span>${esc(ev.time)}</div>`);
@@ -838,8 +900,8 @@ function openDetail(ev) {
        </button>`
     : '';
   const ticketBtn = ev.is_own
-    ? `<a href="/scan" class="detail-save-btn" style="margin-top:8px;display:block;text-align:center;color:var(--txt2)">
-        ◈ Scan tickets
+    ? `<a href="/scan?event=${ev.id}" class="detail-save-btn" style="margin-top:8px;display:block;text-align:center;color:#7c3aed;border-color:#7c3aed">
+        ▷ Scan tickets
        </a>`
     : '';
 
@@ -879,6 +941,7 @@ function closeDetail() {
 // ── Ticket types ──────────────────────────────────────────────────────────────
 let _ticketEventId = null;
 let _ticketIsOwn   = false;
+let _currentEv     = null;
 
 async function loadTicketTypes(eventId, isOwn) {
   _ticketEventId = eventId;
@@ -953,10 +1016,44 @@ async function deleteTicketType(id) {
   loadTicketTypes(_ticketEventId, _ticketIsOwn);
 }
 
+// ── Buy confirmation modal ────────────────────────────────────────────────────
+let _buyTtId = null;
+
 async function buyTicket(ttId) {
-  const res = await fetch(`/api/ticket-types/${ttId}/checkout`, {method:'POST'});
+  // fetch ticket type details for the confirmation screen
+  const types = await fetch(`/api/events/${_ticketEventId}/ticket-types`).then(r => r.json()).catch(() => []);
+  const tt = types.find(t => t.id === ttId);
+  if (!tt) { showToast('Ticket not found'); return; }
+
+  _buyTtId = ttId;
+  const fee = Math.max(1, Math.round(tt.price * 0.10));
+  const total = tt.price + fee;
+
+  document.getElementById('buyEventName').textContent = _currentEv ? _currentEv.title : '';
+  document.getElementById('buyTicketName').textContent = tt.name;
+  document.getElementById('buyPriceRows').innerHTML = `
+    <tr><td>Ticket — ${esc(tt.name)}</td><td>${Number(tt.price).toLocaleString('cs-CZ')} ${tt.currency}</td></tr>
+    <tr><td style="color:var(--txt3)">Processing fee (10 %)</td><td style="color:var(--txt3)">${fee.toLocaleString('cs-CZ')} ${tt.currency}</td></tr>
+    <tr class="total-row"><td>Total</td><td>${total.toLocaleString('cs-CZ')} ${tt.currency}</td></tr>
+  `;
+  document.getElementById('buyTermsCheck').checked = false;
+  document.getElementById('buyPayBtn').disabled = true;
+  document.getElementById('buyModal').classList.add('open');
+}
+
+function closeBuyModal() {
+  document.getElementById('buyModal').classList.remove('open');
+  _buyTtId = null;
+}
+
+async function confirmBuy() {
+  if (!_buyTtId) return;
+  const btn = document.getElementById('buyPayBtn');
+  btn.disabled = true;
+  btn.textContent = 'Redirecting…';
+  const res = await fetch(`/api/ticket-types/${_buyTtId}/checkout`, {method:'POST'});
   const data = await res.json();
-  if (data.error) { showToast(data.error); return; }
+  if (data.error) { showToast(data.error); btn.disabled = false; btn.textContent = 'Pay with card →'; return; }
   window.location.href = data.url;
 }
 
@@ -984,6 +1081,41 @@ async function deleteEvent(id) {
 }
 
 // ── Add event ─────────────────────────────────────────────────────────────────
+// ── Pending tickets in Add Event form ────────────────────────────────────────
+let _pendingTickets = [];
+
+function toggleNewTicketForm() {
+  const form = document.getElementById('newTicketForm');
+  const btn  = document.getElementById('ntToggleBtn');
+  const open = form.style.display === 'none';
+  form.style.display = open ? 'flex' : 'none';
+  btn.textContent = open ? '✕ Close' : '+ Add ticket type';
+}
+
+function addPendingTicket() {
+  const name     = document.getElementById('ntName').value.trim();
+  const price    = parseInt(document.getElementById('ntPrice').value) || 0;
+  const capacity = parseInt(document.getElementById('ntCapacity').value) || 0;
+  if (!name) { showToast('Enter a ticket name'); return; }
+  _pendingTickets.push({name, price, capacity, currency: 'CZK'});
+  document.getElementById('ntName').value = '';
+  document.getElementById('ntPrice').value = '';
+  document.getElementById('ntCapacity').value = '';
+  renderPendingTickets();
+}
+
+function renderPendingTickets() {
+  const list = document.getElementById('pendingTicketList');
+  if (!list) return;
+  list.innerHTML = _pendingTickets.map((t, i) => `
+    <div class="pending-ticket-row">
+      <span class="pt-name">${esc(t.name)}</span>
+      <span class="pt-meta">${t.price > 0 ? t.price.toLocaleString('cs-CZ') + ' CZK' : 'Free'}${t.capacity > 0 ? ' · ' + t.capacity + ' pcs' : ''}</span>
+      <button type="button" class="pending-ticket-rm" onclick="_pendingTickets.splice(${i},1);renderPendingTickets()">✕</button>
+    </div>
+  `).join('');
+}
+
 function openAdd() {
   const d = new Date();
   document.getElementById('aDate').value =
@@ -1003,6 +1135,10 @@ function closeAdd() {
   document.getElementById('addModal').classList.remove('open');
   selectedPhotos = [];
   renderPhotoPreviews();
+  _pendingTickets = [];
+  renderPendingTickets();
+  document.getElementById('newTicketForm').style.display = 'none';
+  document.getElementById('ntToggleBtn').textContent = '+ Add ticket type';
 }
 
 let selectedPhotos = [];
@@ -1069,6 +1205,18 @@ async function submitEvent(e) {
   const data = await res.json();
 
   if (data.ok) {
+    // save pending ticket types
+    for (const t of _pendingTickets) {
+      await fetch(`/api/events/${data.id}/ticket-types`, {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify(t)
+      });
+    }
+    _pendingTickets = [];
+    renderPendingTickets();
+    document.getElementById('newTicketForm').style.display = 'none';
+    document.getElementById('ntToggleBtn').textContent = '+ Add ticket type';
     document.getElementById('addForm').reset();
     closeAdd();
     await loadEvents();
@@ -1083,9 +1231,12 @@ async function submitEvent(e) {
 }
 
 // ── Modals close on backdrop click ────────────────────────────────────────────
-['addModal','detailModal'].forEach(id => {
+['addModal','detailModal','buyModal'].forEach(id => {
   document.getElementById(id).addEventListener('click', e => {
-    if (e.target.id === id) document.getElementById(id).classList.remove('open');
+    if (e.target.id === id) {
+      document.getElementById(id).classList.remove('open');
+      if (id === 'buyModal') _buyTtId = null;
+    }
   });
 });
 

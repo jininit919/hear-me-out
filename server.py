@@ -2266,8 +2266,9 @@ def create_event():
         (session['user_id'], title, date, time_str, venue, city, genre, description, link, lat, lng, *photos)
     )
     conn.commit()
+    event_id = conn.execute('SELECT last_insert_rowid()').fetchone()[0]
     conn.close()
-    return jsonify({'ok': True})
+    return jsonify({'ok': True, 'id': event_id})
 
 
 @app.route('/api/my-events')
@@ -3110,6 +3111,25 @@ def listing_checkout(lid):
     )
     conn.commit(); conn.close()
     return jsonify({'url': checkout.url})
+
+@app.route('/api/events/<int:event_id>/ticket-stats', methods=['GET'])
+def get_ticket_stats(event_id):
+    if 'user_id' not in session:
+        return jsonify({'error': 'Not signed in'}), 401
+    conn = get_db()
+    ev = conn.execute('SELECT user_id FROM events WHERE id=?', (event_id,)).fetchone()
+    if not ev or ev['user_id'] != session['user_id']:
+        conn.close(); return jsonify({'error': 'Forbidden'}), 403
+    sold = conn.execute(
+        "SELECT COUNT(*) FROM orders WHERE item_type='ticket' AND item_id IN (SELECT id FROM ticket_types WHERE event_id=?) AND status IN ('paid','valid','used')",
+        (event_id,)
+    ).fetchone()[0]
+    used = conn.execute(
+        "SELECT COUNT(*) FROM orders WHERE item_type='ticket' AND item_id IN (SELECT id FROM ticket_types WHERE event_id=?) AND status='used'",
+        (event_id,)
+    ).fetchone()[0]
+    conn.close()
+    return jsonify({'sold': sold, 'used': used})
 
 @app.route('/api/events/<int:event_id>/ticket-types', methods=['GET'])
 def get_ticket_types(event_id):

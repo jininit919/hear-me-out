@@ -55,6 +55,10 @@ nav{background:rgba(0,0,0,0.95);border-bottom:1px solid var(--border);padding:0 
 .save-btn:hover{border-color:var(--txt3);color:var(--txt)}
 .save-btn.saved{color:#7c3aed;border-color:#7c3aed}
 
+.scan-btn{width:100%;font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:0.15em;padding:14px;background:#7c3aed;color:#fff;border:none;cursor:pointer;transition:background 0.15s;margin-bottom:12px;display:block;text-align:center}
+.scan-btn:hover{background:#8b5cf6}
+.ticket-count{font-size:11px;letter-spacing:0.08em;color:var(--txt3);text-align:center;margin-bottom:20px}
+
 .loading{color:var(--txt3);font-size:13px;letter-spacing:0.08em;padding:60px 0;text-align:center}
 .error-msg{color:var(--red2);font-size:13px;padding:60px 0;text-align:center}
 </style>
@@ -124,7 +128,8 @@ async function load() {
     ? `<button class="save-btn${ev.is_saved ? ' saved' : ''}" id="saveBtn" onclick="toggleSave()">
         ${ev.is_saved ? '◷ Saved to calendar' : '◷ Save to calendar'}
        </button>`
-    : '';
+    : `<a class="scan-btn" href="/scan?event=${ev.id}">▷ Scan tickets</a>
+       <div class="ticket-count" id="ticketCount"></div>`;
 
   document.title = `${ev.title} — Hear Me Out`;
   document.getElementById('wrap').innerHTML = `
@@ -145,6 +150,14 @@ async function load() {
 
   window.__evId = ev.id;
   window.__evSaved = ev.is_saved;
+
+  if (ev.is_own) {
+    fetch(`/api/events/${ev.id}/ticket-stats`).then(r => r.ok ? r.json() : null).then(d => {
+      if (!d) return;
+      const el = document.getElementById('ticketCount');
+      if (el) el.textContent = `${d.sold} sold · ${d.used} scanned`;
+    });
+  }
 }
 
 async function toggleSave() {

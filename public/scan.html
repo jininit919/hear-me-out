@@ -30,10 +30,10 @@ body{background:var(--bg);color:var(--txt);font-family:'DM Mono',monospace;min-h
 a{color:inherit;text-decoration:none}
 
 nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(0,0,0,0.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;height:54px;gap:16px}
-.nav-brand{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:0.15em;color:var(--red2)}
+.nav-brand{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:0.15em;color:#fff}
 .nav-title{font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:var(--txt3)}
 .nav-back{margin-left:auto;font-size:10px;letter-spacing:0.08em;color:var(--txt3);transition:color 0.15s}
-.nav-back:hover{color:var(--red2)}
+.nav-back:hover{color:#7c3aed}
 
 .page{max-width:480px;margin:0 auto;padding:74px 24px 60px;display:flex;flex-direction:column;align-items:center;gap:20px}
 
@@ -42,12 +42,12 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(0,0,0,0.95);
 #camVideo{width:100%;height:100%;object-fit:cover;display:block}
 .cam-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
 .cam-frame{width:60%;aspect-ratio:1;border:2px solid rgba(255,255,255,0.3);position:relative}
-.cam-frame::before,.cam-frame::after{content:'';position:absolute;width:18px;height:18px;border-color:var(--red2);border-style:solid}
+.cam-frame::before,.cam-frame::after{content:'';position:absolute;width:18px;height:18px;border-color:#7c3aed;border-style:solid}
 .cam-frame::before{top:-2px;left:-2px;border-width:2px 0 0 2px}
 .cam-frame::after{bottom:-2px;right:-2px;border-width:0 2px 2px 0}
-.cam-frame .corner-tr{position:absolute;top:-2px;right:-2px;width:18px;height:18px;border-top:2px solid var(--red2);border-right:2px solid var(--red2)}
-.cam-frame .corner-bl{position:absolute;bottom:-2px;left:-2px;width:18px;height:18px;border-bottom:2px solid var(--red2);border-left:2px solid var(--red2)}
-.cam-scan-line{position:absolute;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--red2),transparent);animation:scan 2s linear infinite}
+.cam-frame .corner-tr{position:absolute;top:-2px;right:-2px;width:18px;height:18px;border-top:2px solid #7c3aed;border-right:2px solid #7c3aed}
+.cam-frame .corner-bl{position:absolute;bottom:-2px;left:-2px;width:18px;height:18px;border-bottom:2px solid #7c3aed;border-left:2px solid #7c3aed}
+.cam-scan-line{position:absolute;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#7c3aed,transparent);animation:scan 2s linear infinite}
 @keyframes scan{0%{top:0}100%{top:100%}}
 
 .cam-hint{font-size:10px;letter-spacing:0.1em;color:var(--txt3);text-align:center;text-transform:uppercase}
@@ -58,7 +58,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(0,0,0,0.95);
 .result-status{display:flex;align-items:center;gap:8px;font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:0.1em;margin-bottom:14px}
 .result-status.valid{color:var(--green)}
 .result-status.used{color:var(--txt3)}
-.result-status.error{color:var(--red2)}
+.result-status.error{color:#7c3aed}
 .result-row{font-size:12px;letter-spacing:0.04em;color:var(--txt2);margin-bottom:6px;display:flex;gap:8px}
 .result-row .lbl{color:var(--txt3);flex-shrink:0;width:70px}
 .result-code{font-size:10px;letter-spacing:0.14em;color:var(--txt3);margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
@@ -75,10 +75,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(0,0,0,0.95);
 .manual-label{font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:var(--txt3);margin-bottom:6px}
 .manual-row{display:flex;gap:8px}
 .manual-input{flex:1;background:var(--bg3);border:1px solid var(--border2);color:var(--txt);font-family:'DM Mono',monospace;font-size:12px;padding:9px 12px;outline:none;letter-spacing:0.08em;text-transform:uppercase;transition:border-color 0.2s}
-.manual-input:focus{border-color:var(--red)}
+.manual-input:focus{border-color:#7c3aed}
 .manual-input::placeholder{text-transform:none;letter-spacing:0.04em}
-.manual-btn{font-family:'Bebas Neue',sans-serif;font-size:12px;letter-spacing:0.1em;padding:9px 16px;background:var(--red2);color:#fff;border:none;cursor:pointer;transition:background 0.15s;flex-shrink:0}
-.manual-btn:hover{background:var(--red3)}
+.manual-btn{font-family:'Bebas Neue',sans-serif;font-size:12px;letter-spacing:0.1em;padding:9px 16px;background:#7c3aed;color:#fff;border:none;cursor:pointer;transition:background 0.15s;flex-shrink:0}
+.manual-btn:hover{background:#8b5cf6}
 
 .no-cam{font-size:11px;color:var(--txt3);letter-spacing:0.04em;text-align:center;padding:28px;border:1px dashed var(--border2);width:100%;max-width:340px;line-height:1.8}
 </style>
@@ -87,8 +87,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(0,0,0,0.95);
 
 <nav>
   <a href="/" class="nav-brand">HEAR ME OUT</a>
-  <div class="nav-title">Scanner</div>
-  <a href="/" class="nav-back">← Feed</a>
+  <div class="nav-title" id="navTitle">Scanner</div>
+  <a href="/" class="nav-back" id="navBack">← Feed</a>
 </nav>
 
 <div class="page">
@@ -259,6 +259,16 @@ function rescan() {
 document.getElementById('manualInput').addEventListener('keydown', e => {
   if (e.key === 'Enter') verifyCode(e.target.value.trim());
 });
+
+// Load event name if ?event= param present
+const eventId = new URLSearchParams(location.search).get('event');
+if (eventId) {
+  document.getElementById('navBack').href = `/events/${eventId}`;
+  document.getElementById('navBack').textContent = '← Event';
+  fetch(`/api/events/${eventId}`).then(r => r.ok ? r.json() : null).then(ev => {
+    if (ev) document.getElementById('navTitle').textContent = ev.title;
+  });
+}
 
 startCamera();
 </script>
