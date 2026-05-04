@@ -2104,8 +2104,8 @@ async function loadSuggested() {
   }
   el.innerHTML = data.map(u => `
     <div class="suggest-item" style="cursor:pointer" onclick="window.location.href='/profile/${esc(u.username)}'">
-      <div class="suggest-avatar" style="overflow:hidden">
-        ${u.avatar ? `<img src="${esc(u.avatar)}" style="width:100%;height:100%;object-fit:cover;display:block">` : esc(u.initials)}
+      <div class="suggest-avatar" style="overflow:hidden" id="sav-${u.id}">
+        ${u.avatar ? `<img src="${esc(u.avatar)}" style="width:100%;height:100%;object-fit:cover;display:block;border-radius:50%" onerror="this.parentElement.textContent='${esc(u.initials)}'">` : esc(u.initials)}
       </div>
       <div class="suggest-info">
         <div class="suggest-name">${esc(u.display_name)}</div>

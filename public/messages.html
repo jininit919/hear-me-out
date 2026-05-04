@@ -227,7 +227,7 @@ function renderConvs(convs) {
   }
   el.innerHTML = convs.map(c => {
     const avatarHTML = c.avatar
-      ? `<div class="conv-avatar"><img src="/uploads/${esc(c.avatar)}" alt=""></div>`
+      ? `<div class="conv-avatar"><img src="/uploads/${esc(c.avatar)}" alt="" onerror="this.parentElement.textContent='${escJs(c.initials)}'"></div>`
       : `<div class="conv-avatar">${esc(c.initials)}</div>`;
     return `<div class="conv-item ${activeUserId === c.user_id ? 'active' : ''}" onclick="openChat(${c.user_id}, '${escJs(c.display_name)}', '${escJs(c.initials)}', '${escJs(c.avatar || '')}', '${escJs(c.username)}')">
       ${avatarHTML}
@@ -264,7 +264,7 @@ async function openChat(userId, name, ini, avatar, username) {
   panel.innerHTML = `
     <div class="chat-header">
       <a class="chat-avatar" href="/profile/${esc(username)}">
-        ${avatar ? `<img src="/uploads/${esc(avatar)}" alt="">` : esc(ini)}
+        ${avatar ? `<img src="/uploads/${esc(avatar)}" alt="" onerror="this.parentElement.textContent='${escJs(ini)}'">` : esc(ini)}
       </a>
       <div class="chat-name"><a href="/profile/${esc(username)}">${esc(name)}</a></div>
     </div>
