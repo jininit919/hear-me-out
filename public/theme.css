@@ -10,7 +10,7 @@ html[data-theme="dark"] nav {
   background: rgba(0,0,0,0.95);
 }
 
-html[data-theme="dark"] ::-webkit-scrollbar-thumb { background: var(--red2); }
+html[data-theme="dark"] ::-webkit-scrollbar-thumb { background: #7c3aed; }
 
 /* ── Purple theme (black / purple) ─────────────────────────────────────────── */
 html[data-theme="purple"] {
@@ -40,7 +40,7 @@ html[data-theme="purple"] #mobileBottomNav {
   background: rgba(6,1,14,0.98);
 }
 
-html[data-theme="purple"] ::-webkit-scrollbar-thumb { background: var(--red2); }
+html[data-theme="purple"] ::-webkit-scrollbar-thumb { background: #7c3aed; }
 
 /* ── Light theme (white / black) ────────────────────────────────────────────── */
 html[data-theme="light"] {
@@ -96,4 +96,4 @@ html[data-theme="light"] textarea {
 }
 
 html[data-theme="light"] ::-webkit-scrollbar-track { background: var(--bg); }
-html[data-theme="light"] ::-webkit-scrollbar-thumb { background: var(--red2); }
+html[data-theme="light"] ::-webkit-scrollbar-thumb { background: #7c3aed; }
