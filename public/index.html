@@ -1347,8 +1347,9 @@ function filterByGenre(genre, btn) {
 function filterByCity(name, lat, lng) {
   if (filters.cityName === name) { clearFilters(); return; }
   filters.cityName = name;
-  filters.lat = lat;
-  filters.lng = lng;
+  filters.cityText = name;
+  filters.lat = null;
+  filters.lng = null;
   document.querySelectorAll('#cityChips .filter-chip').forEach(c =>
     c.classList.toggle('active', c.textContent.trim() === name));
   updateActiveFilterBadge();
@@ -2345,9 +2346,9 @@ function filterSidebarCity(name, lat, lng, el) {
     return;
   }
   filters.cityName = name;
-  filters.cityText = null;
-  filters.lat = lat;
-  filters.lng = lng;
+  filters.cityText = name;
+  filters.lat = null;
+  filters.lng = null;
   document.querySelectorAll('#sidebarCities .sidebar-link').forEach(c => c.classList.remove('active'));
   el.classList.add('active');
   document.querySelectorAll('#cityChips .filter-chip').forEach(c =>
