@@ -122,7 +122,7 @@ def send_email(to, subject, html_body):
         return
     resend.api_key = RESEND_API_KEY
     try:
-        resend.Emails.send({'from': 'Hear Me Out <onboarding@resend.dev>', 'to': to, 'subject': subject, 'html': html_body})
+        resend.Emails.send({'from': 'Hear Me Out <noreply@hearmeout.club>', 'to': to, 'subject': subject, 'html': html_body})
     except Exception as e:
         print(f'[EMAIL ERROR] {e}')
 app.config['MAX_CONTENT_LENGTH'] = 500 * 1024 * 1024  # 500 MB (pro video)
@@ -617,7 +617,7 @@ def send_web_push(user_id: int, title: str, body: str, url: str = '/'):
                                        'keys': {'p256dh': sub['p256dh'], 'auth': sub['auth']}},
                     data=payload,
                     vapid_private_key=pem,
-                    vapid_claims={'sub': 'mailto:admin@hearmeout.app',
+                    vapid_claims={'sub': 'mailto:admin@hearmeout.club',
                                   'aud': sub['endpoint'].split('/', 3)[:3][2] if '/' in sub['endpoint'] else sub['endpoint']},
                 )
             except WebPushException as ex:

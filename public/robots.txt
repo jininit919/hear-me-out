@@ -5,4 +5,4 @@ Disallow: /uploads/
 Disallow: /verify
 Disallow: /upload
 
-Sitemap: https://hearmeout.app/sitemap.xml
+Sitemap: https://hearmeout.club/sitemap.xml

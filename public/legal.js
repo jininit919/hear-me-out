@@ -49,7 +49,7 @@
         <nav class="lf-links" aria-label="Právní dokumenty">
           <a href="/privacy">Ochrana osobních údajů</a>
           <a href="/terms">Obchodní podmínky</a>
-          <a href="mailto:info@hearmeout.cz">Kontakt</a>
+          <a href="mailto:info@hearmeout.club">Kontakt</a>
         </nav>
         <div class="lf-legal">
           Hear Me Out s.r.o. · IČO: 00000000 · Praha, Česká republika ·
