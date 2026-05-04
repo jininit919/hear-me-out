@@ -714,16 +714,22 @@ async function saveProfile(e) {
   const lng = document.getElementById('eLng').value;
   if (lat && lng) { form.append('lat', lat); form.append('lng', lng); }
 
-  const res  = await fetch('/api/profile/update', {method:'POST', body:form});
-  const data = await res.json();
-
-  if (data.ok) {
-    await load();
-    closeEdit();
-    showToast('Profile saved');
-  } else {
+  try {
+    const res  = await fetch('/api/profile/update', {method:'POST', body:form});
+    let data = {};
+    try { data = await res.json(); } catch {}
+    if (res.ok && data.ok) {
+      await load();
+      closeEdit();
+      showToast('Profile saved');
+    } else {
+      const el = document.getElementById('editError');
+      el.textContent = data.error || ('HTTP ' + res.status);
+      el.classList.add('visible');
+    }
+  } catch(err) {
     const el = document.getElementById('editError');
-    el.textContent = data.error || 'Error';
+    el.textContent = 'Network error: ' + err.message;
     el.classList.add('visible');
   }
   btn.disabled = false; btn.textContent = 'SAVE';

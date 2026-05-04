@@ -1919,7 +1919,7 @@ def update_profile():
 
     for slot in ('photo1', 'photo2', 'photo3', 'photo4'):
         if request.form.get(f'remove_{slot}'):
-            conn.execute(f'UPDATE users SET {slot}="" WHERE id=?', (session['user_id'],))
+            conn.execute(f"UPDATE users SET {slot}='' WHERE id=?", (session['user_id'],))
 
     conn.commit()
     u = conn.execute('SELECT display_name FROM users WHERE id=?', (session['user_id'],)).fetchone()
