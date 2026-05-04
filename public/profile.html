@@ -252,16 +252,137 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(14,10,10,0.9
           <div style="display:flex;gap:6px;align-items:center">
             <select id="eCity" style="flex:1;background:var(--bg3);border:1px solid var(--border2);color:var(--txt);font-family:'DM Mono',monospace;font-size:15px;padding:8px 10px;letter-spacing:0.05em;outline:none;cursor:pointer" onchange="onCitySelect(this.value)">
               <option value="">— not selected —</option>
-              <option value="Praha"     data-lat="50.0755" data-lng="14.4378">Praha</option>
-              <option value="Brno"      data-lat="49.1951" data-lng="16.6068">Brno</option>
-              <option value="Ostrava"   data-lat="49.8209" data-lng="18.2625">Ostrava</option>
-              <option value="Bratislava" data-lat="48.1486" data-lng="17.1077">Bratislava</option>
-              <option value="Plzeň"     data-lat="49.7384" data-lng="13.3736">Plzeň</option>
-              <option value="Liberec"   data-lat="50.7663" data-lng="15.0543">Liberec</option>
-              <option value="Olomouc"   data-lat="49.5938" data-lng="17.2509">Olomouc</option>
-              <option value="Košice"    data-lat="48.7164" data-lng="21.2611">Košice</option>
-              <option value="Žilina"    data-lat="49.2231" data-lng="18.7394">Žilina</option>
-              <option value="Prešov"    data-lat="49.0014" data-lng="21.2394">Prešov</option>
+              <optgroup label="Česká republika">
+                <option value="Praha"     data-lat="50.0755" data-lng="14.4378">Praha</option>
+                <option value="Brno"      data-lat="49.1951" data-lng="16.6068">Brno</option>
+                <option value="Ostrava"   data-lat="49.8209" data-lng="18.2625">Ostrava</option>
+                <option value="Plzeň"     data-lat="49.7384" data-lng="13.3736">Plzeň</option>
+                <option value="Liberec"   data-lat="50.7663" data-lng="15.0543">Liberec</option>
+                <option value="Olomouc"   data-lat="49.5938" data-lng="17.2509">Olomouc</option>
+              </optgroup>
+              <optgroup label="Slovensko">
+                <option value="Bratislava" data-lat="48.1486" data-lng="17.1077">Bratislava</option>
+                <option value="Košice"    data-lat="48.7164" data-lng="21.2611">Košice</option>
+                <option value="Žilina"    data-lat="49.2231" data-lng="18.7394">Žilina</option>
+                <option value="Prešov"    data-lat="49.0014" data-lng="21.2394">Prešov</option>
+              </optgroup>
+              <optgroup label="Německo">
+                <option value="Berlin"    data-lat="52.5200" data-lng="13.4050">Berlin</option>
+                <option value="Hamburg"   data-lat="53.5753" data-lng="10.0153">Hamburg</option>
+                <option value="München"   data-lat="48.1351" data-lng="11.5820">München</option>
+                <option value="Frankfurt" data-lat="50.1109" data-lng="8.6821">Frankfurt</option>
+                <option value="Köln"      data-lat="50.9333" data-lng="6.9500">Köln</option>
+                <option value="Stuttgart" data-lat="48.7758" data-lng="9.1829">Stuttgart</option>
+                <option value="Düsseldorf" data-lat="51.2217" data-lng="6.7762">Düsseldorf</option>
+                <option value="Leipzig"   data-lat="51.3397" data-lng="12.3731">Leipzig</option>
+              </optgroup>
+              <optgroup label="Rakousko">
+                <option value="Wien"      data-lat="48.2082" data-lng="16.3738">Wien</option>
+                <option value="Graz"      data-lat="47.0707" data-lng="15.4395">Graz</option>
+                <option value="Linz"      data-lat="48.3069" data-lng="14.2858">Linz</option>
+                <option value="Salzburg"  data-lat="47.8095" data-lng="13.0550">Salzburg</option>
+              </optgroup>
+              <optgroup label="Polsko">
+                <option value="Warszawa"  data-lat="52.2297" data-lng="21.0122">Warszawa</option>
+                <option value="Kraków"    data-lat="50.0647" data-lng="19.9450">Kraków</option>
+                <option value="Wrocław"   data-lat="51.1079" data-lng="17.0385">Wrocław</option>
+                <option value="Gdańsk"    data-lat="54.3520" data-lng="18.6466">Gdańsk</option>
+                <option value="Poznań"    data-lat="52.4064" data-lng="16.9252">Poznań</option>
+              </optgroup>
+              <optgroup label="Maďarsko">
+                <option value="Budapest"  data-lat="47.4979" data-lng="19.0402">Budapest</option>
+                <option value="Debrecen"  data-lat="47.5316" data-lng="21.6273">Debrecen</option>
+              </optgroup>
+              <optgroup label="Velká Británie">
+                <option value="London"    data-lat="51.5074" data-lng="-0.1278">London</option>
+                <option value="Manchester" data-lat="53.4808" data-lng="-2.2426">Manchester</option>
+                <option value="Birmingham" data-lat="52.4862" data-lng="-1.8904">Birmingham</option>
+                <option value="Edinburgh" data-lat="55.9533" data-lng="-3.1883">Edinburgh</option>
+                <option value="Glasgow"   data-lat="55.8642" data-lng="-4.2518">Glasgow</option>
+                <option value="Liverpool" data-lat="53.4084" data-lng="-2.9916">Liverpool</option>
+                <option value="Bristol"   data-lat="51.4545" data-lng="-2.5879">Bristol</option>
+              </optgroup>
+              <optgroup label="Francie">
+                <option value="Paris"     data-lat="48.8566" data-lng="2.3522">Paris</option>
+                <option value="Lyon"      data-lat="45.7640" data-lng="4.8357">Lyon</option>
+                <option value="Marseille" data-lat="43.2965" data-lng="5.3698">Marseille</option>
+                <option value="Toulouse"  data-lat="43.6047" data-lng="1.4442">Toulouse</option>
+                <option value="Nice"      data-lat="43.7102" data-lng="7.2620">Nice</option>
+                <option value="Strasbourg" data-lat="48.5734" data-lng="7.7521">Strasbourg</option>
+              </optgroup>
+              <optgroup label="Španělsko">
+                <option value="Madrid"    data-lat="40.4168" data-lng="-3.7038">Madrid</option>
+                <option value="Barcelona" data-lat="41.3851" data-lng="2.1734">Barcelona</option>
+                <option value="Valencia"  data-lat="39.4699" data-lng="-0.3763">Valencia</option>
+                <option value="Sevilla"   data-lat="37.3891" data-lng="-5.9845">Sevilla</option>
+                <option value="Bilbao"    data-lat="43.2627" data-lng="-2.9253">Bilbao</option>
+              </optgroup>
+              <optgroup label="Itálie">
+                <option value="Roma"      data-lat="41.9028" data-lng="12.4964">Roma</option>
+                <option value="Milano"    data-lat="45.4642" data-lng="9.1900">Milano</option>
+                <option value="Napoli"    data-lat="40.8518" data-lng="14.2681">Napoli</option>
+                <option value="Torino"    data-lat="45.0703" data-lng="7.6869">Torino</option>
+                <option value="Bologna"   data-lat="44.4949" data-lng="11.3426">Bologna</option>
+                <option value="Firenze"   data-lat="43.7696" data-lng="11.2558">Firenze</option>
+              </optgroup>
+              <optgroup label="Benelux">
+                <option value="Amsterdam" data-lat="52.3676" data-lng="4.9041">Amsterdam</option>
+                <option value="Rotterdam" data-lat="51.9244" data-lng="4.4777">Rotterdam</option>
+                <option value="Brussels"  data-lat="50.8503" data-lng="4.3517">Brussels</option>
+                <option value="Antwerp"   data-lat="51.2194" data-lng="4.4025">Antwerp</option>
+                <option value="Luxembourg" data-lat="49.6117" data-lng="6.1319">Luxembourg</option>
+              </optgroup>
+              <optgroup label="Švýcarsko">
+                <option value="Zürich"    data-lat="47.3769" data-lng="8.5417">Zürich</option>
+                <option value="Geneva"    data-lat="46.2044" data-lng="6.1432">Geneva</option>
+                <option value="Basel"     data-lat="47.5596" data-lng="7.5886">Basel</option>
+                <option value="Bern"      data-lat="46.9480" data-lng="7.4474">Bern</option>
+              </optgroup>
+              <optgroup label="Skandinávie">
+                <option value="Stockholm" data-lat="59.3293" data-lng="18.0686">Stockholm</option>
+                <option value="Göteborg"  data-lat="57.7089" data-lng="11.9746">Göteborg</option>
+                <option value="Malmö"     data-lat="55.6050" data-lng="13.0038">Malmö</option>
+                <option value="Copenhagen" data-lat="55.6761" data-lng="12.5683">Copenhagen</option>
+                <option value="Oslo"      data-lat="59.9139" data-lng="10.7522">Oslo</option>
+                <option value="Helsinki"  data-lat="60.1699" data-lng="24.9384">Helsinki</option>
+              </optgroup>
+              <optgroup label="Pobaltí">
+                <option value="Tallinn"   data-lat="59.4370" data-lng="24.7536">Tallinn</option>
+                <option value="Riga"      data-lat="56.9496" data-lng="24.1052">Riga</option>
+                <option value="Vilnius"   data-lat="54.6872" data-lng="25.2797">Vilnius</option>
+              </optgroup>
+              <optgroup label="Balkán">
+                <option value="Zagreb"    data-lat="45.8150" data-lng="15.9819">Zagreb</option>
+                <option value="Ljubljana" data-lat="46.0569" data-lng="14.5058">Ljubljana</option>
+                <option value="Belgrade"  data-lat="44.8176" data-lng="20.4569">Belgrade</option>
+                <option value="Sarajevo"  data-lat="43.8476" data-lng="18.3564">Sarajevo</option>
+                <option value="Skopje"    data-lat="41.9981" data-lng="21.4254">Skopje</option>
+                <option value="Tirana"    data-lat="41.3275" data-lng="19.8189">Tirana</option>
+                <option value="Sofia"     data-lat="42.6977" data-lng="23.3219">Sofia</option>
+                <option value="Bucharest" data-lat="44.4268" data-lng="26.1025">Bucharest</option>
+                <option value="Athens"    data-lat="37.9838" data-lng="23.7275">Athens</option>
+                <option value="Thessaloniki" data-lat="40.6401" data-lng="22.9444">Thessaloniki</option>
+              </optgroup>
+              <optgroup label="Portugalsko">
+                <option value="Lisbon"    data-lat="38.7169" data-lng="-9.1395">Lisbon</option>
+                <option value="Porto"     data-lat="41.1579" data-lng="-8.6291">Porto</option>
+              </optgroup>
+              <optgroup label="Irsko">
+                <option value="Dublin"    data-lat="53.3498" data-lng="-6.2603">Dublin</option>
+                <option value="Cork"      data-lat="51.8985" data-lng="-8.4756">Cork</option>
+              </optgroup>
+              <optgroup label="Ukrajina">
+                <option value="Kyiv"      data-lat="50.4501" data-lng="30.5234">Kyiv</option>
+                <option value="Lviv"      data-lat="49.8397" data-lng="24.0297">Lviv</option>
+                <option value="Kharkiv"   data-lat="49.9935" data-lng="36.2304">Kharkiv</option>
+                <option value="Odessa"    data-lat="46.4825" data-lng="30.7233">Odessa</option>
+              </optgroup>
+              <optgroup label="Ostatní">
+                <option value="Istanbul"  data-lat="41.0082" data-lng="28.9784">Istanbul</option>
+                <option value="Reykjavik" data-lat="64.1355" data-lng="-21.8954">Reykjavik</option>
+                <option value="Nicosia"   data-lat="35.1856" data-lng="33.3823">Nicosia</option>
+                <option value="Valletta"  data-lat="35.8997" data-lng="14.5147">Valletta</option>
+              </optgroup>
             </select>
             <button type="button" id="gpsProfileBtn" title="Use my location" onclick="useGpsForProfile()"
               style="background:none;border:1px solid var(--border2);color:var(--txt3);padding:7px 9px;cursor:pointer;transition:all 0.15s;flex-shrink:0"
