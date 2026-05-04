@@ -82,6 +82,15 @@ if R2_BUCKET and R2_ACCESS_KEY and R2_ACCOUNT_ID:
         config=Config(signature_version='s3v4'),
         region_name='auto',
     )
+    try:
+        _s3.put_bucket_cors(Bucket=R2_BUCKET, CORSConfiguration={'CORSRules': [{
+            'AllowedHeaders': ['*'],
+            'AllowedMethods': ['GET', 'HEAD'],
+            'AllowedOrigins': ['*'],
+            'MaxAgeSeconds': 3600,
+        }]})
+    except Exception:
+        pass
 
 def save_upload(file_storage, filename):
     """Uloží soubor buď do R2 (produkce) nebo na disk (lokální dev)."""
