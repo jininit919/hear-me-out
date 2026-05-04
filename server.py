@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, session, send_from_directory, redirect
+from flask import Flask, request, jsonify, session, send_from_directory, redirect, Response, stream_with_context
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from flask_limiter import Limiter
@@ -695,8 +695,18 @@ def upload_page():
 
 @app.route('/uploads/<path:filename>')
 def serve_upload(filename):
-    if _s3 and R2_PUBLIC_URL:
-        return redirect(f'{R2_PUBLIC_URL}/{filename}')
+    if _s3 and R2_BUCKET:
+        try:
+            obj = _s3.get_object(Bucket=R2_BUCKET, Key=filename)
+            content_type = obj.get('ContentType', 'application/octet-stream')
+            body = obj['Body']
+            resp = Response(stream_with_context(body.iter_chunks(chunk_size=65536)),
+                            content_type=content_type)
+            resp.headers['Cache-Control'] = 'public, max-age=86400'
+            resp.headers['Access-Control-Allow-Origin'] = '*'
+            return resp
+        except Exception:
+            pass
     return send_from_directory(os.path.abspath(UPLOAD_FOLDER), filename)
 
 
