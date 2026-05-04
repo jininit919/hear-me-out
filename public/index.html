@@ -372,6 +372,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(14,10,10,0.9
 .filter-chip.gps-btn{display:flex;align-items:center;gap:5px}
 .filter-chip.gps-btn.locating{opacity:0.6;cursor:default}
 .chips-wrap{display:flex;flex-wrap:wrap;gap:6px}
+.filter-panel .chips-wrap{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:thin;scrollbar-color:var(--border2) transparent;padding-bottom:4px}
+.filter-panel .chips-wrap::-webkit-scrollbar{height:4px}
+.filter-panel .chips-wrap::-webkit-scrollbar-track{background:transparent}
+.filter-panel .chips-wrap::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
 
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 .post{animation:fadeIn 0.25s ease both}
@@ -563,6 +567,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(14,10,10,0.9
 
 /* Tablet: hide right sidebar */
 @media (max-width:1024px) {
+  .layout{grid-template-columns:220px 1fr 200px}
+}
+@media (max-width:900px) {
   .layout{grid-template-columns:220px 1fr}
   .sidebar-right{display:none}
 }
@@ -902,7 +909,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(14,10,10,0.9
       </div>
       <div class="filter-section">
         <div class="filter-label">City</div>
-        <div class="chips-wrap" id="cityChips" style="overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:2px">
+        <div class="chips-wrap" id="cityChips">
           <button class="filter-chip gps-btn" id="nearMeBtn" onclick="useMyLocation()">
             <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><circle cx="5" cy="5" r="3" stroke="currentColor" stroke-width="1.4"/><line x1="5" y1="0" x2="5" y2="2.2" stroke="currentColor" stroke-width="1.4"/><line x1="5" y1="7.8" x2="5" y2="10" stroke="currentColor" stroke-width="1.4"/><line x1="0" y1="5" x2="2.2" y2="5" stroke="currentColor" stroke-width="1.4"/><line x1="7.8" y1="5" x2="10" y2="5" stroke="currentColor" stroke-width="1.4"/></svg>
             Near me
