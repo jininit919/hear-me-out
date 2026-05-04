@@ -1566,7 +1566,7 @@ def get_news():
         'id': r['id'], 'text': r['text'], 'created_at': r['created_at'],
         'user_id': r['user_id'], 'username': r['username'],
         'display_name': r['display_name'] or r['username'],
-        'avatar': r['avatar']
+        'avatar': f'/uploads/{r["avatar"]}' if r['avatar'] else None,
     } for r in rows])
 
 @app.route('/api/news', methods=['POST'])
@@ -1594,7 +1594,7 @@ def post_news():
         'id': row['id'], 'text': row['text'], 'created_at': row['created_at'],
         'user_id': row['user_id'], 'username': row['username'],
         'display_name': row['display_name'] or row['username'],
-        'avatar': row['avatar']
+        'avatar': f'/uploads/{row["avatar"]}' if row['avatar'] else None,
     }), 201
 
 @app.route('/api/news/<int:nid>', methods=['DELETE'])
@@ -1718,7 +1718,7 @@ def suggested():
 @app.route('/api/genres')
 def genres():
     conn = get_db()
-    rows = conn.execute('SELECT genre FROM tracks WHERE genre != "" UNION SELECT genres FROM users WHERE genres != ""').fetchall()
+    rows = conn.execute("SELECT genre FROM tracks WHERE genre != '' UNION SELECT genres FROM users WHERE genres != ''").fetchall()
     conn.close()
     seen = set()
     result = []
@@ -1816,7 +1816,7 @@ def get_profile(username):
         'city':            u['city'],
         'genres':          u['genres'],
         'bio':             u['bio'],
-        'avatar':          u['avatar'],
+        'avatar':          f'/uploads/{u["avatar"]}' if u['avatar'] else None,
         'emoji':           u['emoji'],
         'photos':          [u['photo1'], u['photo2'], u['photo3'], u['photo4']],
         'lat':             u['lat'],
@@ -2005,7 +2005,7 @@ def get_messages(other_id):
             'id':           other['id'],
             'username':     other['username'],
             'display_name': other['display_name'],
-            'avatar':       other['avatar'],
+            'avatar':       f'/uploads/{other["avatar"]}' if other['avatar'] else None,
             'initials':     initials(other['display_name']),
         },
         'messages': [{
@@ -2395,7 +2395,7 @@ def get_profile_playlists(username):
     for r in rows:
         tc = conn.execute('SELECT COUNT(*) FROM playlist_tracks WHERE playlist_id = ?', (r['id'],)).fetchone()[0]
         cover = conn.execute(
-            'SELECT t.cover FROM playlist_tracks pt JOIN tracks t ON pt.track_id = t.id WHERE pt.playlist_id = ? AND t.cover != "" ORDER BY pt.position ASC LIMIT 1',
+            "SELECT t.cover FROM playlist_tracks pt JOIN tracks t ON pt.track_id = t.id WHERE pt.playlist_id = ? AND t.cover != '' ORDER BY pt.position ASC LIMIT 1",
             (r['id'],)
         ).fetchone()
         result.append({
