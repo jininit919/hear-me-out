@@ -133,10 +133,15 @@ class DBCursor:
     def _adapt(sql: str, pg: bool) -> str:
         if not pg:
             return sql
+        is_ignore = 'INSERT OR IGNORE INTO' in sql
         sql = sql.replace('?', '%s')
         sql = sql.replace('INTEGER PRIMARY KEY AUTOINCREMENT', 'SERIAL PRIMARY KEY')
         sql = sql.replace('last_insert_rowid()', 'lastval()')
         sql = sql.replace('DEFAULT ""', "DEFAULT ''")
+        sql = sql.replace('INSERT OR IGNORE INTO', 'INSERT INTO')
+        sql = sql.replace('INSERT OR REPLACE INTO', 'INSERT INTO')
+        if is_ignore:
+            sql = sql.rstrip().rstrip(';') + ' ON CONFLICT DO NOTHING'
         return sql
 
     def execute(self, sql, params=()):
