@@ -34,8 +34,8 @@ else:
 
 # Session cookie security
 app.config['SESSION_COOKIE_HTTPONLY'] = True
-app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
-app.config['SESSION_COOKIE_SECURE']   = os.environ.get('HTTPS', '') == '1'
+app.config['SESSION_COOKIE_SAMESITE'] = 'Strict'
+app.config['SESSION_COOKIE_SECURE']   = os.environ.get('RAILWAY_ENVIRONMENT') is not None or os.environ.get('HTTPS', '') == '1'
 
 # Rate limiter
 limiter = Limiter(
@@ -52,6 +52,17 @@ def security_headers(resp):
     resp.headers['X-Frame-Options'] = 'SAMEORIGIN'
     resp.headers['X-XSS-Protection'] = '1; mode=block'
     resp.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
+    resp.headers['Permissions-Policy'] = 'geolocation=(self), camera=(self), microphone=()'
+    resp.headers['Content-Security-Policy'] = (
+        "default-src 'self'; "
+        "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://unpkg.com https://js.stripe.com; "
+        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
+        "font-src 'self' https://fonts.gstatic.com; "
+        "img-src 'self' data: blob: https://*.r2.cloudflarestorage.com https://*.r2.dev https://pub-*.r2.dev; "
+        "connect-src 'self' https://nominatim.openstreetmap.org; "
+        "frame-src https://js.stripe.com; "
+        "media-src 'self' blob: https://*.r2.cloudflarestorage.com https://*.r2.dev https://pub-*.r2.dev;"
+    )
     return resp
 
 STRIPE_SECRET_KEY     = os.environ.get('STRIPE_SECRET_KEY', '')
@@ -772,7 +783,7 @@ def register():
     <div style="background:#000;color:#ccc;font-family:monospace;padding:40px;max-width:480px;margin:0 auto">
       <div style="font-size:28px;letter-spacing:0.2em;color:#b20000;margin-bottom:8px">HEAR ME OUT</div>
       <div style="font-size:12px;color:#555;margin-bottom:32px;letter-spacing:0.1em">Independent Music Network</div>
-      <p style="margin-bottom:16px">Hi <strong>{display_name}</strong>, enter this code to verify your account:</p>
+      <p style="margin-bottom:16px">Hi <strong>{display_name.replace('&','&amp;').replace('<','&lt;').replace('>','&gt;')}</strong>, enter this code to verify your account:</p>
       <div style="font-size:40px;letter-spacing:0.3em;color:#c62828;background:#0e0e0e;padding:20px;text-align:center;border:1px solid #1a1a1a;margin:24px 0">{code}</div>
       <p style="color:#555;font-size:12px">Code valid for 15 minutes. If you didn't sign up, ignore this email.</p>
     </div>''')
@@ -852,7 +863,7 @@ def forgot_password():
     <div style="background:#000;color:#ccc;font-family:monospace;padding:40px;max-width:480px;margin:0 auto">
       <div style="font-size:28px;letter-spacing:0.2em;color:#b20000;margin-bottom:8px">HEAR ME OUT</div>
       <div style="font-size:12px;color:#555;margin-bottom:32px;letter-spacing:0.1em">Independent Music Network</div>
-      <p style="margin-bottom:24px">Hi <strong>{user['display_name']}</strong>, we received a password reset request for your account.</p>
+      <p style="margin-bottom:24px">Hi <strong>{user['display_name'].replace('&','&amp;').replace('<','&lt;').replace('>','&gt;')}</strong>, we received a password reset request for your account.</p>
       <a href="{reset_url}" style="display:block;background:#b20000;color:#fff;text-align:center;padding:16px;font-family:sans-serif;font-size:14px;letter-spacing:0.1em;text-decoration:none;margin-bottom:24px">RESET YOUR PASSWORD</a>
       <p style="color:#555;font-size:12px">Link valid for 1 hour. If you didn't request this, ignore this email.</p>
     </div>''')
@@ -880,7 +891,7 @@ def reset_password():
         return jsonify({'error': 'Link expired — please request a new one'}), 400
     new_hash = generate_password_hash(password)
     conn.execute('UPDATE users SET password_hash = ? WHERE id = ?', (new_hash, row['user_id']))
-    conn.execute('UPDATE password_reset_tokens SET used = 1 WHERE token = ?', (token,))
+    conn.execute('DELETE FROM password_reset_tokens WHERE token = ?', (token,))
     conn.commit()
     conn.close()
     return jsonify({'ok': True})
@@ -953,6 +964,8 @@ def global_search():
     q = request.args.get('q', '').strip()
     if len(q) < 2:
         return jsonify({'tracks': [], 'artists': [], 'events': [], 'listings': []})
+    if len(q) > 100:
+        return jsonify({'error': 'Search query too long'}), 400
     conn = get_db()
     like = f'%{q}%'
 
@@ -1657,6 +1670,7 @@ def record_play(track_id):
 # ── Follow API ────────────────────────────────────────────────────────────────
 
 @app.route('/api/follow/<int:user_id>', methods=['POST'])
+@limiter.limit('60 per hour')
 def toggle_follow(user_id):
     err = require_login()
     if err:
@@ -2054,6 +2068,13 @@ def get_messages(other_id):
 def send_message(other_id):
     err = require_login()
     if err: return err
+    if other_id == session['user_id']:
+        return jsonify({'error': 'Cannot message yourself'}), 400
+    conn = get_db()
+    target = conn.execute('SELECT id FROM users WHERE id = ?', (other_id,)).fetchone()
+    conn.close()
+    if not target:
+        return jsonify({'error': 'User not found'}), 404
 
     # image message
     if 'image' in request.files:
@@ -2223,6 +2244,7 @@ def get_events():
 
 
 @app.route('/api/events', methods=['POST'])
+@limiter.limit('15 per hour')
 def create_event():
     err = require_login()
     if err: return err
@@ -2239,6 +2261,8 @@ def create_event():
     except (TypeError, ValueError): lat = None
     try: lng = float(request.form.get('lng', ''))
     except (TypeError, ValueError): lng = None
+    if lat is not None and not (-90 <= lat <= 90): lat = None
+    if lng is not None and not (-180 <= lng <= 180): lng = None
 
     if not title or not date:
         return jsonify({'error': 'Title and date are required'}), 400
@@ -2252,7 +2276,7 @@ def create_event():
     photos = []
     for i in range(1, 6):
         f = request.files.get(f'photo{i}')
-        if f and f.filename and allowed_file(f.filename) and allowed_image(f):
+        if f and f.filename and allowed_image(f):
             ext    = secure_filename(f.filename).rsplit('.', 1)[1].lower()
             name   = f'ev_{session["user_id"]}_{int(datetime.now().timestamp()*1000)}_{i}.{ext}'
             save_upload(f, name)
@@ -2294,6 +2318,7 @@ def get_my_events():
 
 
 @app.route('/api/events/<int:event_id>/save', methods=['POST'])
+@limiter.limit('60 per hour')
 def save_event(event_id):
     if 'user_id' not in session:
         return jsonify({'error': 'Not signed in'}), 401
@@ -2700,7 +2725,7 @@ def create_listing():
     photos = []
     for i in range(1, 6):
         f = request.files.get(f'photo{i}')
-        if f and f.filename and allowed_file(f.filename) and allowed_image(f):
+        if f and f.filename and allowed_image(f):
             ext  = secure_filename(f.filename).rsplit('.', 1)[1].lower()
             name = f'lst_{session["user_id"]}_{int(datetime.now().timestamp()*1000)}_{i}.{ext}'
             save_upload(f, name)
@@ -3345,11 +3370,14 @@ def get_ticket(code):
     ).fetchone()
     if not order:
         conn.close(); return jsonify({'error': 'Ticket not found'}), 404
-    # get event info
     ev = conn.execute('SELECT * FROM events WHERE id=?', (order['item_id'],)).fetchone()
-    conn.close()
     if not ev:
-        return jsonify({'error': 'Event not found'}), 404
+        conn.close(); return jsonify({'error': 'Event not found'}), 404
+    # Only the ticket holder or the event organizer can view ticket details
+    uid = session['user_id']
+    if order['user_id'] != uid and ev['user_id'] != uid:
+        conn.close(); return jsonify({'error': 'Access denied'}), 403
+    conn.close()
     return jsonify({
         'code':         order['ticket_code'],
         'status':       order['status'],
