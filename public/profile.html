@@ -370,7 +370,7 @@ function render() {
   const p = profile;
   const emojiBadge = p.emoji ? `<div class="avatar-emoji">${p.emoji}</div>` : '';
   const avatarHTML = p.avatar
-    ? `<img class="avatar-img" src="/uploads/${esc(p.avatar)}" alt="avatar">`
+    ? `<img class="avatar-img" src="/uploads/${esc(p.avatar)}" alt="avatar" onerror="this.outerHTML='<div class=\\'avatar-placeholder\\'>${esc(p.initials)}</div>'">`
     : `<div class="avatar-placeholder">${esc(p.initials)}</div>`;
 
   const editBtn = p.is_own

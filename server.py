@@ -1816,7 +1816,7 @@ def get_profile(username):
         'city':            u['city'],
         'genres':          u['genres'],
         'bio':             u['bio'],
-        'avatar':          f'/uploads/{u["avatar"]}' if u['avatar'] else None,
+        'avatar':          u['avatar'] or None,
         'emoji':           u['emoji'],
         'photos':          [u['photo1'], u['photo2'], u['photo3'], u['photo4']],
         'lat':             u['lat'],
