@@ -173,8 +173,20 @@ async function toggleSave() {
 }
 
 async function shareEvent(eventId) {
+  const url = `/api/events/${eventId}/share-image`;
+  if (navigator.canShare) {
+    try {
+      const res = await fetch(url);
+      const blob = await res.blob();
+      const file = new File([blob], 'hear-me-out-event.png', { type: 'image/png' });
+      if (navigator.canShare({ files: [file] })) {
+        await navigator.share({ files: [file] });
+        return;
+      }
+    } catch (_) {}
+  }
   const a = document.createElement('a');
-  a.href = `/api/events/${eventId}/share-image`;
+  a.href = url;
   a.download = 'hear-me-out-event.png';
   a.click();
 }

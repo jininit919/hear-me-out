@@ -2064,15 +2064,30 @@ async function toggleFollow(btn, userId) {
 }
 
 // ── Share ─────────────────────────────────────────────────────────────────────
+async function _shareImage(url, filename, fallbackText) {
+  if (navigator.canShare) {
+    try {
+      const res = await fetch(url);
+      const blob = await res.blob();
+      const file = new File([blob], filename, { type: 'image/png' });
+      if (navigator.canShare({ files: [file] })) {
+        await navigator.share({ files: [file] });
+        return;
+      }
+    } catch (_) {}
+  }
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  a.click();
+  showToast('Share card downloaded');
+}
+
 async function shareTrack(btn) {
   const trackId = btn.dataset.id;
   const text    = btn.dataset.title + ' — ' + btn.dataset.artist + ' | Hear Me Out';
   if (trackId) {
-    const a = document.createElement('a');
-    a.href = `/api/tracks/${trackId}/share-image`;
-    a.download = 'hear-me-out-track.png';
-    a.click();
-    showToast('Share card downloaded');
+    await _shareImage(`/api/tracks/${trackId}/share-image`, 'hear-me-out-track.png', text);
   } else if (navigator.share) {
     navigator.share({title: text, url: window.location.href});
   } else {
@@ -2081,11 +2096,7 @@ async function shareTrack(btn) {
 }
 
 async function shareEvent(eventId, title) {
-  const a = document.createElement('a');
-  a.href = `/api/events/${eventId}/share-image`;
-  a.download = 'hear-me-out-event.png';
-  a.click();
-  showToast('Share card downloaded');
+  await _shareImage(`/api/events/${eventId}/share-image`, 'hear-me-out-event.png', title);
 }
 
 // ── News ──────────────────────────────────────────────────────────────────────
