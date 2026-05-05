@@ -3322,6 +3322,13 @@ def stripe_webhook():
     This ticket is valid for one person.
   </div>
 </div>''')
+                    # notify organizer
+                    ev_row = conn.execute('SELECT e.user_id, e.title, e.id FROM ticket_types tt JOIN events e ON e.id = tt.event_id WHERE tt.id = ?', (order['item_id'],)).fetchone()
+                    if ev_row:
+                        buyer_name = buyer['display_name'] if buyer else 'Someone'
+                        push_notif(conn, ev_row['user_id'], order['user_id'], 'ticket_sold',
+                                   ev_row['id'], 'event',
+                                   f"{buyer_name} bought a ticket for {ev_row['title']}")
                 elif order['item_type'] == 'listing':
                     conn.execute('UPDATE listings SET status = "sold" WHERE id = ?', (order['item_id'],))
                 conn.commit()
