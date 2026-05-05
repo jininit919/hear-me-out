@@ -3409,6 +3409,11 @@ def stripe_webhook():
                         date_str = tt['date'] or ''
                         time_str = (' · ' + tt['time']) if tt['time'] else ''
                         venue_str = ', '.join(filter(None, [tt['venue'], tt['city']]))
+                        import qrcode, io, base64
+                        qr_img = qrcode.make(code)
+                        qr_buf = io.BytesIO()
+                        qr_img.save(qr_buf, format='PNG')
+                        qr_b64 = base64.b64encode(qr_buf.getvalue()).decode()
                         send_email(buyer['email'], f'Your ticket — {tt["title"]}', f'''
 <div style="font-family:monospace;max-width:480px;margin:0 auto;background:#000;color:#e8e8e8;padding:32px">
   <div style="font-size:22px;letter-spacing:0.15em;margin-bottom:24px;color:#fff">HEAR ME OUT</div>
@@ -3416,12 +3421,15 @@ def stripe_webhook():
   <div style="color:#888;font-size:13px;margin-bottom:4px">{tt_name}</div>
   {f'<div style="color:#888;font-size:13px;margin-bottom:4px">{date_str}{time_str}</div>' if date_str else ''}
   {f'<div style="color:#888;font-size:13px;margin-bottom:24px">{venue_str}</div>' if venue_str else '<div style="margin-bottom:24px"></div>'}
-  <div style="background:#111;border:1px solid #222;padding:20px;margin-bottom:24px">
+  <div style="background:#fff;padding:16px;margin-bottom:20px;text-align:center">
+    <img src="data:image/png;base64,{qr_b64}" width="200" height="200" alt="QR ticket" style="display:block;margin:0 auto">
+  </div>
+  <div style="background:#111;border:1px solid #222;padding:16px 20px;margin-bottom:24px;text-align:center">
     <div style="font-size:11px;color:#444;letter-spacing:0.1em;margin-bottom:8px">TICKET CODE</div>
     <div style="font-size:16px;letter-spacing:0.15em;color:#7c3aed">{code}</div>
   </div>
   <div style="font-size:12px;color:#444;line-height:1.8">
-    Show this code or the QR at the entrance.<br>
+    Show this QR code or enter the code manually at the entrance.<br>
     This ticket is valid for one person.
   </div>
 </div>''')
