@@ -3284,6 +3284,32 @@ def stripe_webhook():
                 conn.execute('UPDATE orders SET status = "paid" WHERE id = ?', (order['id'],))
                 if order['item_type'] == 'ticket':
                     conn.execute('UPDATE ticket_types SET sold = sold + 1 WHERE id = ?', (order['item_id'],))
+                    buyer = conn.execute('SELECT email, display_name FROM users WHERE id = ?', (order['user_id'],)).fetchone()
+                    tt    = conn.execute('SELECT tt.name, e.title, e.date, e.time, e.venue, e.city FROM ticket_types tt JOIN events e ON e.id = tt.event_id WHERE tt.id = ?', (order['item_id'],)).fetchone()
+                    if buyer and tt and buyer['email']:
+                        code = order['ticket_code']
+                        dn   = (buyer['display_name'] or 'there').replace('&','&amp;').replace('<','&lt;').replace('>','&gt;')
+                        ev_title = (tt['title'] or '').replace('&','&amp;').replace('<','&lt;').replace('>','&gt;')
+                        tt_name  = (tt['name']  or '').replace('&','&amp;').replace('<','&lt;').replace('>','&gt;')
+                        date_str = tt['date'] or ''
+                        time_str = (' · ' + tt['time']) if tt['time'] else ''
+                        venue_str = ', '.join(filter(None, [tt['venue'], tt['city']]))
+                        send_email(buyer['email'], f'Your ticket — {tt["title"]}', f'''
+<div style="font-family:monospace;max-width:480px;margin:0 auto;background:#000;color:#e8e8e8;padding:32px">
+  <div style="font-size:22px;letter-spacing:0.15em;margin-bottom:24px;color:#fff">HEAR ME OUT</div>
+  <div style="font-size:18px;font-weight:bold;margin-bottom:8px">{ev_title}</div>
+  <div style="color:#888;font-size:13px;margin-bottom:4px">{tt_name}</div>
+  {f'<div style="color:#888;font-size:13px;margin-bottom:4px">{date_str}{time_str}</div>' if date_str else ''}
+  {f'<div style="color:#888;font-size:13px;margin-bottom:24px">{venue_str}</div>' if venue_str else '<div style="margin-bottom:24px"></div>'}
+  <div style="background:#111;border:1px solid #222;padding:20px;margin-bottom:24px">
+    <div style="font-size:11px;color:#444;letter-spacing:0.1em;margin-bottom:8px">TICKET CODE</div>
+    <div style="font-size:16px;letter-spacing:0.15em;color:#7c3aed">{code}</div>
+  </div>
+  <div style="font-size:12px;color:#444;line-height:1.8">
+    Show this code or the QR at the entrance.<br>
+    This ticket is valid for one person.
+  </div>
+</div>''')
                 elif order['item_type'] == 'listing':
                     conn.execute('UPDATE listings SET status = "sold" WHERE id = ?', (order['item_id'],))
                 conn.commit()
