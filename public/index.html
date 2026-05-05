@@ -2471,7 +2471,7 @@ async function runSearch(q) {
   if (res.events.length) {
     html += `<div class="sr-section"><div class="sr-label">Akce</div>`;
     res.events.forEach(ev => {
-      html += `<div class="sr-item" onclick="closeSearch();window.location='/events'">
+      html += `<div class="sr-item" onclick="closeSearch();window.location='/events/${ev.id}'">
         <div class="sr-thumb" style="border-radius:50%">◷</div>
         <div><div class="sr-name">${esc(ev.title)}</div><div class="sr-sub">${esc(ev.date)}${ev.city ? ' · ' + esc(ev.city) : ''}</div></div>
       </div>`;
