@@ -146,6 +146,7 @@ async function load() {
       </div>
     </div>
     ${saveBtn}
+    <button onclick="shareEvent(${ev.id})" style="width:100%;margin-top:10px;font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:0.14em;padding:12px;background:none;color:var(--txt3);border:1px solid var(--border2);cursor:pointer;transition:all 0.15s" onmouseover="this.style.color='var(--txt)';this.style.borderColor='var(--txt3)'" onmouseout="this.style.color='var(--txt3)';this.style.borderColor='var(--border2)'">↗ Download share card</button>
   `;
 
   window.__evId = ev.id;
@@ -169,6 +170,13 @@ async function toggleSave() {
   window.__evSaved = data.saved;
   btn.textContent = data.saved ? '◷ Saved to calendar' : '◷ Save to calendar';
   btn.classList.toggle('saved', data.saved);
+}
+
+async function shareEvent(eventId) {
+  const a = document.createElement('a');
+  a.href = `/api/events/${eventId}/share-image`;
+  a.download = 'hear-me-out-event.png';
+  a.click();
 }
 
 load();

@@ -1511,7 +1511,7 @@ function buildPost(t, i) {
       <button class="action-btn save-btn" id="savebtn-${t.id}" data-trackid="${t.id}" data-filename="${fn}" data-title="${ti}" data-artist="${ar}" data-cover="${escAttr(t.cover||'')}" onclick="toggleSave(this)" style="position:relative">
         <span class="ic">⬇</span><span>Save</span><div class="save-progress" id="saveprog-${t.id}"></div>
       </button>
-      <button class="action-btn share" data-title="${ti}" data-artist="${ar}" onclick="shareTrack(this)">
+      <button class="action-btn share" data-title="${ti}" data-artist="${ar}" data-id="${t.id}" onclick="shareTrack(this)">
         <span class="ic">↗</span><span>Share</span>
       </button>
       ${t.user.username === currentUser ? `
@@ -2064,13 +2064,28 @@ async function toggleFollow(btn, userId) {
 }
 
 // ── Share ─────────────────────────────────────────────────────────────────────
-function shareTrack(btn) {
-  const text = btn.dataset.title + ' — ' + btn.dataset.artist + ' | Hear Me Out';
-  if (navigator.share) {
+async function shareTrack(btn) {
+  const trackId = btn.dataset.id;
+  const text    = btn.dataset.title + ' — ' + btn.dataset.artist + ' | Hear Me Out';
+  if (trackId) {
+    const a = document.createElement('a');
+    a.href = `/api/tracks/${trackId}/share-image`;
+    a.download = 'hear-me-out-track.png';
+    a.click();
+    showToast('Share card downloaded');
+  } else if (navigator.share) {
     navigator.share({title: text, url: window.location.href});
   } else {
     navigator.clipboard.writeText(text).then(() => showToast('Copied to clipboard'));
   }
+}
+
+async function shareEvent(eventId, title) {
+  const a = document.createElement('a');
+  a.href = `/api/events/${eventId}/share-image`;
+  a.download = 'hear-me-out-event.png';
+  a.click();
+  showToast('Share card downloaded');
 }
 
 // ── News ──────────────────────────────────────────────────────────────────────

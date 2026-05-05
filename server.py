@@ -1424,6 +1424,109 @@ def get_profile_reposts(username):
     } for t in rows])
 
 
+# ── Share images ─────────────────────────────────────────────────────────────
+
+def _make_share_image(cover_path, title, subtitle, tag=None):
+    """Generate a 1080x1920 share card (Instagram Stories format)."""
+    from PIL import Image, ImageDraw, ImageFont
+    import io, textwrap
+
+    W, H = 1080, 1920
+    img = Image.new('RGB', (W, H), (0, 0, 0))
+    draw = ImageDraw.Draw(img)
+
+    # cover art
+    if cover_path and os.path.exists(cover_path):
+        try:
+            cover = Image.open(cover_path).convert('RGB')
+            cover = cover.resize((W, W), Image.LANCZOS)
+            # dark gradient overlay
+            overlay = Image.new('RGBA', (W, W), (0, 0, 0, 0))
+            for y in range(W):
+                alpha = int(180 * (y / W))
+                for x in range(W):
+                    overlay.putpixel((x, y), (0, 0, 0, alpha))
+            img.paste(cover, (0, (H - W) // 2))
+            img.paste(overlay, (0, (H - W) // 2), overlay)
+        except Exception:
+            pass
+
+    # gradient bottom
+    for y in range(H // 2, H):
+        alpha = min(255, int(255 * ((y - H // 2) / (H // 2))))
+        draw.rectangle([(0, y), (W, y + 1)], fill=(0, 0, 0))
+
+    try:
+        font_big  = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf', 80)
+        font_med  = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf', 48)
+        font_sm   = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf', 36)
+    except Exception:
+        font_big = font_med = font_sm = ImageFont.load_default()
+
+    # brand
+    draw.text((60, 60), 'HEAR ME OUT', fill=(255, 255, 255), font=font_sm)
+
+    # tag pill
+    if tag:
+        draw.text((60, H - 420), tag.upper(), fill=(124, 58, 237), font=font_sm)
+
+    # title (wrapped)
+    lines = textwrap.wrap(title, width=22)[:3]
+    y_text = H - 340
+    for line in lines:
+        draw.text((60, y_text), line, fill=(255, 255, 255), font=font_big)
+        y_text += 90
+
+    # subtitle
+    draw.text((60, y_text + 10), subtitle, fill=(136, 136, 136), font=font_med)
+
+    buf = io.BytesIO()
+    img.save(buf, format='PNG', optimize=True)
+    buf.seek(0)
+    return buf
+
+
+@app.route('/api/tracks/<int:track_id>/share-image')
+def track_share_image(track_id):
+    conn = get_db()
+    t = conn.execute(
+        'SELECT t.title, t.genre, t.cover, u.display_name FROM tracks t JOIN users u ON u.id = t.user_id WHERE t.id = ?',
+        (track_id,)
+    ).fetchone()
+    conn.close()
+    if not t:
+        return jsonify({'error': 'Not found'}), 404
+    cover_path = os.path.join(UPLOAD_FOLDER, t['cover']) if t['cover'] else None
+    subtitle = t['display_name'] + (f'  ·  {t["genre"]}' if t['genre'] else '')
+    buf = _make_share_image(cover_path, t['title'], subtitle, tag='track')
+    return send_file(buf, mimetype='image/png',
+                     download_name=f'track-{track_id}.png',
+                     as_attachment=True)
+
+
+@app.route('/api/events/<int:event_id>/share-image')
+def event_share_image(event_id):
+    conn = get_db()
+    e = conn.execute('SELECT * FROM events WHERE id = ?', (event_id,)).fetchone()
+    conn.close()
+    if not e:
+        return jsonify({'error': 'Not found'}), 404
+    cover_path = None
+    if e['photos']:
+        try:
+            first = json.loads(e['photos'])[0] if e['photos'].startswith('[') else e['photos'].split(',')[0]
+            cover_path = os.path.join(UPLOAD_FOLDER, first.strip())
+        except Exception:
+            pass
+    date_str = e['date'] or ''
+    venue_str = ', '.join(filter(None, [e['venue'], e['city']]))
+    subtitle = '  ·  '.join(filter(None, [date_str, venue_str]))
+    buf = _make_share_image(cover_path, e['title'], subtitle, tag='event')
+    return send_file(buf, mimetype='image/png',
+                     download_name=f'event-{event_id}.png',
+                     as_attachment=True)
+
+
 # ── Comments ─────────────────────────────────────────────────────────────────
 
 @app.route('/api/tracks/<int:track_id>/comments')
