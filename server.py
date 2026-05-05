@@ -258,7 +258,11 @@ def init_db():
                 'verify_expires TEXT DEFAULT NULL',
                 'pro INTEGER DEFAULT 0',
                 'pro_expires TEXT DEFAULT NULL',
-                'stripe_customer_id TEXT DEFAULT NULL'):
+                'stripe_customer_id TEXT DEFAULT NULL',
+                'link_instagram TEXT DEFAULT ""',
+                'link_spotify   TEXT DEFAULT ""',
+                'link_soundcloud TEXT DEFAULT ""',
+                'link_website   TEXT DEFAULT ""'):
         add_col('users', col)
     conn.commit()
 
@@ -1837,7 +1841,7 @@ def terms_page():
 def get_profile(username):
     uid  = session.get('user_id', 0)
     conn = get_db()
-    u = conn.execute('SELECT id, username, display_name, city, genres, bio, avatar, emoji, photo1, photo2, photo3, photo4, lat, lng, created_at, pro FROM users WHERE username = ?', (username,)).fetchone()
+    u = conn.execute('SELECT id, username, display_name, city, genres, bio, avatar, emoji, photo1, photo2, photo3, photo4, lat, lng, created_at, pro, link_instagram, link_spotify, link_soundcloud, link_website FROM users WHERE username = ?', (username,)).fetchone()
     if not u:
         conn.close()
         return jsonify({'error': 'User not found'}), 404
@@ -1865,6 +1869,10 @@ def get_profile(username):
         'photos':          [u['photo1'], u['photo2'], u['photo3'], u['photo4']],
         'lat':             u['lat'],
         'lng':             u['lng'],
+        'link_instagram':  u['link_instagram'] or '',
+        'link_spotify':    u['link_spotify'] or '',
+        'link_soundcloud': u['link_soundcloud'] or '',
+        'link_website':    u['link_website'] or '',
         'initials':        initials(u['display_name']),
         'pro':             bool(u['pro']),
         'is_own':          uid != 0 and u['id'] == uid,
@@ -1909,11 +1917,15 @@ def update_profile():
     err = require_login()
     if err: return err
 
-    display_name = request.form.get('display_name', '').strip()
-    city         = request.form.get('city', '').strip()
-    genres       = request.form.get('genres', '').strip()
-    bio          = request.form.get('bio', '').strip()
-    emoji        = request.form.get('emoji', '').strip()
+    display_name    = request.form.get('display_name', '').strip()
+    city            = request.form.get('city', '').strip()
+    genres          = request.form.get('genres', '').strip()
+    bio             = request.form.get('bio', '').strip()
+    emoji           = request.form.get('emoji', '').strip()
+    link_instagram  = request.form.get('link_instagram', '').strip()[:200]
+    link_spotify    = request.form.get('link_spotify', '').strip()[:200]
+    link_soundcloud = request.form.get('link_soundcloud', '').strip()[:200]
+    link_website    = request.form.get('link_website', '').strip()[:200]
     try:
         lat = float(request.form.get('lat', ''))
     except (ValueError, TypeError):
@@ -1940,11 +1952,11 @@ def update_profile():
 
     conn = get_db()
     if lat is not None and lng is not None:
-        conn.execute('UPDATE users SET display_name=?, city=?, genres=?, bio=?, emoji=?, lat=?, lng=? WHERE id=?',
-                     (display_name, city, genres, bio, emoji, lat, lng, session['user_id']))
+        conn.execute('UPDATE users SET display_name=?, city=?, genres=?, bio=?, emoji=?, lat=?, lng=?, link_instagram=?, link_spotify=?, link_soundcloud=?, link_website=? WHERE id=?',
+                     (display_name, city, genres, bio, emoji, lat, lng, link_instagram, link_spotify, link_soundcloud, link_website, session['user_id']))
     else:
-        conn.execute('UPDATE users SET display_name=?, city=?, genres=?, bio=?, emoji=? WHERE id=?',
-                     (display_name, city, genres, bio, emoji, session['user_id']))
+        conn.execute('UPDATE users SET display_name=?, city=?, genres=?, bio=?, emoji=?, link_instagram=?, link_spotify=?, link_soundcloud=?, link_website=? WHERE id=?',
+                     (display_name, city, genres, bio, emoji, link_instagram, link_spotify, link_soundcloud, link_website, session['user_id']))
 
     def save_img(field, col):
         f = request.files.get(field)

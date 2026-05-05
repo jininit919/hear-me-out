@@ -404,6 +404,22 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(14,10,10,0.9
         <textarea id="eBio" placeholder="A few words about you, your music, your sound..."></textarea>
       </div>
       <div class="mfield">
+        <label>Instagram</label>
+        <input type="url" id="eInstagram" placeholder="https://instagram.com/yourname">
+      </div>
+      <div class="mfield">
+        <label>Spotify</label>
+        <input type="url" id="eSpotify" placeholder="https://open.spotify.com/artist/...">
+      </div>
+      <div class="mfield">
+        <label>SoundCloud</label>
+        <input type="url" id="eSoundcloud" placeholder="https://soundcloud.com/yourname">
+      </div>
+      <div class="mfield">
+        <label>Website</label>
+        <input type="url" id="eWebsite" placeholder="https://yoursite.com">
+      </div>
+      <div class="mfield">
         <label>Profile emoji badge</label>
         <div class="emoji-picker">
           <div class="emoji-opt none active" data-val="" onclick="pickEmoji(this)">none</div>
@@ -561,6 +577,14 @@ function render() {
         <div class="profile-username">@${esc(p.username)}</div>
         <div class="profile-tags">${tags}</div>
         ${bioHTML}
+        ${(()=>{
+          const links = [];
+          if (p.link_instagram)  links.push(`<a href="${esc(p.link_instagram)}"  target="_blank" rel="noopener" title="Instagram"  style="color:var(--txt3);font-size:16px;text-decoration:none;transition:color 0.15s" onmouseover="this.style.color='#E1306C'" onmouseout="this.style.color='var(--txt3)'">ig</a>`);
+          if (p.link_spotify)    links.push(`<a href="${esc(p.link_spotify)}"    target="_blank" rel="noopener" title="Spotify"    style="color:var(--txt3);font-size:16px;text-decoration:none;transition:color 0.15s" onmouseover="this.style.color='#1DB954'" onmouseout="this.style.color='var(--txt3)'">sp</a>`);
+          if (p.link_soundcloud) links.push(`<a href="${esc(p.link_soundcloud)}" target="_blank" rel="noopener" title="SoundCloud" style="color:var(--txt3);font-size:16px;text-decoration:none;transition:color 0.15s" onmouseover="this.style.color='#FF5500'" onmouseout="this.style.color='var(--txt3)'">sc</a>`);
+          if (p.link_website)    links.push(`<a href="${esc(p.link_website)}"    target="_blank" rel="noopener" title="Website"    style="color:var(--txt3);font-size:16px;text-decoration:none;transition:color 0.15s" onmouseover="this.style.color='var(--txt)'" onmouseout="this.style.color='var(--txt3)'">↗</a>`);
+          return links.length ? `<div style="display:flex;gap:14px;align-items:center;margin-bottom:14px;letter-spacing:0.08em;font-family:'Bebas Neue',sans-serif">${links.join('')}</div>` : '';
+        })()}
         <div class="profile-stats">
           <div class="stat"><div class="stat-val">${p.track_count}</div><div class="stat-lbl">Tracks</div></div>
           <div class="stat"><div class="stat-val">${p.followers}</div><div class="stat-lbl">Followers</div></div>
@@ -609,8 +633,12 @@ function render() {
   if (p.is_own) {
     document.getElementById('eName').value    = p.display_name;
     document.getElementById('eGenres').value  = p.genres || '';
-    document.getElementById('eBio').value     = p.bio || '';
-    document.getElementById('eEmoji').value   = p.emoji || '';
+    document.getElementById('eBio').value          = p.bio || '';
+    document.getElementById('eEmoji').value        = p.emoji || '';
+    document.getElementById('eInstagram').value    = p.link_instagram || '';
+    document.getElementById('eSpotify').value      = p.link_spotify || '';
+    document.getElementById('eSoundcloud').value   = p.link_soundcloud || '';
+    document.getElementById('eWebsite').value      = p.link_website || '';
     document.querySelectorAll('.emoji-opt').forEach(el => {
       el.classList.toggle('active', el.dataset.val === (p.emoji || ''));
     });
@@ -709,7 +737,11 @@ async function saveProfile(e) {
   form.append('city',         document.getElementById('eCity').value.trim());
   form.append('genres',       document.getElementById('eGenres').value.trim());
   form.append('bio',          document.getElementById('eBio').value.trim());
-  form.append('emoji',        document.getElementById('eEmoji').value);
+  form.append('emoji',           document.getElementById('eEmoji').value);
+  form.append('link_instagram',  document.getElementById('eInstagram').value.trim());
+  form.append('link_spotify',    document.getElementById('eSpotify').value.trim());
+  form.append('link_soundcloud', document.getElementById('eSoundcloud').value.trim());
+  form.append('link_website',    document.getElementById('eWebsite').value.trim());
   const lat = document.getElementById('eLat').value;
   const lng = document.getElementById('eLng').value;
   if (lat && lng) { form.append('lat', lat); form.append('lng', lng); }
